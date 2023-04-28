@@ -1,23 +1,73 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:ishwarpharma/controller/product_controller.dart';
+import 'package:ishwarpharma/utils/constant.dart';
+import 'package:ishwarpharma/view/common_widget/common_text.dart';
 import 'package:ishwarpharma/view/common_widget/product_card.dart';
 
 class ProductsScreen extends StatelessWidget {
-  const ProductsScreen({Key? key}) : super(key: key);
+  final productController = Get.find<ProductController>();
+  ProductsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Expanded(
-          child: ListView.separated(
-            itemCount: 100,
-            shrinkWrap: true,
-            padding: const EdgeInsets.all(10),
-            physics: const BouncingScrollPhysics(),
-            separatorBuilder: (context, index) => const SizedBox(height: 10),
-            itemBuilder: (context, index) => const ProductCard(),
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: TextFormField(
+            decoration: const InputDecoration(
+              hintText: "Search medicine",
+              prefixIcon: Icon(Icons.search, size: 25),
+              border: OutlineInputBorder(),
+              isDense: true,
+            ),
           ),
-        )
+        ),
+        Obx(() => productController.isLoading.value
+            ? Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Center(
+                      child: CircularProgressIndicator(color: AppColor.primaryColor),
+                    ),
+                  ],
+                ),
+              )
+            : productController.productList.isEmpty
+                ? Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        CommonText(
+                          fontSize: 20,
+                          textAlign: TextAlign.center,
+                          fontWeight: FontWeight.w700,
+                          color: AppColor.primaryColor,
+                          text: "No Products Available",
+                        )
+                      ],
+                    ),
+                  )
+                : Expanded(
+                    child: ListView.separated(
+                      itemCount: productController.productList.length,
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(10),
+                      physics: const BouncingScrollPhysics(),
+                      separatorBuilder: (context, index) => const SizedBox(height: 10),
+                      itemBuilder: (context, index) => ProductCard(
+                        title:
+                            "${productController.productList[index].brand ?? ""} ${productController.productList[index].pack ?? ""}",
+                        company: productController.productList[index].company ?? "",
+                        rate: productController.productList[index].rate ?? "",
+                        mrp: productController.productList[index].mrp ?? "",
+                        free: productController.productList[index].free_scheme ?? "",
+                        subTitle: productController.productList[index].content ?? "",
+                      ),
+                    ),
+                  ))
       ],
     );
   }

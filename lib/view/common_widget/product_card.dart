@@ -4,19 +4,27 @@ import 'package:ishwarpharma/view/common_widget/common_text.dart';
 import 'package:ishwarpharma/view/common_widget/product_card_column.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({Key? key}) : super(key: key);
+  String? title;
+  String? company;
+  String? rate;
+  String? mrp;
+  String? free;
+  String? subTitle;
+  ProductCard({
+    Key? key,
+    this.title,
+    this.company,
+    this.rate,
+    this.mrp,
+    this.free,
+    this.subTitle,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
-        // border: Border(
-        //   left: BorderSide(color: AppColor.primaryColor),
-        //   top: BorderSide(color: AppColor.primaryColor),
-        //   bottom: BorderSide(color: AppColor.secondaryColor),
-        //   right: BorderSide(color: AppColor.secondaryColor),
-        // ),
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -31,20 +39,20 @@ class ProductCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const CommonText(text: "Perasitamol", fontWeight: FontWeight.w600),
+            CommonText(text: title ?? "", fontWeight: FontWeight.w600),
             const Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ProductCardColumn(title: "Company", subTitle: "Protech"),
-                ProductCardColumn(title: "Rate", subTitle: "Rs. 162.00"),
-                ProductCardColumn(title: "MRP", subTitle: "Rs. 339.00"),
-                ProductCardColumn(title: "Free", subTitle: "Scheme 5..%"),
+                ProductCardColumn(title: "Company", subTitle: company ?? ""),
+                ProductCardColumn(title: "Rate", subTitle: rate ?? ""),
+                ProductCardColumn(title: "MRP", subTitle: mrp ?? ""),
+                ProductCardColumn(title: "Free", subTitle: free ?? ""),
               ],
             ),
             const Divider(),
-            const CommonText(text: "Haperine 25000iu/5ml", fontWeight: FontWeight.w500),
+            CommonText(text: subTitle ?? "", fontWeight: FontWeight.w500),
           ],
         ),
       ),

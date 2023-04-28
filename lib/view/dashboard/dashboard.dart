@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:ishwarpharma/controller/product_controller.dart';
 import 'package:ishwarpharma/utils/constant.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
 import 'package:ishwarpharma/view/dashboard/home_screen.dart';
@@ -13,6 +15,7 @@ class DashBoard extends StatefulWidget {
 
 class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
   TabController? _tabController;
+  final productController = Get.put<ProductController>(ProductController());
   @override
   void initState() {
     super.initState();
