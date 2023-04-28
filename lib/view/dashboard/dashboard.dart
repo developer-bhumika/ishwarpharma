@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ishwarpharma/controller/product_controller.dart';
 import 'package:ishwarpharma/utils/constant.dart';
+import 'package:ishwarpharma/view/about_us_screen.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
 import 'package:ishwarpharma/view/dashboard/home_screen.dart';
 import 'package:ishwarpharma/view/dashboard/products_screen.dart';
+import 'package:ishwarpharma/view/setting/setting_screen.dart';
 
 class DashBoard extends StatefulWidget {
   const DashBoard({Key? key}) : super(key: key);
@@ -31,9 +33,7 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
           padding: const EdgeInsets.all(10.0),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(5),
-            child: Image.asset(
-              AppImage.logo,
-            ),
+            child: Image.asset(AppImage.logo),
           ),
         ),
         title: const CommonText(
@@ -42,11 +42,26 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
           fontWeight: FontWeight.w800,
           fontSize: 20,
         ),
-        actions: const [
-          Icon(Icons.sync),
-          SizedBox(width: 5),
-          Icon(Icons.more_vert_sharp),
-          SizedBox(width: 10),
+        actions: [
+          const Icon(Icons.sync),
+          const SizedBox(width: 5),
+          PopupMenuButton<int>(
+            splashRadius: 20,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+            icon: const Icon(Icons.more_vert_sharp),
+            itemBuilder: (context) => [
+              const PopupMenuItem(value: 1, child: Text("Setting")),
+              const PopupMenuItem(value: 2, child: Text("About Us")),
+            ],
+            elevation: 10,
+            onSelected: (val) {
+              if (val == 1) {
+                Get.to(SettingScreen());
+              } else {
+                Get.to(AboutUsScreen());
+              }
+            },
+          ),
         ],
       ),
       body: Column(

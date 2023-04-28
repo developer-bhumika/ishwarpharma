@@ -22,38 +22,45 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
+    return Card(
+      elevation: 5,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(5),
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            AppColor.secondaryColor.withOpacity(0.2),
-            AppColor.primaryColor.withOpacity(0.2),
-          ],
-        ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CommonText(text: title ?? "", fontWeight: FontWeight.w600),
-            const Divider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ProductCardColumn(title: "Company", subTitle: company ?? ""),
-                ProductCardColumn(title: "Rate", subTitle: rate ?? ""),
-                ProductCardColumn(title: "MRP", subTitle: mrp ?? ""),
-                ProductCardColumn(title: "Free", subTitle: free ?? ""),
-              ],
-            ),
-            const Divider(),
-            CommonText(text: subTitle ?? "", fontWeight: FontWeight.w500),
-          ],
+      margin: const EdgeInsets.only(bottom: 5),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppColor.secondaryColor.withOpacity(0.2),
+              AppColor.primaryColor.withOpacity(0.2),
+            ],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CommonText(text: title ?? "", fontWeight: FontWeight.w600),
+              const Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ProductCardColumn(title: "Company", subTitle: company ?? ""),
+                  ProductCardColumn(title: "Rate", subTitle: rate ?? ""),
+                  ProductCardColumn(title: "MRP", subTitle: mrp ?? ""),
+                  ProductCardColumn(title: "Free", subTitle: free ?? ""),
+                ],
+              ),
+              const Divider(),
+              CommonText(text: subTitle ?? "", fontWeight: FontWeight.w500),
+            ],
+          ),
         ),
       ),
     );
