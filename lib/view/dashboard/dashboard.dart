@@ -105,10 +105,10 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
               children: [
                 const HomeScreen(),
                 ProductsScreen(),
-                Container(child: const CommonText(text: "3")),
-                Container(child: const CommonText(text: "4")),
-                Container(child: const CommonText(text: "5")),
-                Container(child: const CommonText(text: "6")),
+                const CommonText(text: "3"),
+                const CommonText(text: "4"),
+                const CommonText(text: "5"),
+                const CommonText(text: "6"),
               ],
             ),
           )

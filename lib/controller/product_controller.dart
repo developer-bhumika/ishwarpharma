@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:ishwarpharma/api/service_locator.dart';
 import 'package:ishwarpharma/api/services/product_service.dart';
@@ -7,6 +8,7 @@ class ProductController extends GetxController {
   final productService = getIt.get<ProductService>();
   RxBool isLoading = true.obs;
   RxList<ProductDataModel> productList = <ProductDataModel>[].obs;
+  RxList<ProductDataModel> searchList = <ProductDataModel>[].obs;
   Rx<ProductModel> productModel = ProductModel().obs;
 
   getProduct() async {
@@ -17,6 +19,9 @@ class ProductController extends GetxController {
         productModel.value = resp;
         if (productModel.value.success ?? false) {
           productList.value = productModel.value.data ?? [];
+          if (productList.isNotEmpty) {
+            productList.sort((a, b) => a.brand!.compareTo(b.brand ?? ""));
+          }
           isLoading.value = false;
         } else {
           Get.snackbar("Error", productModel.value.message ?? "");
@@ -27,6 +32,17 @@ class ProductController extends GetxController {
       }
     } catch (e) {
       isLoading.value = false;
+    }
+  }
+
+  final search = TextEditingController();
+
+  searchProduct(String v) {
+    searchList.clear();
+    for (var element in productList) {
+      if (element.brand?.toLowerCase().contains(search.text) ?? false) {
+        searchList.add(element);
+      }
     }
   }
 

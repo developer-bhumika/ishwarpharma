@@ -16,6 +16,14 @@ class ProductsScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(10),
           child: TextFormField(
+            onChanged: (v) {
+              if (v.isEmpty) {
+                productController.searchList.clear();
+              } else {
+                productController.searchProduct(v);
+              }
+            },
+            controller: productController.search,
             decoration: const InputDecoration(
               hintText: "Search medicine",
               prefixIcon: Icon(Icons.search, size: 25),
@@ -51,22 +59,39 @@ class ProductsScreen extends StatelessWidget {
                     ),
                   )
                 : Expanded(
-                    child: ListView.separated(
-                      itemCount: productController.productList.length,
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.all(10),
-                      physics: const BouncingScrollPhysics(),
-                      separatorBuilder: (context, index) => const SizedBox(height: 10),
-                      itemBuilder: (context, index) => ProductCard(
-                        title:
-                            "${productController.productList[index].brand ?? ""} ${productController.productList[index].pack ?? ""}",
-                        company: productController.productList[index].company ?? "",
-                        rate: productController.productList[index].rate ?? "",
-                        mrp: productController.productList[index].mrp ?? "",
-                        free: productController.productList[index].free_scheme ?? "",
-                        subTitle: productController.productList[index].content ?? "",
-                      ),
-                    ),
+                    child: productController.searchList.isNotEmpty
+                        ? ListView.separated(
+                            itemCount: productController.searchList.length,
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.all(10),
+                            physics: const BouncingScrollPhysics(),
+                            separatorBuilder: (context, index) => const SizedBox(height: 10),
+                            itemBuilder: (context, index) => ProductCard(
+                              title:
+                                  "${productController.searchList[index].brand ?? ""} ${productController.searchList[index].pack ?? ""}",
+                              company: productController.searchList[index].company ?? "",
+                              rate: productController.searchList[index].rate ?? "",
+                              mrp: productController.searchList[index].mrp ?? "",
+                              free: productController.searchList[index].free_scheme ?? "",
+                              subTitle: productController.searchList[index].content ?? "",
+                            ),
+                          )
+                        : ListView.separated(
+                            itemCount: productController.productList.length,
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.all(10),
+                            physics: const BouncingScrollPhysics(),
+                            separatorBuilder: (context, index) => const SizedBox(height: 10),
+                            itemBuilder: (context, index) => ProductCard(
+                              title:
+                                  "${productController.productList[index].brand ?? ""} ${productController.productList[index].pack ?? ""}",
+                              company: productController.productList[index].company ?? "",
+                              rate: productController.productList[index].rate ?? "",
+                              mrp: productController.productList[index].mrp ?? "",
+                              free: productController.productList[index].free_scheme ?? "",
+                              subTitle: productController.productList[index].content ?? "",
+                            ),
+                          ),
                   ))
       ],
     );
