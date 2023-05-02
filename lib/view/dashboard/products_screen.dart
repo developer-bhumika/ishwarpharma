@@ -6,8 +6,9 @@ import 'package:ishwarpharma/view/common_widget/common_text.dart';
 import 'package:ishwarpharma/view/common_widget/product_card.dart';
 
 class ProductsScreen extends StatelessWidget {
-  final productController = Get.find<ProductController>();
   ProductsScreen({Key? key}) : super(key: key);
+
+  final productController = Get.find<ProductController>();
 
   @override
   Widget build(BuildContext context) {
