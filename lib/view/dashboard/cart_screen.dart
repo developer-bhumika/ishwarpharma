@@ -24,37 +24,42 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Obx(
-          () => productController.isCartLoading.value
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Center(
-                      child: CircularProgressIndicator(color: AppColor.primaryColor),
+      padding: const EdgeInsets.all(10.0),
+      child: Obx(
+        () => productController.isCartLoading.value
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Center(
+                    child: CircularProgressIndicator(color: AppColor.primaryColor),
+                  ),
+                ],
+              )
+            : productController.cartList.isEmpty
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(width: 150, height: 150, AppImage.cart),
+                      const CommonText(
+                        fontSize: 20,
+                        textAlign: TextAlign.center,
+                        fontWeight: FontWeight.w700,
+                        color: AppColor.primaryColor,
+                        text: "Your Cart is Empty",
+                      ),
+                    ],
+                  )
+                : ListView.separated(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: productController.cartList.length,
+                    separatorBuilder: (context, index) => const SizedBox(height: 10),
+                    itemBuilder: (context, index) => CartCard(
+                      brand: productController.cartList[index].brand_name ?? "",
+                      qty: productController.cartList[index].qty ?? "",
+                      index: index,
                     ),
-                  ],
-                )
-              : productController.productList.isEmpty
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(width: 150, height: 150, AppImage.cart),
-                        const CommonText(
-                          fontSize: 20,
-                          textAlign: TextAlign.center,
-                          fontWeight: FontWeight.w700,
-                          color: AppColor.primaryColor,
-                          text: "Your Cart is Empty",
-                        ),
-                      ],
-                    )
-                  : ListView.separated(
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: productController.cartList.length,
-                      separatorBuilder: (context, index) => const SizedBox(height: 10),
-                      itemBuilder: (context, index) => CartCard(),
-                    ),
-        ));
+                  ),
+      ),
+    );
   }
 }

@@ -28,4 +28,6 @@ class Endpoints {
   static const String getProduct = '/get-products';
   static const String productDetail = '/get-product';
   static const String cart = '/cart';
+  static const String deleteCart = '/delete-cart';
+  static const String orderHistory = '/order-history';
 }

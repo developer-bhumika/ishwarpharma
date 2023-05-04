@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:ishwarpharma/controller/product_controller.dart';
 import 'package:ishwarpharma/utils/constant.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
 
 class CartCard extends StatelessWidget {
   bool? view;
-  CartCard({Key? key, this.view}) : super(key: key);
+  String? brand;
+  String? qty;
+  int? index;
+  CartCard({Key? key, this.view, this.brand, this.qty, this.index}) : super(key: key);
+  final productController = Get.find<ProductController>();
 
   @override
   Widget build(BuildContext context) {
@@ -27,19 +33,22 @@ class CartCard extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                CommonText(
-                  text: "DOBLUTECH 250",
-                  fontWeight: FontWeight.w500,
-                ),
-                SizedBox(height: 5),
-                CommonText(text: "BLUTECH 250", fontSize: 12),
+              children: [
+                CommonText(text: brand ?? "", fontWeight: FontWeight.w500),
+                const SizedBox(height: 5),
+                CommonText(text: qty ?? "", fontSize: 12),
               ],
             ),
           ),
           Column(
             children: [
-              view ?? true ? const Icon(Icons.delete, color: AppColor.primaryColor) : const SizedBox(),
+              InkWell(
+                onTap: () {
+                  productController.deleteProduct(productController.cartList[index ?? 0].id);
+                  productController.cartList.removeAt(index ?? 0);
+                },
+                child: const Icon(Icons.delete, color: AppColor.primaryColor),
+              )
             ],
           )
         ],

@@ -33,4 +33,22 @@ class ProductApi {
       rethrow;
     }
   }
+
+  Future<Response?> getHistory(FormData data) async {
+    try {
+      final Response response = await dioClient.post(Endpoints.orderHistory, data: data);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response?> deleteProduct(FormData data) async {
+    try {
+      final Response response = await dioClient.post(Endpoints.deleteCart, data: data);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

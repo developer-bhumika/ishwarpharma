@@ -28,87 +28,90 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(5),
-            child: Image.asset(AppImage.logo),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          leading: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: Image.asset(AppImage.logo),
+            ),
           ),
-        ),
-        title: const CommonText(
-          text: "Ishwar Pharma",
-          color: AppColor.white,
-          fontWeight: FontWeight.w800,
-          fontSize: 20,
-        ),
-        actions: [
-          const Icon(Icons.sync),
-          const SizedBox(width: 5),
-          PopupMenuButton<int>(
-            splashRadius: 20,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-            icon: const Icon(Icons.more_vert_sharp),
-            itemBuilder: (context) => [
-              const PopupMenuItem(value: 1, child: Text("Setting")),
-              const PopupMenuItem(value: 2, child: Text("About Us")),
-            ],
-            elevation: 10,
-            onSelected: (val) {
-              if (val == 1) {
-                Get.to(SettingScreen());
-              } else {
-                Get.to(AboutUsScreen());
-              }
-            },
+          title: const CommonText(
+            text: "Ishwar Pharma",
+            color: AppColor.white,
+            fontWeight: FontWeight.w800,
+            fontSize: 20,
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Container(
-            height: 45,
-            color: AppColor.primaryColor,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
-              child: TabBar(
-                physics: const BouncingScrollPhysics(),
-                isScrollable: true,
-                controller: _tabController,
-                labelColor: AppColor.primaryColor,
-                indicator: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: AppColor.white,
+          actions: [
+            const Icon(Icons.sync),
+            const SizedBox(width: 5),
+            PopupMenuButton<int>(
+              splashRadius: 20,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+              icon: const Icon(Icons.more_vert_sharp),
+              itemBuilder: (context) => [
+                const PopupMenuItem(value: 1, child: Text("Setting")),
+                const PopupMenuItem(value: 2, child: Text("About Us")),
+              ],
+              elevation: 10,
+              onSelected: (val) {
+                if (val == 1) {
+                  Get.to(SettingScreen());
+                } else {
+                  Get.to(AboutUsScreen());
+                }
+              },
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            Container(
+              height: 45,
+              color: AppColor.primaryColor,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
+                child: TabBar(
+                  physics: const BouncingScrollPhysics(),
+                  isScrollable: true,
+                  controller: _tabController,
+                  labelColor: AppColor.primaryColor,
+                  indicator: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: AppColor.white,
+                  ),
+                  indicatorColor: AppColor.white,
+                  unselectedLabelColor: AppColor.white,
+                  tabs: const [
+                    Tab(child: Text("Home")),
+                    Tab(child: Text("Products")),
+                    Tab(child: Text("Cart")),
+                    Tab(child: Text("History")),
+                    Tab(child: Text("Notifications")),
+                    Tab(child: Text("Downloads")),
+                  ],
                 ),
-                indicatorColor: AppColor.white,
-                unselectedLabelColor: AppColor.white,
-                tabs: const [
-                  Tab(child: Text("Home")),
-                  Tab(child: Text("Products")),
-                  Tab(child: Text("Cart")),
-                  Tab(child: Text("History")),
-                  Tab(child: Text("Notifications")),
-                  Tab(child: Text("Downloads")),
-                ],
               ),
             ),
-          ),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                const HomeScreen(),
-                ProductsScreen(),
-                CartScreen(),
-                HistoryScreen(),
-                const Center(child: CommonText(text: "Notification")),
-                const Center(child: CommonText(text: "Downloads")),
-              ],
-            ),
-          )
-        ],
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  const HomeScreen(),
+                  ProductsScreen(),
+                  CartScreen(),
+                  HistoryScreen(),
+                  const Center(child: CommonText(text: "Notification")),
+                  const Center(child: CommonText(text: "Downloads")),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

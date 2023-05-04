@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:ishwarpharma/api/service_locator.dart';
 import 'package:ishwarpharma/api/services/product_service.dart';
 import 'package:ishwarpharma/model/cart_model.dart';
+import 'package:ishwarpharma/model/history_model.dart';
 import 'package:ishwarpharma/model/product_detail_model.dart';
 import 'package:ishwarpharma/model/product_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -164,6 +165,45 @@ class ProductController extends GetxController {
       }
     } catch (e) {
       isCartLoading.value = false;
+    }
+  }
+
+  deleteProduct(int? id) async {
+    try {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
+      final resp = await productService.deleteProduct(androidInfo.id, id.toString());
+      if (resp != null) {
+        if (resp['success'] ?? false) {
+        } else {
+          Get.snackbar("Error", cartModel.value.message ?? "");
+        }
+      }
+    } catch (e) {}
+  }
+
+  RxBool isHistoryLoading = true.obs;
+  Rx<HistoryModel> historyModel = HistoryModel().obs;
+  RxList<HistoryData> historyList = <HistoryData>[].obs;
+  getHistory() async {
+    try {
+      isHistoryLoading.value = true;
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      final resp = await productService.getHistory(androidInfo.id);
+      if (resp != null) {
+        historyModel.value = resp;
+        if (historyModel.value.success ?? false) {
+          historyList.value = historyModel.value.data ?? [];
+          isHistoryLoading.value = false;
+        } else {
+          Get.snackbar("Error", historyModel.value.message ?? "");
+          isHistoryLoading.value = false;
+        }
+      } else {
+        isHistoryLoading.value = false;
+      }
+    } catch (e) {
+      isHistoryLoading.value = false;
     }
   }
 

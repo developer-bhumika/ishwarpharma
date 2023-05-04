@@ -18,6 +18,7 @@ class CartData {
   int? id;
   String? product_id;
   String? device_id;
+  String? brand_name;
   String? company;
   String? pack;
   String? content;
@@ -33,6 +34,7 @@ class CartData {
       {this.id,
       this.product_id,
       this.device_id,
+      this.brand_name,
       this.company,
       this.pack,
       this.content,

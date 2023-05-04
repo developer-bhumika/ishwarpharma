@@ -30,9 +30,9 @@ class ProductsScreen extends StatelessWidget {
             decoration: const InputDecoration(
               hintText: "Search medicine",
               prefixIcon: Icon(Icons.search, size: 25, color: AppColor.primaryColor),
-              border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+              border: OutlineInputBorder(borderSide: BorderSide(color: AppColor.primaryColor)),
+              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: AppColor.primaryColor)),
+              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: AppColor.primaryColor)),
               isDense: true,
             ),
           ),
