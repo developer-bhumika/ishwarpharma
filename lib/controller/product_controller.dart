@@ -333,6 +333,7 @@ class ProductController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    getCart();
     getProduct();
   }
 }

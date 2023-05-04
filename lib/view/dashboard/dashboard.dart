@@ -9,6 +9,7 @@ import 'package:ishwarpharma/view/dashboard/history_screen.dart';
 import 'package:ishwarpharma/view/dashboard/home_screen.dart';
 import 'package:ishwarpharma/view/dashboard/products_screen.dart';
 import 'package:ishwarpharma/view/setting/setting_screen.dart';
+import 'package:badges/badges.dart' as badges;
 
 class DashBoard extends StatefulWidget {
   const DashBoard({Key? key}) : super(key: key);
@@ -86,10 +87,32 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                   ),
                   indicatorColor: AppColor.white,
                   unselectedLabelColor: AppColor.white,
-                  tabs: const [
+                  tabs: [
                     Tab(child: Text("Home")),
                     Tab(child: Text("Products")),
-                    Tab(child: Text("Cart")),
+                    Tab(
+                      child: Obx(
+                        () => productController.cartList.isEmpty
+                            ? Text("Cart")
+                            : badges.Badge(
+                                badgeStyle: badges.BadgeStyle(
+                                  badgeColor: Colors.red.shade700,
+                                ),
+                                position: badges.BadgePosition.topEnd(top: -12, end: -15),
+                                badgeContent: Text(
+                                  productController.cartList.length.toString(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                child: Text(
+                                  'Cart',
+                                ),
+                              ),
+                      ),
+                    ),
                     Tab(child: Text("History")),
                     Tab(child: Text("Notifications")),
                     Tab(child: Text("Downloads")),
