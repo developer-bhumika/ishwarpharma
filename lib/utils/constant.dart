@@ -30,4 +30,5 @@ class Endpoints {
   static const String cart = '/cart';
   static const String deleteCart = '/delete-cart';
   static const String orderHistory = '/order-history';
+  static const String placeOrder = '/place-order';
 }

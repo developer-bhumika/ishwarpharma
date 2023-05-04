@@ -142,20 +142,38 @@ class ProductController extends GetxController {
     if (search.text.contains(" ")) {
       for (var e in searchTextList) {
         for (var element in productList) {
-          if (element.company?.toLowerCase().contains(e.toLowerCase()) ??
-              false ||
+          if (element.brand?.toLowerCase().contains(e.toLowerCase()) ??
+                  false /*||
                   (element.brand?.toLowerCase().contains(e.toLowerCase()) ?? false) ||
-                  (element.content?.toLowerCase().contains(e.toLowerCase()) ?? false)) {
+                  (element.content?.toLowerCase().contains(e.toLowerCase()) ?? false)*/
+              ) {
+            searchList.add(element);
+          } else if (element.company?.toLowerCase().contains(e.toLowerCase()) ?? false) {
+            searchList.add(element);
+          } else if (element.content?.toLowerCase().contains(e.toLowerCase()) ?? false) {
             searchList.add(element);
           }
         }
       }
     } else {
       for (var element in productList) {
-        if (element.company?.toLowerCase().contains(search.text.toLowerCase()) ??
-            false ||
+        if (element.brand?.toLowerCase().contains(search.text.toLowerCase()) ??
+                false /*||
                 (element.brand?.toLowerCase().contains(search.text.toLowerCase()) ?? false) ||
-                (element.content?.toLowerCase().contains(search.text.toLowerCase()) ?? false)) {
+                (element.content?.toLowerCase().contains(search.text.toLowerCase()) ?? false)*/
+            ) {
+          searchList.add(element);
+        } else if (element.company?.toLowerCase().contains(search.text.toLowerCase()) ??
+                false /*||
+                (element.brand?.toLowerCase().contains(search.text.toLowerCase()) ?? false) ||
+                (element.content?.toLowerCase().contains(search.text.toLowerCase()) ?? false)*/
+            ) {
+          searchList.add(element);
+        } else if (element.content?.toLowerCase().contains(search.text.toLowerCase()) ??
+                false /*||
+                (element.brand?.toLowerCase().contains(search.text.toLowerCase()) ?? false) ||
+                (element.content?.toLowerCase().contains(search.text.toLowerCase()) ?? false)*/
+            ) {
           searchList.add(element);
         }
       }
@@ -189,18 +207,47 @@ class ProductController extends GetxController {
     }
   }
 
-  deleteProduct(int? id) async {
+  RxBool deleteProductLoading = false.obs;
+
+  deleteProduct(int? id, int? index) async {
     try {
+      deleteProductLoading.value = true;
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
 
       final resp = await productService.deleteProduct(androidInfo.id, id.toString());
       if (resp != null) {
         if (resp['success'] ?? false) {
+          cartList.removeAt(index ?? 0);
+          return deleteProductLoading.value = false;
         } else {
           Get.snackbar("Error", cartModel.value.message ?? "");
+          deleteProductLoading.value = false;
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      deleteProductLoading.value = false;
+    }
+  }
+
+  RxBool orderPlaceLoading = false.obs;
+  orderPlace({String? deviceId, String? firmName, String? mobileNo, String? place, String? email}) async {
+    try {
+      orderPlaceLoading.value = true;
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
+      final resp = await productService.orderPlace(
+          deviceId: deviceId, email: email, mobileNo: mobileNo, firmName: firmName, place: place);
+      if (resp != null) {
+        if (resp['success'] ?? false) {
+          orderPlaceLoading.value = false;
+        } else {
+          Get.snackbar("Error", cartModel.value.message ?? "");
+          orderPlaceLoading.value = false;
+        }
+      }
+    } catch (e) {
+      orderPlaceLoading.value = false;
+    }
   }
 
   RxBool isHistoryLoading = true.obs;

@@ -29,7 +29,7 @@ class ProductCardColumn extends StatelessWidget {
 
       children.add(TextSpan(
         text: source.substring(match.start, match.end),
-        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.yellow.shade700),
+        style: TextStyle(fontWeight: FontWeight.bold, color: AppColor.primaryColor, backgroundColor: Colors.yellow),
       ));
 
       if (i == matches.length - 1 && match.end != source.length) {
