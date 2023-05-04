@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:ishwarpharma/utils/constant.dart';
-import 'package:ishwarpharma/view/common_widget/common_text.dart';
 import 'package:ishwarpharma/view/common_widget/product_card_column.dart';
 
 class ProductCard extends StatelessWidget {
@@ -45,7 +44,7 @@ class ProductCard extends StatelessWidget {
 
       children.add(TextSpan(
         text: source.substring(match.start, match.end),
-        style: const TextStyle(fontWeight: FontWeight.bold, color: AppColor.primaryColor),
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.yellow.shade700),
       ));
 
       if (i == matches.length - 1 && match.end != source.length) {

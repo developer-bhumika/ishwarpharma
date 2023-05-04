@@ -142,6 +142,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           CommonTextField(
                             hintText: "Remark",
                             labelText: "Remark",
+                            controller: productController.remarkCon,
                           )
                         ],
                       ),
@@ -197,10 +198,37 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ),
                         const SizedBox(width: 20),
                         Expanded(
-                          child: CommonButton(
-                            btnText: "Add to cart",
-                            fontSize: 20,
-                            onTap: () {},
+                          child: Obx(
+                            () => CommonButton(
+                              btnText: "Add to cart",
+                              fontSize: 20,
+                              load: productController.addCartLoading.value,
+                              onTap: () async {
+                                if (productController.quantity.value > 0) {
+                                  if (await productController.isInternet()) {
+                                    productController.addCart(
+                                      scheme: productController.productDetailModel.value.data?.free_scheme == ""
+                                          ? "0"
+                                          : productController.productDetailModel.value.data?.free_scheme,
+                                      remark: productController.remarkCon.text,
+                                      rate: productController.productDetailModel.value.data?.rate ?? "0",
+                                      qty: productController.quantity.value,
+                                      product_id: widget.id,
+                                      pack: productController.productDetailModel.value.data?.pack,
+                                      mrp: productController.productDetailModel.value.data?.mrp,
+                                      content: productController.productDetailModel.value.data?.content,
+                                      brand_name: productController.productDetailModel.value.data?.brand,
+                                      company: productController.productDetailModel.value.data?.company,
+                                      caseData: productController.productDetailModel.value.data?.case_value,
+                                    );
+                                  } else {
+                                    Get.snackbar("Network", "Check your internet connection");
+                                  }
+                                } else {
+                                  Get.snackbar("Required", "Minimum 1 quantity required");
+                                }
+                              },
+                            ),
                           ),
                         ),
                       ],

@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ishwarpharma/api/service_locator.dart';
 import 'package:ishwarpharma/api/services/product_service.dart';
 import 'package:ishwarpharma/model/cart_model.dart';
@@ -17,6 +19,31 @@ class ProductController extends GetxController {
   RxList<ProductDataModel> searchList = <ProductDataModel>[].obs;
   Rx<ProductModel> productModel = ProductModel().obs;
   RxList<ProductDataModel> productIndList = <ProductDataModel>[].obs;
+
+  Future<bool> isInternet() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+      // I am connected to a mobile network, make sure there is actually a net connection.
+      if (await InternetConnectionChecker().hasConnection) {
+        // Mobile data detected & internet connection confirmed.
+        return true;
+      } else {
+        // Mobile data detected but no internet connection found.
+        return false;
+      }
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      // I am connected to a WIFI network, make sure there is actually a net connection.
+      if (await InternetConnectionChecker().hasConnection) {
+        // Wifi detected & internet connection confirmed.
+        return true;
+      } else {
+        // Wifi detected but no internet connection found.
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
 
   getProduct() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -78,6 +105,7 @@ class ProductController extends GetxController {
 
   Rx<ProductDetailModel> productDetailModel = ProductDetailModel().obs;
   TextEditingController caseDetail = TextEditingController();
+  TextEditingController remarkCon = TextEditingController();
   RxInt quantity = 0.obs;
   RxBool productDetailLoad = false.obs;
 
@@ -164,6 +192,57 @@ class ProductController extends GetxController {
       }
     } catch (e) {
       isCartLoading.value = false;
+    }
+  }
+
+  RxBool addCartLoading = false.obs;
+  addCart({
+    int? product_id,
+    String? brand_name,
+    String? company,
+    String? pack,
+    String? content,
+    String? rate,
+    String? scheme,
+    String? mrp,
+    int? qty,
+    String? remark,
+    String? caseData,
+  }) async {
+    try {
+      addCartLoading.value = true;
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      final resp = await productService.addCart(
+        brand_name: brand_name,
+        caseData: caseData,
+        company: company,
+        content: content,
+        deviceId: androidInfo.id,
+        mrp: mrp,
+        pack: pack,
+        product_id: product_id,
+        qty: qty,
+        rate: rate,
+        remark: remark,
+        scheme: scheme,
+      );
+      if (resp != null) {
+        cartModel.value = resp;
+        if (cartModel.value.success ?? false) {
+          addCartLoading.value = false;
+          quantity.value = 0;
+          remarkCon.clear();
+          Get.back();
+          Get.snackbar("Success", cartModel.value.message ?? "");
+        } else {
+          Get.snackbar("Error", cartModel.value.message ?? "");
+          addCartLoading.value = false;
+        }
+      } else {
+        addCartLoading.value = false;
+      }
+    } catch (e) {
+      addCartLoading.value = false;
     }
   }
 
