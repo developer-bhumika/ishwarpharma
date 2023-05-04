@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:ishwarpharma/api/service_locator.dart';
 import 'package:ishwarpharma/api/services/product_service.dart';
 import 'package:ishwarpharma/model/cart_model.dart';
+import 'package:ishwarpharma/model/product_detail_model.dart';
 import 'package:ishwarpharma/model/product_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -75,9 +76,44 @@ class ProductController extends GetxController {
     }
   }
 
+  Rx<ProductDetailModel> productDetailModel = ProductDetailModel().obs;
+  TextEditingController caseDetail = TextEditingController();
+  RxInt quantity = 0.obs;
+  RxBool productDetailLoad = false.obs;
+
+  addQuantity() {
+    quantity.value++;
+  }
+
+  removeQuantity() {
+    if (quantity > 0) {
+      quantity.value--;
+    }
+  }
+
+  productDetail(int? id) async {
+    try {
+      productDetailLoad.value = true;
+      final resp = await productService.productDetail(id);
+      if (resp != null) {
+        productDetailModel.value = resp;
+        if (productDetailModel.value.success ?? false) {
+          caseDetail.text = productDetailModel.value.data?.case_value ?? "0";
+          productDetailLoad.value = false;
+        } else {
+          Get.snackbar("Error", productDetailModel.value.message ?? "");
+          productDetailLoad.value = false;
+        }
+      } else {
+        productDetailLoad.value = false;
+      }
+    } catch (e) {
+      productDetailLoad.value = false;
+    }
+  }
+
   final search = TextEditingController();
   final RxList<String> searchTextList = <String>[].obs;
-
   searchProduct(String v) {
     searchList.clear();
     searchTextList.value = search.text.split(" ").toList();
