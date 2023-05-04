@@ -10,6 +10,8 @@ class CommonButton extends StatelessWidget {
   final double? fontSize;
   final bool? load;
   final double? height;
+  final double? sizeBoxHeight;
+  final double? sizeBoxWidth;
 
   CommonButton({
     this.onTap,
@@ -18,6 +20,8 @@ class CommonButton extends StatelessWidget {
     this.fontSize,
     this.load,
     this.height,
+    this.sizeBoxHeight,
+    this.sizeBoxWidth,
   });
 
   @override
@@ -32,7 +36,7 @@ class CommonButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: load ?? false
-          ? ProgressView(color: AppColor.white)
+          ? SizedBox(height: sizeBoxHeight, width: sizeBoxWidth, child: ProgressView(color: AppColor.white))
           : CommonText(
               text: btnText ?? '',
               color: AppColor.white,

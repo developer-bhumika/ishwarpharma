@@ -90,7 +90,7 @@ class ProductService {
         "firm_name": firmName,
         "place": place,
         "mobile_number": mobileNo,
-        "e": deviceId,
+        "email": email,
       });
       final response = await productApi.orderPlace(data);
       if (response != null) {

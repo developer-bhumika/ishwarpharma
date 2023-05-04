@@ -234,16 +234,27 @@ class ProductController extends GetxController {
   }
 
   RxBool orderPlaceLoading = false.obs;
-  orderPlace({String? deviceId, String? firmName, String? mobileNo, String? place, String? email}) async {
+  orderPlace() async {
     try {
       orderPlaceLoading.value = true;
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
 
       final resp = await productService.orderPlace(
-          deviceId: deviceId, email: email, mobileNo: mobileNo, firmName: firmName, place: place);
+        deviceId: androidInfo.id,
+        email: email.text,
+        mobileNo: moNo.text,
+        firmName: firm.text,
+        place: place.text,
+      );
       if (resp != null) {
         if (resp['success'] ?? false) {
+          Get.back();
           orderPlaceLoading.value = false;
+          email.clear();
+          firm.clear();
+          place.clear();
+          moNo.clear();
+          getCart();
         } else {
           Get.snackbar("Error", cartModel.value.message ?? "");
           orderPlaceLoading.value = false;
