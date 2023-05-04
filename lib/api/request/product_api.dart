@@ -15,4 +15,13 @@ class ProductApi {
       rethrow;
     }
   }
+
+  Future<Response?> productDetail(int? id) async {
+    try {
+      final Response? response = await dioClient.get("${Endpoints.productDetail}/$id");
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

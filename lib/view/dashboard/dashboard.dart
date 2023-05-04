@@ -71,31 +71,25 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
             color: AppColor.primaryColor,
             child: Padding(
               padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
-              child: Container(
-                decoration: BoxDecoration(
+              child: TabBar(
+                physics: const BouncingScrollPhysics(),
+                isScrollable: true,
+                controller: _tabController,
+                labelColor: AppColor.primaryColor,
+                indicator: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
-                  border: Border.all(color: AppColor.white),
+                  color: AppColor.white,
                 ),
-                padding: const EdgeInsets.all(2),
-                child: TabBar(
-                  physics: const BouncingScrollPhysics(),
-                  isScrollable: true,
-                  controller: _tabController,
-                  labelColor: AppColor.primaryColor,
-                  indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: AppColor.white,
-                  ),
-                  unselectedLabelColor: AppColor.white,
-                  tabs: const [
-                    Tab(child: Text("Home")),
-                    Tab(child: Text("Products")),
-                    Tab(child: Text("Cart")),
-                    Tab(child: Text("History")),
-                    Tab(child: Text("Notifications")),
-                    Tab(child: Text("Downloads")),
-                  ],
-                ),
+                indicatorColor: AppColor.white,
+                unselectedLabelColor: AppColor.white,
+                tabs: const [
+                  Tab(child: Text("Home")),
+                  Tab(child: Text("Products")),
+                  Tab(child: Text("Cart")),
+                  Tab(child: Text("History")),
+                  Tab(child: Text("Notifications")),
+                  Tab(child: Text("Downloads")),
+                ],
               ),
             ),
           ),

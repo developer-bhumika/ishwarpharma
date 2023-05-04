@@ -13,6 +13,7 @@ class ProductController extends GetxController {
   RxList<ProductDataModel> productList = <ProductDataModel>[].obs;
   RxList<ProductDataModel> searchList = <ProductDataModel>[].obs;
   Rx<ProductModel> productModel = ProductModel().obs;
+  RxList<ProductDataModel> productIndList = <ProductDataModel>[].obs;
 
   getProduct() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -24,6 +25,24 @@ class ProductController extends GetxController {
       productList.value = productModel.value.data ?? [];
       if (productList.isNotEmpty) {
         productList.sort((a, b) => a.brand!.compareTo(b.brand ?? ""));
+        // for (int i = 0; i < num.parse(productList.length.toString()); i++) {
+        //   if (productList[i].brand![0] == "0" ||
+        //       productList[i].brand![0] == "1" ||
+        //       productList[i].brand![0] == "2" ||
+        //       productList[i].brand![0] == "3" ||
+        //       productList[i].brand![0] == "4" ||
+        //       productList[i].brand![0] == "5" ||
+        //       productList[i].brand![0] == "6" ||
+        //       productList[i].brand![0] == "7" ||
+        //       productList[i].brand![0] == "8" ||
+        //       productList[i].brand![0] == "9") {
+        //     productIndList.add(productList[i]);
+        //   }
+        // }
+        // productIndList.forEach((e) {
+        //   productList.remove(e);
+        // });
+        // print(productList[0].brand);
         isLoading.value = false;
       }
     } else {
@@ -55,12 +74,29 @@ class ProductController extends GetxController {
   }
 
   final search = TextEditingController();
-
+  final RxList<String> searchTextList = <String>[].obs;
   searchProduct(String v) {
     searchList.clear();
-    for (var element in productList) {
-      if (element.brand?.toLowerCase().contains(search.text) ?? false) {
-        searchList.add(element);
+    searchTextList.value = search.text.split(" ").toList();
+    if (search.text.contains(" ")) {
+      for (var e in searchTextList) {
+        for (var element in productList) {
+          if (element.company?.toLowerCase().contains(e.toLowerCase()) ??
+              false ||
+                  (element.brand?.toLowerCase().contains(e.toLowerCase()) ?? false) ||
+                  (element.content?.toLowerCase().contains(e.toLowerCase()) ?? false)) {
+            searchList.add(element);
+          }
+        }
+      }
+    } else {
+      for (var element in productList) {
+        if (element.company?.toLowerCase().contains(search.text.toLowerCase()) ??
+            false ||
+                (element.brand?.toLowerCase().contains(search.text.toLowerCase()) ?? false) ||
+                (element.content?.toLowerCase().contains(search.text.toLowerCase()) ?? false)) {
+          searchList.add(element);
+        }
       }
     }
   }

@@ -17,6 +17,7 @@ class ProductsScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(10),
           child: TextFormField(
+            cursorColor: AppColor.primaryColor,
             onChanged: (v) {
               if (v.isEmpty) {
                 productController.searchList.clear();
@@ -27,8 +28,10 @@ class ProductsScreen extends StatelessWidget {
             controller: productController.search,
             decoration: const InputDecoration(
               hintText: "Search medicine",
-              prefixIcon: Icon(Icons.search, size: 25),
-              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.search, size: 25, color: AppColor.primaryColor),
+              border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
               isDense: true,
             ),
           ),
@@ -75,6 +78,8 @@ class ProductsScreen extends StatelessWidget {
                               mrp: productController.searchList[index].mrp ?? "",
                               free: productController.searchList[index].free_scheme ?? "",
                               subTitle: productController.searchList[index].content ?? "",
+                              searchTextList: productController.searchTextList,
+                              searchText: productController.search.text,
                             ),
                           )
                         : ListView.separated(
@@ -89,6 +94,8 @@ class ProductsScreen extends StatelessWidget {
                               company: productController.productList[index].company ?? "",
                               rate: productController.productList[index].rate ?? "",
                               mrp: productController.productList[index].mrp ?? "",
+                              searchText: productController.search.text,
+                              searchTextList: productController.searchTextList,
                               free: productController.productList[index].free_scheme ?? "",
                               subTitle: productController.productList[index].content ?? "",
                             ),
