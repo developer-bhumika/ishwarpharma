@@ -24,4 +24,13 @@ class ProductApi {
       rethrow;
     }
   }
+
+  Future<Response?> getCart(Map<String, dynamic> params) async {
+    try {
+      final Response? response = await dioClient.get(Endpoints.cart, queryParameters: params);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

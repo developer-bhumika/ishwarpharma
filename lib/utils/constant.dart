@@ -9,6 +9,7 @@ class AppColor {
 class AppImage {
   static const String imagePath = "assets/img/";
   static const String logo = "${imagePath}appLogo.png";
+  static const String cart = "${imagePath}cart.png";
 }
 
 class Endpoints {
@@ -25,4 +26,5 @@ class Endpoints {
 
   static const String getProduct = '/get-products';
   static const String productDetail = '/get-product';
+  static const String cart = '/cart';
 }

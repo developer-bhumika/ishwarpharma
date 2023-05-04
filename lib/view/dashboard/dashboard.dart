@@ -4,6 +4,8 @@ import 'package:ishwarpharma/controller/product_controller.dart';
 import 'package:ishwarpharma/utils/constant.dart';
 import 'package:ishwarpharma/view/about_us_screen.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
+import 'package:ishwarpharma/view/dashboard/cart_screen.dart';
+import 'package:ishwarpharma/view/dashboard/history_screen.dart';
 import 'package:ishwarpharma/view/dashboard/home_screen.dart';
 import 'package:ishwarpharma/view/dashboard/products_screen.dart';
 import 'package:ishwarpharma/view/setting/setting_screen.dart';
@@ -99,10 +101,10 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
               children: [
                 const HomeScreen(),
                 ProductsScreen(),
-                const CommonText(text: "3"),
-                const CommonText(text: "4"),
-                const CommonText(text: "5"),
-                const CommonText(text: "6"),
+                CartScreen(),
+                HistoryScreen(),
+                const Center(child: CommonText(text: "Notification")),
+                const Center(child: CommonText(text: "Downloads")),
               ],
             ),
           )

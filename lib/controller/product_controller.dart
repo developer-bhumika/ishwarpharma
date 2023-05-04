@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:ishwarpharma/api/service_locator.dart';
 import 'package:ishwarpharma/api/services/product_service.dart';
+import 'package:ishwarpharma/model/cart_model.dart';
 import 'package:ishwarpharma/model/product_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -75,6 +77,7 @@ class ProductController extends GetxController {
 
   final search = TextEditingController();
   final RxList<String> searchTextList = <String>[].obs;
+
   searchProduct(String v) {
     searchList.clear();
     searchTextList.value = search.text.split(" ").toList();
@@ -98,6 +101,33 @@ class ProductController extends GetxController {
           searchList.add(element);
         }
       }
+    }
+  }
+
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  RxBool isCartLoading = true.obs;
+  Rx<CartModel> cartModel = CartModel().obs;
+  RxList<CartData> cartList = <CartData>[].obs;
+  getCart() async {
+    try {
+      isCartLoading.value = true;
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      Map<String, dynamic> params = {"device_id": androidInfo.id};
+      final resp = await productService.getCart(params);
+      if (resp != null) {
+        cartModel.value = resp;
+        if (cartModel.value.success ?? false) {
+          cartList.value = cartModel.value.data ?? [];
+          isCartLoading.value = false;
+        } else {
+          Get.snackbar("Error", cartModel.value.message ?? "");
+          isCartLoading.value = false;
+        }
+      } else {
+        isCartLoading.value = false;
+      }
+    } catch (e) {
+      isCartLoading.value = false;
     }
   }
 
