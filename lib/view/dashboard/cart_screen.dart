@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:ishwarpharma/controller/product_controller.dart';
 import 'package:ishwarpharma/utils/constant.dart';
 import 'package:ishwarpharma/view/common_widget/cart_card.dart';
+import 'package:ishwarpharma/view/common_widget/common_button.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
+import 'package:ishwarpharma/view/common_widget/common_textfield.dart';
 
 class CartScreen extends StatefulWidget {
   CartScreen({Key? key}) : super(key: key);
@@ -49,15 +51,42 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                     ],
                   )
-                : ListView.separated(
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: productController.cartList.length,
-                    separatorBuilder: (context, index) => const SizedBox(height: 10),
-                    itemBuilder: (context, index) => CartCard(
-                      brand: productController.cartList[index].brand_name ?? "",
-                      qty: productController.cartList[index].qty ?? "",
-                      index: index,
-                    ),
+                : Column(
+                    children: [
+                      Expanded(
+                        child: ListView.separated(
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: productController.cartList.length,
+                          separatorBuilder: (context, index) => const SizedBox(height: 10),
+                          itemBuilder: (context, index) => CartCard(
+                            brand: productController.cartList[index].brand_name ?? "",
+                            qty: productController.cartList[index].qty ?? "",
+                            index: index,
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Expanded(
+                            child: CommonTextField(
+                              suffixIcon: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+                                child: MaterialButton(
+                                  onPressed: () {},
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  color: AppColor.primaryColor,
+                                  child: const CommonText(text: "SEND", color: AppColor.white),
+                                ),
+                              ),
+                              isDense: true,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
       ),
     );

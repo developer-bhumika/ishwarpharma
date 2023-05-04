@@ -20,25 +20,28 @@ class CommonTextField extends StatelessWidget {
   final void Function(String)? onChange;
   final String? Function(String?)? validator;
   final List<TextInputFormatter>? inputFormatters;
+  final Widget? suffixIcon;
 
   // ignore: use_key_in_widget_constructors
-  CommonTextField(
-      {this.controller,
-      this.hintText,
-      this.maxLines,
-      this.hintTextColor,
-      this.hintTextFontSize,
-      this.hintTextFontWeight,
-      this.keyBoardType,
-      this.obSecureText,
-      this.labelText,
-      this.readOnly,
-      this.isDense,
-      this.onTap,
-      this.radius,
-      this.onChange,
-      this.validator,
-      this.inputFormatters});
+  CommonTextField({
+    this.controller,
+    this.hintText,
+    this.maxLines,
+    this.hintTextColor,
+    this.hintTextFontSize,
+    this.hintTextFontWeight,
+    this.keyBoardType,
+    this.obSecureText,
+    this.labelText,
+    this.readOnly,
+    this.isDense,
+    this.onTap,
+    this.radius,
+    this.onChange,
+    this.validator,
+    this.inputFormatters,
+    this.suffixIcon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -67,25 +70,26 @@ class CommonTextField extends StatelessWidget {
           controller: controller,
           validator: validator,
           decoration: InputDecoration(
+            suffixIcon: suffixIcon ?? const SizedBox(),
             isDense: isDense,
             border: OutlineInputBorder(
-              borderSide: BorderSide(color: AppColor.primaryColor),
+              borderSide: const BorderSide(color: AppColor.primaryColor),
               borderRadius: BorderRadius.circular(5),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: AppColor.primaryColor),
+              borderSide: const BorderSide(color: AppColor.primaryColor),
               borderRadius: BorderRadius.circular(5),
             ),
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: AppColor.primaryColor),
+              borderSide: const BorderSide(color: AppColor.primaryColor),
               borderRadius: BorderRadius.circular(5),
             ),
             errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: AppColor.primaryColor),
+              borderSide: const BorderSide(color: AppColor.primaryColor),
               borderRadius: BorderRadius.circular(5),
             ),
             disabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: AppColor.primaryColor),
+              borderSide: const BorderSide(color: AppColor.primaryColor),
               borderRadius: BorderRadius.circular(5),
             ),
             hintText: hintText,
