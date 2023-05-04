@@ -20,6 +20,10 @@ class ProductController extends GetxController {
   RxList<ProductDataModel> searchList = <ProductDataModel>[].obs;
   Rx<ProductModel> productModel = ProductModel().obs;
   RxList<ProductDataModel> productIndList = <ProductDataModel>[].obs;
+  TextEditingController firm = TextEditingController();
+  TextEditingController place = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController moNo = TextEditingController();
 
   Future<bool> isInternet() async {
     var connectivityResult = await (Connectivity().checkConnectivity());

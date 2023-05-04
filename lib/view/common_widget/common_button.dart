@@ -9,6 +9,7 @@ class CommonButton extends StatelessWidget {
   final Color? color;
   final double? fontSize;
   final bool? load;
+  final double? height;
 
   CommonButton({
     this.onTap,
@@ -16,23 +17,22 @@ class CommonButton extends StatelessWidget {
     this.color,
     this.fontSize,
     this.load,
+    this.height,
   });
 
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
       onPressed: onTap,
-      height: 60,
+      height: height ?? 60,
       minWidth: MediaQuery.of(context).size.width,
       elevation: 0,
       color: color ?? AppColor.primaryColor,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: load ?? false
-          ? ProgressView(
-              color: AppColor.white,
-            )
+          ? ProgressView(color: AppColor.white)
           : CommonText(
               text: btnText ?? '',
               color: AppColor.white,

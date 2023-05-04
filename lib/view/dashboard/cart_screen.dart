@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:ishwarpharma/controller/product_controller.dart';
 import 'package:ishwarpharma/utils/constant.dart';
@@ -16,6 +18,7 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   final productController = Get.find<ProductController>();
+  final _formKey = GlobalKey<FormBuilderState>();
 
   @override
   void initState() {
@@ -65,27 +68,91 @@ class _CartScreenState extends State<CartScreen> {
                           ),
                         ),
                       ),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Expanded(
-                            child: CommonTextField(
-                              suffixIcon: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
-                                child: MaterialButton(
-                                  onPressed: () {},
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
+                      CommonButton(
+                          onTap: () {
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Center(
+                                  child: CommonText(
+                                    text: "PlaceOrder",
+                                    color: AppColor.primaryColor,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
                                   ),
-                                  color: AppColor.primaryColor,
-                                  child: const CommonText(text: "SEND", color: AppColor.white),
                                 ),
+                                content: FormBuilder(
+                                  key: _formKey,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      CommonTextField(
+                                        labelText: "Firm Name",
+                                        hintText: "Firm Name",
+                                        isDense: true,
+                                        controller: productController.firm,
+                                        validator: FormBuilderValidators.required(),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      CommonTextField(
+                                        labelText: "Place",
+                                        hintText: "Place",
+                                        isDense: true,
+                                        controller: productController.place,
+                                        validator: FormBuilderValidators.required(),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      CommonTextField(
+                                        labelText: "Email",
+                                        hintText: "Email",
+                                        isDense: true,
+                                        controller: productController.email,
+                                        validator: FormBuilderValidators.required(),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      CommonTextField(
+                                        labelText: "Mobile Number",
+                                        hintText: "Mobile Number",
+                                        isDense: true,
+                                        controller: productController.moNo,
+                                        validator: FormBuilderValidators.required(),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                actions: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: CommonButton(
+                                          height: 40,
+                                          onTap: () => Get.back(),
+                                          color: AppColor.primaryColor,
+                                          btnText: "Cancel",
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: CommonButton(
+                                          height: 40,
+                                          onTap: () {
+                                            if (_formKey.currentState?.validate() ?? false) {}
+                                          },
+                                          color: AppColor.primaryColor,
+                                          btnText: "Confirm",
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                              isDense: true,
-                            ),
-                          ),
-                        ],
-                      ),
+                            );
+                          },
+                          color: AppColor.primaryColor,
+                          btnText: "PlaceOrder")
                     ],
                   ),
       ),
