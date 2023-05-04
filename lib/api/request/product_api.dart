@@ -51,4 +51,13 @@ class ProductApi {
       rethrow;
     }
   }
+
+  Future<Response?> addCart(FormData req) async {
+    try {
+      final Response response = await dioClient.post(Endpoints.cart, data: req);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

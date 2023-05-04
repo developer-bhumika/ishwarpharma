@@ -81,4 +81,44 @@ class ProductService {
     }
     return null;
   }
+
+  Future<CartModel?> addCart({
+    String? deviceId,
+    int? product_id,
+    String? brand_name,
+    String? company,
+    String? pack,
+    String? content,
+    String? rate,
+    String? scheme,
+    String? mrp,
+    int? qty,
+    String? remark,
+    String? caseData,
+  }) async {
+    try {
+      final formData = FormData.fromMap({
+        "device_id": deviceId,
+        "product_id": product_id,
+        "brand_name": brand_name,
+        "company": company,
+        "pack": pack,
+        "content": content,
+        "rate": rate,
+        "scheme": scheme,
+        "mrp": mrp,
+        "qty": qty,
+        "remark": remark,
+        "case": caseData
+      });
+      final response = await productApi.addCart(formData);
+      if (response != null) {
+        return CartModel.fromJson(response.data);
+      }
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+    return null;
+  }
 }

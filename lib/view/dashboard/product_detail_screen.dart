@@ -10,7 +10,28 @@ import 'package:ishwarpharma/view/common_widget/product_card_column.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   int? id;
-  ProductDetailScreen({Key? key, this.id}) : super(key: key);
+  String? brand_name;
+  String? company;
+  String? pack;
+  String? content;
+  String? rate;
+  String? scheme;
+  String? mrp;
+  String? caseData;
+  String? type;
+  ProductDetailScreen(
+      {Key? key,
+      this.id,
+      this.caseData,
+      this.company,
+      this.content,
+      this.mrp,
+      this.pack,
+      this.rate,
+      this.brand_name,
+      this.type,
+      this.scheme})
+      : super(key: key);
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -23,7 +44,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    productController.productDetail(widget.id);
+    productController.caseDetail.text = widget.caseData!;
   }
 
   @override
@@ -61,8 +82,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             child: Center(
                               child: CommonText(
-                                text:
-                                    "${productController.productDetailModel.value.data?.brand ?? ""} ${productController.productDetailModel.value.data?.pack ?? ""}",
+                                text: "${widget.brand_name} ${widget.pack}",
                                 fontSize: 16,
                                 color: AppColor.primaryColor,
                                 fontWeight: FontWeight.w600,
@@ -80,7 +100,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               children: [
                                 ProductCardColumn(
                                   title: "Company",
-                                  subTitle: productController.productDetailModel.value.data?.company ?? "",
+                                  subTitle: widget.company,
                                   alignment: CrossAxisAlignment.center,
                                 ),
                                 const VerticalDivider(
@@ -88,7 +108,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 ),
                                 ProductCardColumn(
                                   title: "Pack",
-                                  subTitle: productController.productDetailModel.value.data?.pack ?? "",
+                                  subTitle: widget.pack,
                                   alignment: CrossAxisAlignment.center,
                                 ),
                                 const VerticalDivider(
@@ -96,7 +116,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 ),
                                 ProductCardColumn(
                                   title: "Type",
-                                  subTitle: productController.productDetailModel.value.data?.type ?? "",
+                                  subTitle: widget.type,
                                   alignment: CrossAxisAlignment.center,
                                 ),
                               ],
@@ -112,21 +132,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               children: [
                                 ProductCardColumn(
                                   title: "Rate",
-                                  subTitle: productController.productDetailModel.value.data?.rate ?? "0",
+                                  subTitle: widget.rate,
                                   alignment: CrossAxisAlignment.center,
                                 ),
                                 const VerticalDivider(color: AppColor.primaryColor),
                                 ProductCardColumn(
                                   title: "MRP",
-                                  subTitle: productController.productDetailModel.value.data?.mrp ?? "0",
+                                  subTitle: widget.mrp,
                                   alignment: CrossAxisAlignment.center,
                                 ),
                                 const VerticalDivider(color: AppColor.primaryColor),
                                 ProductCardColumn(
                                   title: "Free Scheme",
-                                  subTitle: productController.productDetailModel.value.data?.free_scheme == ""
-                                      ? "0"
-                                      : productController.productDetailModel.value.data?.free_scheme ?? "0",
+                                  subTitle: widget.scheme == "" ? "0" : widget.scheme,
                                   alignment: CrossAxisAlignment.center,
                                 ),
                               ],
@@ -142,6 +160,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           CommonTextField(
                             hintText: "Remark",
                             labelText: "Remark",
+                            controller: productController.remarkCon,
                           )
                         ],
                       ),
@@ -197,10 +216,37 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ),
                         const SizedBox(width: 20),
                         Expanded(
-                          child: CommonButton(
-                            btnText: "Add to cart",
-                            fontSize: 20,
-                            onTap: () {},
+                          child: Obx(
+                            () => CommonButton(
+                              btnText: "Add to cart",
+                              fontSize: 20,
+                              load: productController.addCartLoading.value,
+                              onTap: () async {
+                                if (productController.quantity.value > 0) {
+                                  if (await productController.isInternet()) {
+                                    productController.addCart(
+                                      scheme: productController.productDetailModel.value.data?.free_scheme == ""
+                                          ? "0"
+                                          : productController.productDetailModel.value.data?.free_scheme,
+                                      remark: productController.remarkCon.text,
+                                      rate: productController.productDetailModel.value.data?.rate ?? "0",
+                                      qty: productController.quantity.value,
+                                      product_id: widget.id,
+                                      pack: productController.productDetailModel.value.data?.pack,
+                                      mrp: productController.productDetailModel.value.data?.mrp,
+                                      content: productController.productDetailModel.value.data?.content,
+                                      brand_name: productController.productDetailModel.value.data?.brand,
+                                      company: productController.productDetailModel.value.data?.company,
+                                      caseData: productController.productDetailModel.value.data?.case_value,
+                                    );
+                                  } else {
+                                    Get.snackbar("Network", "Check your internet connection");
+                                  }
+                                } else {
+                                  Get.snackbar("Required", "Minimum 1 quantity required");
+                                }
+                              },
+                            ),
                           ),
                         ),
                       ],
