@@ -23,21 +23,15 @@ class ProductController extends GetxController {
   Future<bool> isInternet() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile) {
-      // I am connected to a mobile network, make sure there is actually a net connection.
       if (await InternetConnectionChecker().hasConnection) {
-        // Mobile data detected & internet connection confirmed.
         return true;
       } else {
-        // Mobile data detected but no internet connection found.
         return false;
       }
     } else if (connectivityResult == ConnectivityResult.wifi) {
-      // I am connected to a WIFI network, make sure there is actually a net connection.
       if (await InternetConnectionChecker().hasConnection) {
-        // Wifi detected & internet connection confirmed.
         return true;
       } else {
-        // Wifi detected but no internet connection found.
         return false;
       }
     } else {
@@ -126,7 +120,6 @@ class ProductController extends GetxController {
       if (resp != null) {
         productDetailModel.value = resp;
         if (productDetailModel.value.success ?? false) {
-          caseDetail.text = productDetailModel.value.data?.case_value ?? "0";
           productDetailLoad.value = false;
         } else {
           Get.snackbar("Error", productDetailModel.value.message ?? "");

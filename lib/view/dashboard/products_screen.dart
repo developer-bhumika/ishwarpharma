@@ -75,6 +75,15 @@ class ProductsScreen extends StatelessWidget {
                               onTap: () {
                                 Get.to(ProductDetailScreen(
                                   id: productController.searchList[index].id,
+                                  brand_name: productController.searchList[index].brand ?? "",
+                                  content: productController.searchList[index].content ?? "",
+                                  company: productController.searchList[index].company ?? "",
+                                  type: productController.searchList[index].type ?? "",
+                                  rate: productController.searchList[index].rate ?? "0",
+                                  scheme: productController.searchList[index].free_scheme ?? "0",
+                                  caseData: productController.searchList[index].case_value ?? "0",
+                                  mrp: productController.searchList[index].mrp ?? "0",
+                                  pack: productController.searchList[index].pack ?? "0",
                                 ));
                               },
                               child: ProductCard(
@@ -102,6 +111,15 @@ class ProductsScreen extends StatelessWidget {
                               onTap: () {
                                 Get.to(ProductDetailScreen(
                                   id: productController.productList[index].id,
+                                  brand_name: productController.productList[index].brand ?? "",
+                                  content: productController.productList[index].content ?? "",
+                                  type: productController.productList[index].type ?? "",
+                                  company: productController.productList[index].company ?? "",
+                                  rate: productController.productList[index].rate ?? "0",
+                                  scheme: productController.productList[index].free_scheme ?? "0",
+                                  caseData: productController.productList[index].case_value ?? "0",
+                                  mrp: productController.productList[index].mrp ?? "0",
+                                  pack: productController.productList[index].pack ?? "0",
                                 ));
                               },
                               child: ProductCard(
