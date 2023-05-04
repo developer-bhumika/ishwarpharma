@@ -60,4 +60,13 @@ class ProductApi {
       rethrow;
     }
   }
+
+  Future<Response?> orderPlace(FormData req) async {
+    try {
+      final Response response = await dioClient.post(Endpoints.placeOrder, data: req);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

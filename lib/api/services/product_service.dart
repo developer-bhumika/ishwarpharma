@@ -82,6 +82,27 @@ class ProductService {
     return null;
   }
 
+  Future<dynamic> orderPlace(
+      {String? deviceId, String? firmName, String? mobileNo, String? place, String? email}) async {
+    try {
+      final data = FormData.fromMap({
+        "device_id": deviceId,
+        "firm_name": firmName,
+        "place": place,
+        "mobile_number": mobileNo,
+        "e": deviceId,
+      });
+      final response = await productApi.orderPlace(data);
+      if (response != null) {
+        return response.data;
+      }
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+    return null;
+  }
+
   Future<CartModel?> addCart({
     String? deviceId,
     int? product_id,

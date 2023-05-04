@@ -225,19 +225,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 if (productController.quantity.value > 0) {
                                   if (await productController.isInternet()) {
                                     productController.addCart(
-                                      scheme: productController.productDetailModel.value.data?.free_scheme == ""
-                                          ? "0"
-                                          : productController.productDetailModel.value.data?.free_scheme,
+                                      scheme: widget.scheme == "" ? "0" : widget.scheme,
                                       remark: productController.remarkCon.text,
-                                      rate: productController.productDetailModel.value.data?.rate ?? "0",
+                                      rate: widget.rate,
                                       qty: productController.quantity.value,
                                       product_id: widget.id,
-                                      pack: productController.productDetailModel.value.data?.pack,
-                                      mrp: productController.productDetailModel.value.data?.mrp,
-                                      content: productController.productDetailModel.value.data?.content,
-                                      brand_name: productController.productDetailModel.value.data?.brand,
-                                      company: productController.productDetailModel.value.data?.company,
-                                      caseData: productController.productDetailModel.value.data?.case_value,
+                                      pack: widget.pack,
+                                      mrp: widget.mrp,
+                                      content: widget.content,
+                                      brand_name: widget.brand_name,
+                                      company: widget.company,
+                                      caseData: widget.caseData,
                                     );
                                   } else {
                                     Get.snackbar("Network", "Check your internet connection");
