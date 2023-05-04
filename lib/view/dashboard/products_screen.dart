@@ -4,6 +4,7 @@ import 'package:ishwarpharma/controller/product_controller.dart';
 import 'package:ishwarpharma/utils/constant.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
 import 'package:ishwarpharma/view/common_widget/product_card.dart';
+import 'package:ishwarpharma/view/dashboard/product_detail_screen.dart';
 
 class ProductsScreen extends StatelessWidget {
   ProductsScreen({Key? key}) : super(key: key);
@@ -70,16 +71,25 @@ class ProductsScreen extends StatelessWidget {
                             padding: const EdgeInsets.all(10),
                             physics: const BouncingScrollPhysics(),
                             separatorBuilder: (context, index) => const SizedBox(height: 10),
-                            itemBuilder: (context, index) => ProductCard(
-                              title:
-                                  "${productController.searchList[index].brand ?? ""} ${productController.searchList[index].pack ?? ""}",
-                              company: productController.searchList[index].company ?? "",
-                              rate: productController.searchList[index].rate ?? "",
-                              mrp: productController.searchList[index].mrp ?? "",
-                              free: productController.searchList[index].free_scheme ?? "",
-                              subTitle: productController.searchList[index].content ?? "",
-                              searchTextList: productController.searchTextList,
-                              searchText: productController.search.text,
+                            itemBuilder: (context, index) => InkWell(
+                              onTap: () {
+                                Get.to(ProductDetailScreen(
+                                  id: productController.searchList[index].id,
+                                ));
+                              },
+                              child: ProductCard(
+                                title:
+                                    "${productController.searchList[index].brand ?? ""} ${productController.searchList[index].pack ?? ""}",
+                                company: productController.searchList[index].company ?? "",
+                                rate: productController.searchList[index].rate ?? "",
+                                mrp: productController.searchList[index].mrp ?? "",
+                                free: productController.productDetailModel.value.data?.free_scheme == ""
+                                    ? "0"
+                                    : productController.productList[index].free_scheme ?? "0",
+                                subTitle: productController.searchList[index].content ?? "",
+                                searchTextList: productController.searchTextList,
+                                searchText: productController.search.text,
+                              ),
                             ),
                           )
                         : ListView.separated(
@@ -88,16 +98,25 @@ class ProductsScreen extends StatelessWidget {
                             padding: const EdgeInsets.all(10),
                             physics: const BouncingScrollPhysics(),
                             separatorBuilder: (context, index) => const SizedBox(height: 10),
-                            itemBuilder: (context, index) => ProductCard(
-                              title:
-                                  "${productController.productList[index].brand ?? ""} ${productController.productList[index].pack ?? ""}",
-                              company: productController.productList[index].company ?? "",
-                              rate: productController.productList[index].rate ?? "",
-                              mrp: productController.productList[index].mrp ?? "",
-                              searchText: productController.search.text,
-                              searchTextList: productController.searchTextList,
-                              free: productController.productList[index].free_scheme ?? "",
-                              subTitle: productController.productList[index].content ?? "",
+                            itemBuilder: (context, index) => InkWell(
+                              onTap: () {
+                                Get.to(ProductDetailScreen(
+                                  id: productController.productList[index].id,
+                                ));
+                              },
+                              child: ProductCard(
+                                title:
+                                    "${productController.productList[index].brand ?? ""} ${productController.productList[index].pack ?? ""}",
+                                company: productController.productList[index].company ?? "",
+                                rate: productController.productList[index].rate ?? "",
+                                mrp: productController.productList[index].mrp ?? "",
+                                searchText: productController.search.text,
+                                searchTextList: productController.searchTextList,
+                                free: productController.productDetailModel.value.data?.free_scheme == ""
+                                    ? "0"
+                                    : productController.productList[index].free_scheme ?? "0",
+                                subTitle: productController.productList[index].content ?? "",
+                              ),
                             ),
                           ),
                   ))

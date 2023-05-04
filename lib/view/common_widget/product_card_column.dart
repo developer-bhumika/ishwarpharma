@@ -6,7 +6,8 @@ class ProductCardColumn extends StatelessWidget {
   String? title;
   String? subTitle;
   String? searchText;
-  ProductCardColumn({Key? key, this.title, this.subTitle, this.searchText}) : super(key: key);
+  CrossAxisAlignment? alignment;
+  ProductCardColumn({Key? key, this.title, this.subTitle, this.searchText, this.alignment}) : super(key: key);
 
   List<TextSpan> highlightOccurrences(String source, String query) {
     if (query.isEmpty || !source.toLowerCase().contains(query.toLowerCase())) {
@@ -46,7 +47,7 @@ class ProductCardColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: alignment ?? CrossAxisAlignment.start,
         children: [
           CommonText(text: title ?? "", fontWeight: FontWeight.w500),
           const SizedBox(height: 5),
