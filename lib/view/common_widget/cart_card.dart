@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ishwarpharma/controller/product_controller.dart';
 import 'package:ishwarpharma/utils/constant.dart';
+import 'package:ishwarpharma/utils/indicator.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
 
 class CartCard extends StatelessWidget {
@@ -44,10 +45,17 @@ class CartCard extends StatelessWidget {
             children: [
               InkWell(
                 onTap: () {
-                  productController.deleteProduct(productController.cartList[index ?? 0].id);
-                  productController.cartList.removeAt(index ?? 0);
+                  productController.deleteProduct(productController.cartList[index ?? 0].id, index);
                 },
-                child: const Icon(Icons.delete, color: AppColor.primaryColor),
+                child: Obx(
+                  () => productController.deleteProductLoading.value
+                      ? SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: ProgressView(),
+                        )
+                      : Icon(Icons.delete, color: AppColor.primaryColor),
+                ),
               )
             ],
           )
