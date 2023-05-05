@@ -66,7 +66,7 @@ class CommonTextField extends StatelessWidget {
           onTap: readOnly ?? false ? onTap : null,
           inputFormatters: inputFormatters,
           onChanged: onChange,
-          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 12, color: AppColor.black),
+          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: AppColor.black),
           controller: controller,
           validator: validator,
           decoration: InputDecoration(
@@ -96,7 +96,7 @@ class CommonTextField extends StatelessWidget {
             hintStyle: TextStyle(
               color: hintTextColor ?? AppColor.black.withOpacity(0.70),
               fontWeight: hintTextFontWeight ?? FontWeight.w400,
-              fontSize: hintTextFontSize ?? 12,
+              fontSize: hintTextFontSize ?? 14,
             ),
           ),
         ),

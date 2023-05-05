@@ -3,14 +3,17 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ishwarpharma/api/service_locator.dart';
 import 'package:ishwarpharma/api/services/product_service.dart';
 import 'package:ishwarpharma/model/cart_model.dart';
+import 'package:ishwarpharma/model/company_model.dart';
 import 'package:ishwarpharma/model/history_model.dart';
 import 'package:ishwarpharma/model/product_detail_model.dart';
 import 'package:ishwarpharma/model/product_model.dart';
+import 'package:ishwarpharma/utils/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductController extends GetxController {
@@ -24,6 +27,7 @@ class ProductController extends GetxController {
   TextEditingController place = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController moNo = TextEditingController();
+  RxBool reLoad = false.obs;
 
   Future<bool> isInternet() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -90,7 +94,17 @@ class ProductController extends GetxController {
             }
             isLoading.value = false;
           } else {
-            Get.snackbar("Error", productModel.value.message ?? "");
+            Get.snackbar("Error", productModel.value.message ?? "",
+                messageText: Text(
+                  productModel.value.message ?? "",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
+                    color: Colors.green.shade900,
+                  ),
+                ),
+                backgroundColor: Color(0xff81B29A).withOpacity(0.9),
+                colorText: Colors.green.shade900);
             isLoading.value = false;
           }
         } else {
@@ -105,7 +119,7 @@ class ProductController extends GetxController {
   Rx<ProductDetailModel> productDetailModel = ProductDetailModel().obs;
   TextEditingController caseDetail = TextEditingController();
   TextEditingController remarkCon = TextEditingController();
-  RxInt quantity = 0.obs;
+  RxInt quantity = 1.obs;
   RxBool productDetailLoad = false.obs;
 
   addQuantity() {
@@ -113,7 +127,7 @@ class ProductController extends GetxController {
   }
 
   removeQuantity() {
-    if (quantity > 0) {
+    if (quantity > 1) {
       quantity.value--;
     }
   }
@@ -127,7 +141,17 @@ class ProductController extends GetxController {
         if (productDetailModel.value.success ?? false) {
           productDetailLoad.value = false;
         } else {
-          Get.snackbar("Error", productDetailModel.value.message ?? "");
+          Get.snackbar("Error", productDetailModel.value.message ?? "",
+              messageText: Text(
+                productDetailModel.value.message ?? "",
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13,
+                  color: Colors.green.shade900,
+                ),
+              ),
+              backgroundColor: Color(0xff81B29A).withOpacity(0.9),
+              colorText: Colors.green.shade900);
           productDetailLoad.value = false;
         }
       } else {
@@ -135,6 +159,56 @@ class ProductController extends GetxController {
       }
     } catch (e) {
       productDetailLoad.value = false;
+    }
+  }
+
+  Rx<CompanyModel> companyModel = CompanyModel().obs;
+  RxList<CompanyData> companyList = <CompanyData>[].obs;
+  RxBool companyLoad = false.obs;
+
+  getCompany() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    if (preferences.getString('company') != null) {
+      companyLoad.value = true;
+      final data = preferences.getString('company');
+      companyModel.value = CompanyModel.fromJson(jsonDecode(data ?? ""));
+      companyList.value = companyModel.value.data ?? [];
+      if (companyList.isNotEmpty) {
+        companyLoad.value = false;
+      }
+    } else {
+      try {
+        companyLoad.value = true;
+        final resp = await productService.getCompany();
+        if (resp != null) {
+          companyModel.value = resp;
+          if (companyModel.value.success ?? false) {
+            companyList.value = companyModel.value.data ?? [];
+            if (companyList.isNotEmpty) {
+              var jsonRes = jsonDecode(jsonEncode(companyModel));
+              await preferences.setString('company', json.encode(jsonRes));
+            }
+            companyLoad.value = false;
+          } else {
+            Get.snackbar("Error", companyModel.value.message ?? "",
+                messageText: Text(
+                  companyModel.value.message ?? "",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
+                    color: Colors.green.shade900,
+                  ),
+                ),
+                backgroundColor: Color(0xff81B29A).withOpacity(0.9),
+                colorText: Colors.green.shade900);
+            companyLoad.value = false;
+          }
+        } else {
+          companyLoad.value = false;
+        }
+      } catch (e) {
+        companyLoad.value = false;
+      }
     }
   }
 
@@ -200,7 +274,16 @@ class ProductController extends GetxController {
           cartList.value = cartModel.value.data ?? [];
           isCartLoading.value = false;
         } else {
-          Get.snackbar("Error", cartModel.value.message ?? "");
+          Get.snackbar(
+            "Error",
+            cartModel.value.message ?? "",
+            messageText: Text(
+              cartModel.value.message ?? "",
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: Colors.green.shade900),
+            ),
+            backgroundColor: Color(0xff81B29A).withOpacity(0.9),
+            colorText: Colors.green.shade900,
+          );
           isCartLoading.value = false;
         }
       } else {
@@ -212,6 +295,7 @@ class ProductController extends GetxController {
   }
 
   RxBool deleteProductLoading = false.obs;
+  RxInt selectedItem = 1.obs;
 
   deleteProduct(int? id, int? index) async {
     try {
@@ -224,7 +308,17 @@ class ProductController extends GetxController {
           cartList.removeAt(index ?? 0);
           return deleteProductLoading.value = false;
         } else {
-          Get.snackbar("Error", cartModel.value.message ?? "");
+          Get.snackbar("Error", cartModel.value.message ?? "",
+              messageText: Text(
+                cartModel.value.message ?? "",
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13,
+                  color: Colors.green.shade900,
+                ),
+              ),
+              backgroundColor: Color(0xff81B29A).withOpacity(0.9),
+              colorText: Colors.green.shade900);
           deleteProductLoading.value = false;
         }
       }
@@ -256,7 +350,17 @@ class ProductController extends GetxController {
           moNo.clear();
           getCart();
         } else {
-          Get.snackbar("Error", cartModel.value.message ?? "");
+          Get.snackbar("Error", cartModel.value.message ?? "",
+              messageText: Text(
+                cartModel.value.message ?? "",
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13,
+                  color: Colors.green.shade900,
+                ),
+              ),
+              backgroundColor: Color(0xff81B29A).withOpacity(0.9),
+              colorText: Colors.green.shade900);
           orderPlaceLoading.value = false;
         }
       }
@@ -269,24 +373,49 @@ class ProductController extends GetxController {
   Rx<HistoryModel> historyModel = HistoryModel().obs;
   RxList<HistoryData> historyList = <HistoryData>[].obs;
   getHistory() async {
-    try {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    if (preferences.getString('history') != null) {
       isHistoryLoading.value = true;
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      final resp = await productService.getHistory(androidInfo.id);
-      if (resp != null) {
-        historyModel.value = resp;
-        if (historyModel.value.success ?? false) {
-          historyList.value = historyModel.value.data ?? [];
-          isHistoryLoading.value = false;
-        } else {
-          Get.snackbar("Error", historyModel.value.message ?? "");
-          isHistoryLoading.value = false;
-        }
-      } else {
+      final data = preferences.getString('history');
+      historyModel.value = HistoryModel.fromJson(jsonDecode(data ?? ""));
+      historyList.value = historyModel.value.data ?? [];
+      if (historyList.isNotEmpty) {
         isHistoryLoading.value = false;
       }
-    } catch (e) {
-      isHistoryLoading.value = false;
+    } else {
+      try {
+        isHistoryLoading.value = true;
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        final resp = await productService.getHistory(androidInfo.id);
+        if (resp != null) {
+          historyModel.value = resp;
+          if (historyModel.value.success ?? false) {
+            historyList.value = historyModel.value.data ?? [];
+            if (historyList.isNotEmpty) {
+              var jsonRes = jsonDecode(jsonEncode(historyModel));
+              await preferences.setString('history', json.encode(jsonRes));
+            }
+            isHistoryLoading.value = false;
+          } else {
+            Get.snackbar("Error", historyModel.value.message ?? "",
+                messageText: Text(
+                  historyModel.value.message ?? "",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
+                    color: Colors.green.shade900,
+                  ),
+                ),
+                backgroundColor: Color(0xff81B29A).withOpacity(0.9),
+                colorText: Colors.green.shade900);
+            isHistoryLoading.value = false;
+          }
+        } else {
+          isHistoryLoading.value = false;
+        }
+      } catch (e) {
+        isHistoryLoading.value = false;
+      }
     }
   }
 
@@ -325,10 +454,21 @@ class ProductController extends GetxController {
         cartModel.value = resp;
         if (cartModel.value.success ?? false) {
           addCartLoading.value = false;
-          quantity.value = 0;
+          quantity.value = 1;
           remarkCon.clear();
+          getCart();
           Get.back();
-          Get.snackbar("Success", cartModel.value.message ?? "");
+          Get.snackbar("Success", cartModel.value.message ?? "",
+              messageText: Text(
+                cartModel.value.message ?? "",
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13,
+                  color: Colors.green.shade900,
+                ),
+              ),
+              backgroundColor: Color(0xff81B29A).withOpacity(0.9),
+              colorText: Colors.green.shade900);
         } else {
           Get.snackbar("Error", cartModel.value.message ?? "");
           addCartLoading.value = false;
@@ -344,6 +484,7 @@ class ProductController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    getCompany();
     getCart();
     getProduct();
   }

@@ -26,6 +26,7 @@ class Endpoints {
   static const int connectionTimeout = 15000;
 
   static const String getProduct = '/get-products';
+  static const String getCompany = '/get-company';
   static const String productDetail = '/get-product';
   static const String cart = '/cart';
   static const String deleteCart = '/delete-cart';

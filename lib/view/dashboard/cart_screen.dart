@@ -8,6 +8,7 @@ import 'package:ishwarpharma/view/common_widget/cart_card.dart';
 import 'package:ishwarpharma/view/common_widget/common_button.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
 import 'package:ishwarpharma/view/common_widget/common_textfield.dart';
+import 'package:ishwarpharma/view/dashboard/product_detail_screen.dart';
 
 class CartScreen extends StatefulWidget {
   CartScreen({Key? key}) : super(key: key);
@@ -61,10 +62,29 @@ class _CartScreenState extends State<CartScreen> {
                           physics: const BouncingScrollPhysics(),
                           itemCount: productController.cartList.length,
                           separatorBuilder: (context, index) => const SizedBox(height: 10),
-                          itemBuilder: (context, index) => CartCard(
-                            brand: productController.cartList[index].brand_name ?? "",
-                            qty: productController.cartList[index].qty ?? "",
-                            index: index,
+                          itemBuilder: (context, index) => InkWell(
+                            onTap: () {
+                              Get.to(ProductDetailScreen(
+                                id: productController.cartList[index].id,
+                                brand_name: productController.cartList[index].brand_name ?? "",
+                                content: productController.cartList[index].content ?? "",
+                                type: productController.cartList[index].qty ?? "",
+                                company: productController.cartList[index].company ?? "",
+                                rate: productController.cartList[index].rate ?? "0",
+                                scheme: productController.cartList[index].scheme ?? "0",
+                                mrp: productController.cartList[index].mrp ?? "0",
+                                pack: productController.cartList[index].pack ?? "0",
+                                view: true,
+                              ));
+                            },
+                            child: CartCard(
+                              brand: productController.cartList[index].brand_name ?? "",
+                              qty: productController.cartList[index].qty ?? "",
+                              index: index,
+                              company: productController.cartList[index].company ?? "",
+                              content: productController.cartList[index].content ?? "",
+                              price: productController.cartList[index].mrp ?? "0",
+                            ),
                           ),
                         ),
                       ),

@@ -19,6 +19,7 @@ class ProductDetailScreen extends StatefulWidget {
   String? mrp;
   String? caseData;
   String? type;
+  bool? view;
   ProductDetailScreen(
       {Key? key,
       this.id,
@@ -30,7 +31,8 @@ class ProductDetailScreen extends StatefulWidget {
       this.rate,
       this.brand_name,
       this.type,
-      this.scheme})
+      this.scheme,
+      this.view})
       : super(key: key);
 
   @override
@@ -44,7 +46,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    productController.caseDetail.text = widget.caseData!;
+    if (widget.view == null) {
+      productController.caseDetail.text = widget.caseData!;
+    }
   }
 
   @override
@@ -94,6 +98,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             color: AppColor.primaryColor,
                             height: 25,
                           ),
+                          CommonText(
+                            text: widget.content,
+                            fontSize: 14,
+                          ),
+                          SizedBox(
+                            height: 25,
+                          ),
                           IntrinsicHeight(
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,7 +126,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   color: AppColor.primaryColor,
                                 ),
                                 ProductCardColumn(
-                                  title: "Type",
+                                  title: widget.view ?? false ? "Quantity" : "Type",
                                   subTitle: widget.type,
                                   alignment: CrossAxisAlignment.center,
                                 ),
@@ -151,104 +162,139 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ),
                           ),
                           const SizedBox(height: 15),
-                          CommonTextField(
-                            hintText: "Order case",
-                            labelText: "Order case",
-                            controller: productController.caseDetail,
-                          ),
-                          const SizedBox(height: 15),
-                          CommonTextField(
-                            hintText: "Remark",
-                            labelText: "Remark",
-                            controller: productController.remarkCon,
-                          )
+                          widget.view ?? false
+                              ? SizedBox()
+                              : CommonTextField(
+                                  hintText: "Order case",
+                                  labelText: "Order case",
+                                  controller: productController.caseDetail,
+                                ),
+                          widget.view ?? false ? SizedBox() : const SizedBox(height: 15),
+                          widget.view ?? false
+                              ? SizedBox()
+                              : CommonTextField(
+                                  hintText: "Remark",
+                                  labelText: "Remark",
+                                  controller: productController.remarkCon,
+                                )
                         ],
                       ),
                     ),
-                    Row(
-                      children: [
-                        Row(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                productController.removeQuantity();
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(5),
+                    widget.view ?? false
+                        ? SizedBox()
+                        : Row(
+                            children: [
+                              Container(
                                 decoration: BoxDecoration(
-                                  color: AppColor.primaryColor.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(3),
-                                  border: Border.all(color: AppColor.primaryColor),
-                                ),
-                                child: const Icon(
-                                  Icons.remove,
-                                  color: AppColor.primaryColor,
+                                    border: Border.all(color: AppColor.primaryColor),
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: Row(
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        productController.removeQuantity();
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(3.0),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(5),
+                                          decoration: BoxDecoration(
+                                            color: AppColor.primaryColor.withOpacity(0.3),
+                                            borderRadius: BorderRadius.circular(3),
+                                          ),
+                                          child: const Icon(
+                                            Icons.remove,
+                                            color: AppColor.primaryColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Obx(
+                                      () => CommonText(
+                                        text: productController.quantity.value.toString(),
+                                        color: Colors.black,
+                                        fontSize: 17,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    InkWell(
+                                      onTap: () {
+                                        productController.addQuantity();
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(3.0),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(5),
+                                          decoration: BoxDecoration(
+                                            color: AppColor.primaryColor.withOpacity(0.3),
+                                            borderRadius: BorderRadius.circular(3),
+                                          ),
+                                          child: const Icon(
+                                            Icons.add,
+                                            color: AppColor.primaryColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: 10),
-                            Obx(
-                              () => CommonText(
-                                text: productController.quantity.value.toString(),
-                                color: Colors.black,
-                                fontSize: 17,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            InkWell(
-                              onTap: () {
-                                productController.addQuantity();
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                  color: AppColor.primaryColor.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(3),
-                                  border: Border.all(color: AppColor.primaryColor),
+                              const SizedBox(width: 20),
+                              Expanded(
+                                child: Obx(
+                                  () => CommonButton(
+                                    btnText: "Add to cart",
+                                    fontSize: 20,
+                                    load: productController.addCartLoading.value,
+                                    onTap: () async {
+                                      if (productController.quantity.value > 0) {
+                                        if (await productController.isInternet()) {
+                                          productController.addCart(
+                                            scheme: widget.scheme == "" ? "0" : widget.scheme,
+                                            remark: productController.remarkCon.text,
+                                            rate: widget.rate,
+                                            qty: productController.quantity.value,
+                                            product_id: widget.id,
+                                            pack: widget.pack,
+                                            mrp: widget.mrp,
+                                            content: widget.content,
+                                            brand_name: widget.brand_name,
+                                            company: widget.company,
+                                            caseData: widget.caseData,
+                                          );
+                                        } else {
+                                          Get.snackbar("Network", "Check your internet connection",
+                                              messageText: Text(
+                                                "Check your internet connection",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 13,
+                                                  color: Colors.green.shade900,
+                                                ),
+                                              ),
+                                              backgroundColor: Color(0xff81B29A).withOpacity(0.9),
+                                              colorText: Colors.green.shade900);
+                                        }
+                                      } else {
+                                        Get.snackbar("Required", "Minimum 1 quantity required",
+                                            messageText: Text(
+                                              "Minimum 1 quantity required",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 13,
+                                                color: Colors.green.shade900,
+                                              ),
+                                            ),
+                                            backgroundColor: Color(0xff81B29A).withOpacity(0.9),
+                                            colorText: Colors.green.shade900);
+                                      }
+                                    },
+                                  ),
                                 ),
-                                child: const Icon(
-                                  Icons.add,
-                                  color: AppColor.primaryColor,
-                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(width: 20),
-                        Expanded(
-                          child: Obx(
-                            () => CommonButton(
-                              btnText: "Add to cart",
-                              fontSize: 20,
-                              load: productController.addCartLoading.value,
-                              onTap: () async {
-                                if (productController.quantity.value > 0) {
-                                  if (await productController.isInternet()) {
-                                    productController.addCart(
-                                      scheme: widget.scheme == "" ? "0" : widget.scheme,
-                                      remark: productController.remarkCon.text,
-                                      rate: widget.rate,
-                                      qty: productController.quantity.value,
-                                      product_id: widget.id,
-                                      pack: widget.pack,
-                                      mrp: widget.mrp,
-                                      content: widget.content,
-                                      brand_name: widget.brand_name,
-                                      company: widget.company,
-                                      caseData: widget.caseData,
-                                    );
-                                  } else {
-                                    Get.snackbar("Network", "Check your internet connection");
-                                  }
-                                } else {
-                                  Get.snackbar("Required", "Minimum 1 quantity required");
-                                }
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
+                            ],
+                          )
                   ],
                 ),
         ),

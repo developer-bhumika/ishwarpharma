@@ -16,6 +16,15 @@ class ProductApi {
     }
   }
 
+  Future<Response?> getCompany() async {
+    try {
+      final Response? response = await dioClient.get(Endpoints.getCompany);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<Response?> productDetail(int? id) async {
     try {
       final Response? response = await dioClient.get("${Endpoints.productDetail}/$id");

@@ -10,7 +10,11 @@ class CartCard extends StatelessWidget {
   String? brand;
   String? qty;
   int? index;
-  CartCard({Key? key, this.view, this.brand, this.qty, this.index}) : super(key: key);
+  String? company;
+  String? content;
+  String? price;
+  CartCard({Key? key, this.view, this.brand, this.qty, this.index, this.company, this.content, this.price})
+      : super(key: key);
   final productController = Get.find<ProductController>();
 
   @override
@@ -29,35 +33,51 @@ class CartCard extends StatelessWidget {
           ],
         ),
       ),
-      child: Row(
+      child: Stack(
+        alignment: Alignment.topRight,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CommonText(text: brand ?? "", fontWeight: FontWeight.w500),
-                const SizedBox(height: 5),
-                CommonText(text: qty ?? "", fontSize: 12),
-              ],
-            ),
-          ),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              InkWell(
-                onTap: () {
-                  productController.deleteProduct(productController.cartList[index ?? 0].id, index);
-                },
-                child: Obx(
-                  () => productController.deleteProductLoading.value
-                      ? SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: ProgressView(),
-                        )
-                      : Icon(Icons.delete, color: AppColor.primaryColor),
-                ),
-              )
+              CommonText(text: brand ?? "", fontWeight: FontWeight.w600),
+              const SizedBox(height: 5),
+              CommonText(text: company ?? "", fontWeight: FontWeight.w500),
+              const SizedBox(height: 5),
+              CommonText(text: content ?? ""),
+              const SizedBox(height: 5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CommonText(
+                    text: "${price ?? " "} ",
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColor.primaryColor,
+                  ),
+                  CommonText(
+                    text: "${qty ?? " "} Unit",
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColor.primaryColor,
+                  ),
+                ],
+              ),
             ],
+          ),
+          InkWell(
+            onTap: () {
+              productController.selectedItem.value = index!;
+              productController.deleteProduct(productController.cartList[index ?? 0].id, index);
+            },
+            child: Obx(
+              () => productController.deleteProductLoading.value && productController.selectedItem.value == index
+                  ? SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: ProgressView(),
+                    )
+                  : Icon(Icons.delete, color: AppColor.primaryColor),
+            ),
           )
         ],
       ),

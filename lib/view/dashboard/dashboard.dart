@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ishwarpharma/controller/product_controller.dart';
 import 'package:ishwarpharma/utils/constant.dart';
+import 'package:ishwarpharma/utils/indicator.dart';
 import 'package:ishwarpharma/view/about_us_screen.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
 import 'package:ishwarpharma/view/dashboard/cart_screen.dart';
@@ -10,6 +11,7 @@ import 'package:ishwarpharma/view/dashboard/home_screen.dart';
 import 'package:ishwarpharma/view/dashboard/products_screen.dart';
 import 'package:ishwarpharma/view/setting/setting_screen.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DashBoard extends StatefulWidget {
   const DashBoard({Key? key}) : super(key: key);
@@ -48,7 +50,54 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
             fontSize: 20,
           ),
           actions: [
-            const Icon(Icons.sync),
+            InkWell(
+                onTap: () async {
+                  SharedPreferences preferences = await SharedPreferences.getInstance();
+                  preferences.clear();
+                  if (await productController.isInternet()) {
+                    productController.reLoad.value = true;
+                    await productController.getCompany();
+                    await productController.getProduct();
+                    await productController.getCart();
+                    await productController.getHistory();
+                    productController.reLoad.value = false;
+                    Get.snackbar(
+                      "Success",
+                      "Data reload successfully",
+                      messageText: Text(
+                        "Data reload successfully",
+                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: Colors.green.shade900),
+                      ),
+                      backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
+                      colorText: Colors.green.shade900,
+                    );
+                  } else {
+                    Get.snackbar("Network", "Check your internet connection",
+                        messageText: Text(
+                          "Check your internet connection",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                            color: Colors.green.shade900,
+                          ),
+                        ),
+                        backgroundColor: Color(0xff81B29A).withOpacity(0.9),
+                        colorText: Colors.green.shade900);
+                  }
+                },
+                child: Obx(
+                  () => productController.reLoad.value
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 17.0),
+                          child: const SizedBox(
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                color: AppColor.white,
+                                strokeWidth: 2,
+                              )),
+                        )
+                      : const Icon(Icons.sync),
+                )),
             const SizedBox(width: 5),
             PopupMenuButton<int>(
               splashRadius: 20,
@@ -88,12 +137,12 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                   indicatorColor: AppColor.white,
                   unselectedLabelColor: AppColor.white,
                   tabs: [
-                    Tab(child: Text("Home")),
-                    Tab(child: Text("Products")),
+                    const Tab(child: Text("Home")),
+                    const Tab(child: Text("Products")),
                     Tab(
                       child: Obx(
                         () => productController.cartList.isEmpty
-                            ? Text("Cart")
+                            ? const Text("Cart")
                             : badges.Badge(
                                 badgeStyle: badges.BadgeStyle(
                                   badgeColor: Colors.red.shade700,
@@ -101,21 +150,21 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                                 position: badges.BadgePosition.topEnd(top: -12, end: -15),
                                 badgeContent: Text(
                                   productController.cartList.length.toString(),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 10,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                child: Text(
+                                child: const Text(
                                   'Cart',
                                 ),
                               ),
                       ),
                     ),
-                    Tab(child: Text("History")),
-                    Tab(child: Text("Notifications")),
-                    Tab(child: Text("Downloads")),
+                    const Tab(child: Text("History")),
+                    const Tab(child: Text("Notifications")),
+                    const Tab(child: Text("Downloads")),
                   ],
                 ),
               ),
@@ -123,8 +172,9 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
             Expanded(
               child: TabBarView(
                 controller: _tabController,
+                physics: const BouncingScrollPhysics(),
                 children: [
-                  const HomeScreen(),
+                  HomeScreen(tabController: _tabController),
                   ProductsScreen(),
                   CartScreen(),
                   HistoryScreen(),
