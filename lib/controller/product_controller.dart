@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -13,7 +14,9 @@ import 'package:ishwarpharma/model/company_model.dart';
 import 'package:ishwarpharma/model/history_model.dart';
 import 'package:ishwarpharma/model/product_detail_model.dart';
 import 'package:ishwarpharma/model/product_model.dart';
-import 'package:ishwarpharma/utils/constant.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductController extends GetxController {
@@ -103,7 +106,7 @@ class ProductController extends GetxController {
                     color: Colors.green.shade900,
                   ),
                 ),
-                backgroundColor: Color(0xff81B29A).withOpacity(0.9),
+                backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
                 colorText: Colors.green.shade900);
             isLoading.value = false;
           }
@@ -150,7 +153,7 @@ class ProductController extends GetxController {
                   color: Colors.green.shade900,
                 ),
               ),
-              backgroundColor: Color(0xff81B29A).withOpacity(0.9),
+              backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
               colorText: Colors.green.shade900);
           productDetailLoad.value = false;
         }
@@ -167,13 +170,15 @@ class ProductController extends GetxController {
   RxBool companyLoad = false.obs;
 
   getCompany() async {
+    companyLoad.value = true;
     SharedPreferences preferences = await SharedPreferences.getInstance();
     if (preferences.getString('company') != null) {
-      companyLoad.value = true;
       final data = preferences.getString('company');
       companyModel.value = CompanyModel.fromJson(jsonDecode(data ?? ""));
       companyList.value = companyModel.value.data ?? [];
       if (companyList.isNotEmpty) {
+        companyLoad.value = false;
+      } else {
         companyLoad.value = false;
       }
     } else {
@@ -199,7 +204,7 @@ class ProductController extends GetxController {
                     color: Colors.green.shade900,
                   ),
                 ),
-                backgroundColor: Color(0xff81B29A).withOpacity(0.9),
+                backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
                 colorText: Colors.green.shade900);
             companyLoad.value = false;
           }
@@ -281,7 +286,7 @@ class ProductController extends GetxController {
               cartModel.value.message ?? "",
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: Colors.green.shade900),
             ),
-            backgroundColor: Color(0xff81B29A).withOpacity(0.9),
+            backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
             colorText: Colors.green.shade900,
           );
           isCartLoading.value = false;
@@ -317,7 +322,7 @@ class ProductController extends GetxController {
                   color: Colors.green.shade900,
                 ),
               ),
-              backgroundColor: Color(0xff81B29A).withOpacity(0.9),
+              backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
               colorText: Colors.green.shade900);
           deleteProductLoading.value = false;
         }
@@ -359,7 +364,7 @@ class ProductController extends GetxController {
                   color: Colors.green.shade900,
                 ),
               ),
-              backgroundColor: Color(0xff81B29A).withOpacity(0.9),
+              backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
               colorText: Colors.green.shade900);
           orderPlaceLoading.value = false;
         }
@@ -406,7 +411,7 @@ class ProductController extends GetxController {
                     color: Colors.green.shade900,
                   ),
                 ),
-                backgroundColor: Color(0xff81B29A).withOpacity(0.9),
+                backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
                 colorText: Colors.green.shade900);
             isHistoryLoading.value = false;
           }
@@ -467,7 +472,7 @@ class ProductController extends GetxController {
                   color: Colors.green.shade900,
                 ),
               ),
-              backgroundColor: Color(0xff81B29A).withOpacity(0.9),
+              backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
               colorText: Colors.green.shade900);
         } else {
           Get.snackbar("Error", cartModel.value.message ?? "");
@@ -479,6 +484,22 @@ class ProductController extends GetxController {
     } catch (e) {
       addCartLoading.value = false;
     }
+  }
+
+  downloadPdf() async {
+    final pdf = pw.Document();
+
+    pdf.addPage(pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        build: (pw.Context context) {
+          return pw.Center(
+            child: pw.Text("Hello World"),
+          ); // Center
+        }));
+
+    final output = await getTemporaryDirectory();
+    final file = File("/storage/emulated/0/Download/${DateTime.now()}}.pdf");
+    await file.writeAsBytes(await pdf.save());
   }
 
   @override

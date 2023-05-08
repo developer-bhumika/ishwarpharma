@@ -33,18 +33,19 @@ class HistoryCard extends StatelessWidget {
                   ?.map(
                     (e) => InkWell(
                       onTap: () {
-                        Get.to(ProductDetailScreen(
-                          id: int.parse(e.product_id.toString()),
-                          brand_name: e.brand_name ?? "",
-                          content: e.content ?? "",
-                          type: e.qty ?? "",
-                          company: e.company ?? "",
-                          rate: e.rate ?? "0",
-                          scheme: e.scheme ?? "0",
-                          mrp: e.mrp ?? "0",
-                          pack: e.pack ?? "0",
-                          view: true,
-                        ));
+                        productController.downloadPdf();
+                        // Get.to(ProductDetailScreen(
+                        //   id: int.parse(e.product_id.toString()),
+                        //   brand_name: e.brand_name ?? "",
+                        //   content: e.content ?? "",
+                        //   type: e.qty ?? "",
+                        //   company: e.company ?? "",
+                        //   rate: e.rate ?? "0",
+                        //   scheme: e.scheme ?? "0",
+                        //   mrp: e.mrp ?? "0",
+                        //   pack: e.pack ?? "0",
+                        //   view: true,
+                        // ));
                       },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
