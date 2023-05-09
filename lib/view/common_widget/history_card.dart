@@ -33,7 +33,7 @@ class HistoryCard extends StatelessWidget {
                   ?.map(
                     (e) => InkWell(
                       onTap: () {
-                        productController.downloadPdf();
+                        productController.downloadPdf(e);
                         // Get.to(ProductDetailScreen(
                         //   id: int.parse(e.product_id.toString()),
                         //   brand_name: e.brand_name ?? "",

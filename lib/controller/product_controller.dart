@@ -5,6 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ishwarpharma/api/service_locator.dart';
@@ -14,6 +15,7 @@ import 'package:ishwarpharma/model/company_model.dart';
 import 'package:ishwarpharma/model/history_model.dart';
 import 'package:ishwarpharma/model/product_detail_model.dart';
 import 'package:ishwarpharma/model/product_model.dart';
+import 'package:ishwarpharma/utils/constant.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -486,19 +488,204 @@ class ProductController extends GetxController {
     }
   }
 
-  downloadPdf() async {
+  downloadPdf(Products e) async {
     final pdf = pw.Document();
-
-    pdf.addPage(pw.Page(
+    final ByteData image = await rootBundle.load(AppImage.logo);
+    Uint8List imageData = (image).buffer.asUint8List();
+    pdf.addPage(
+      pw.Page(
         pageFormat: PdfPageFormat.a4,
         build: (pw.Context context) {
-          return pw.Center(
-            child: pw.Text("Hello World"),
-          ); // Center
-        }));
+          return pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
+            pw.Row(
+              children: [
+                pw.Image(
+                  pw.MemoryImage(imageData),
+                ),
+                pw.SizedBox(width: 30),
+                pw.Text(
+                  "Ishwar Pharma",
+                  style: pw.TextStyle(
+                    fontWeight: pw.FontWeight.bold,
+                    color: PdfColors.green800,
+                    fontSize: 30,
+                  ),
+                ),
+              ],
+            ),
+            pw.Divider(color: PdfColors.green800, height: 25),
+            pw.SizedBox(height: 20),
+            pw.Table(
+              border: pw.TableBorder.all(color: PdfColors.green800),
+              columnWidths: {
+                0: pw.FlexColumnWidth(4),
+                1: pw.FlexColumnWidth(8),
+                2: pw.FlexColumnWidth(4),
+                3: pw.FlexColumnWidth(2),
+                4: pw.FlexColumnWidth(3),
+              },
+              // defaultColumnWidth: pw.TableColumnWidth(),
+              children: [
+                pw.TableRow(
+                  children: [
+                    pw.Column(children: [
+                      pw.Padding(
+                        padding: pw.EdgeInsets.symmetric(vertical: 10),
+                        child: pw.Text(
+                          'Brand',
+                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                        ),
+                      )
+                    ]),
+                    pw.Column(children: [
+                      pw.Padding(
+                        padding: pw.EdgeInsets.symmetric(vertical: 10),
+                        child: pw.Text(
+                          'Content',
+                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                        ),
+                      )
+                    ]),
+                    pw.Column(children: [
+                      pw.Padding(
+                        padding: pw.EdgeInsets.symmetric(vertical: 10),
+                        child: pw.Text(
+                          'Company',
+                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                        ),
+                      )
+                    ]),
+                    pw.Column(children: [
+                      pw.Padding(
+                        padding: pw.EdgeInsets.symmetric(vertical: 10),
+                        child: pw.Text(
+                          'Qty',
+                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                        ),
+                      )
+                    ]),
+                    pw.Column(children: [
+                      pw.Padding(
+                        padding: pw.EdgeInsets.symmetric(vertical: 10),
+                        child: pw.Text(
+                          'Amount',
+                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                        ),
+                      )
+                    ]),
+                  ],
+                ),
+                pw.TableRow(
+                  children: [
+                    pw.Column(children: [
+                      pw.Padding(
+                        padding: pw.EdgeInsets.all(10),
+                        child: pw.Text(
+                          e.brand_name ?? "",
+                        ),
+                      )
+                    ]),
+                    pw.Column(children: [
+                      pw.Padding(
+                        padding: pw.EdgeInsets.all(10),
+                        child: pw.Text(
+                          e.content ?? "",
+                          style: pw.TextStyle(fontSize: 12),
+                        ),
+                      )
+                    ]),
+                    pw.Column(children: [
+                      pw.Padding(
+                        padding: pw.EdgeInsets.all(10),
+                        child: pw.Text(
+                          e.company ?? "",
+                        ),
+                      )
+                    ]),
+                    pw.Column(children: [
+                      pw.Padding(
+                        padding: pw.EdgeInsets.all(10),
+                        child: pw.Text(
+                          e.qty ?? "",
+                        ),
+                      )
+                    ]),
+                    pw.Column(children: [
+                      pw.Padding(
+                        padding: pw.EdgeInsets.all(10),
+                        child: pw.Text(
+                          e.amount ?? "",
+                        ),
+                      )
+                    ]),
+                  ],
+                ),
+              ],
+            )
+            // pw.Row(
+            //   crossAxisAlignment: pw.CrossAxisAlignment.start,
+            //   children: [
+            //     pw.Column(
+            //       crossAxisAlignment: pw.CrossAxisAlignment.start,
+            //       children: [
+            //         pw.Row(
+            //           crossAxisAlignment: pw.CrossAxisAlignment.start,
+            //           children: [
+            //             pw.Text('Brand    : ', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+            //             pw.Text(e.brand_name ?? ""),
+            //           ],
+            //         ),
+            //         pw.SizedBox(height: 5),
+            //         pw.Row(
+            //           crossAxisAlignment: pw.CrossAxisAlignment.start,
+            //           children: [
+            //             pw.Text('Company : ', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+            //             pw.Text(e.company ?? ""),
+            //           ],
+            //         ),
+            //         pw.SizedBox(height: 5),
+            //         pw.Row(
+            //           crossAxisAlignment: pw.CrossAxisAlignment.start,
+            //           children: [
+            //             pw.Text('content  : ', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+            //             pw.Text(e.content ?? ""),
+            //           ],
+            //         ),
+            //       ],
+            //     ),
+            //     pw.SizedBox(width: 20),
+            //     pw.Column(children: [
+            //       pw.Text('Qty', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+            //       pw.Text(e.qty ?? ""),
+            //     ]),
+            //     pw.SizedBox(width: 20),
+            //     pw.Column(children: [
+            //       pw.Text('Amount', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+            //       pw.Text(e.amount ?? ""),
+            //     ]),
+            //   ],
+            // ),
 
-    final output = await getTemporaryDirectory();
-    final file = File("/storage/emulated/0/Download/${DateTime.now()}}.pdf");
+            // pw.Row(
+            //   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     pw.Text(
+            //       e.amount ?? "0",
+            //       style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+            //     ),
+            //     pw.Text(
+            //       e.qty ?? "0",
+            //       style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+            //     ),
+            //   ],
+            // )
+          ]); // Center
+        },
+      ),
+    );
+
+    String date = DateTime.now().toString().replaceAll(':', '');
+    final file = File("/storage/emulated/0/Download/ishwarpharma-$date.pdf");
     await file.writeAsBytes(await pdf.save());
   }
 
