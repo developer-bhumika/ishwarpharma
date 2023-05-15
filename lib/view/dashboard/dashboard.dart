@@ -8,6 +8,7 @@ import 'package:ishwarpharma/view/common_widget/common_text.dart';
 import 'package:ishwarpharma/view/dashboard/cart_screen.dart';
 import 'package:ishwarpharma/view/dashboard/history_screen.dart';
 import 'package:ishwarpharma/view/dashboard/home_screen.dart';
+import 'package:ishwarpharma/view/dashboard/notification_screen.dart';
 import 'package:ishwarpharma/view/dashboard/products_screen.dart';
 import 'package:ishwarpharma/view/setting/setting_screen.dart';
 import 'package:badges/badges.dart' as badges;
@@ -178,7 +179,7 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                   ProductsScreen(),
                   CartScreen(),
                   HistoryScreen(),
-                  const Center(child: CommonText(text: "Notification")),
+                  NotificationScreen(),
                   const Center(child: CommonText(text: "Downloads")),
                 ],
               ),
