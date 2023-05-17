@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ishwarpharma/controller/bottombar_controller.dart';
 import 'package:ishwarpharma/controller/product_controller.dart';
 import 'package:ishwarpharma/utils/constant.dart';
-import 'package:ishwarpharma/utils/indicator.dart';
 import 'package:ishwarpharma/view/about_us_screen.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
 import 'package:ishwarpharma/view/dashboard/cart_screen.dart';
@@ -22,12 +22,11 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
-  TabController? _tabController;
   final productController = Get.put<ProductController>(ProductController());
+  final bottomBarController = Get.put<BottomBarController>(BottomBarController());
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 6, vsync: this);
   }
 
   @override
@@ -82,15 +81,15 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                             color: Colors.green.shade900,
                           ),
                         ),
-                        backgroundColor: Color(0xff81B29A).withOpacity(0.9),
+                        backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
                         colorText: Colors.green.shade900);
                   }
                 },
                 child: Obx(
                   () => productController.reLoad.value
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 17.0),
-                          child: const SizedBox(
+                      ? const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 17.0),
+                          child: SizedBox(
                               width: 20,
                               child: CircularProgressIndicator(
                                 color: AppColor.white,
@@ -119,73 +118,36 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
             ),
           ],
         ),
-        body: Column(
-          children: [
-            Container(
-              height: 45,
-              color: AppColor.primaryColor,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
-                child: TabBar(
-                  physics: const BouncingScrollPhysics(),
-                  isScrollable: true,
-                  controller: _tabController,
-                  labelColor: AppColor.primaryColor,
-                  indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: AppColor.white,
-                  ),
-                  indicatorColor: AppColor.white,
-                  unselectedLabelColor: AppColor.white,
-                  tabs: [
-                    const Tab(child: Text("Home")),
-                    const Tab(child: Text("Products")),
-                    Tab(
-                      child: Obx(
-                        () => productController.cartList.isEmpty
-                            ? const Text("Cart")
-                            : badges.Badge(
-                                badgeStyle: badges.BadgeStyle(
-                                  badgeColor: Colors.red.shade700,
-                                ),
-                                position: badges.BadgePosition.topEnd(top: -12, end: -15),
-                                badgeContent: Text(
-                                  productController.cartList.length.toString(),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                child: const Text(
-                                  'Cart',
-                                ),
-                              ),
-                      ),
-                    ),
-                    const Tab(child: Text("History")),
-                    const Tab(child: Text("Notifications")),
-                    const Tab(child: Text("Downloads")),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                physics: const BouncingScrollPhysics(),
-                children: [
-                  HomeScreen(tabController: _tabController),
-                  ProductsScreen(),
-                  CartScreen(),
-                  HistoryScreen(),
-                  NotificationScreen(),
-                  const Center(child: CommonText(text: "Downloads")),
-                ],
-              ),
-            )
-          ],
-        ),
+        body: Obx(() => bottomBarController.pageList.elementAt(bottomBarController.selectedIndex.value)),
+        bottomNavigationBar: Obx(() => BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: AppColor.primaryColor,
+              showSelectedLabels: false,
+              showUnselectedLabels: false,
+              selectedItemColor: AppColor.white,
+              unselectedItemColor: AppColor.white.withOpacity(0.5),
+              onTap: (v) {
+                bottomBarController.selectedIndex.value = v;
+              },
+              items: [
+                const BottomNavigationBarItem(label: "", icon: Icon(Icons.home)),
+                const BottomNavigationBarItem(label: "", icon: Icon(Icons.data_array)),
+                BottomNavigationBarItem(
+                    label: "",
+                    icon: badges.Badge(
+                        badgeStyle: badges.BadgeStyle(
+                          badgeColor: Colors.red.shade700,
+                        ),
+                        badgeContent: Text(
+                          productController.cartList.length.toString(),
+                          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                        ),
+                        child: const Icon(Icons.shopping_cart))),
+                const BottomNavigationBarItem(label: "", icon: Icon(Icons.history)),
+                const BottomNavigationBarItem(label: "", icon: Icon(Icons.download)),
+                const BottomNavigationBarItem(label: "", icon: Icon(Icons.notifications_active)),
+              ],
+            )),
       ),
     );
   }

@@ -18,13 +18,13 @@ class HomeScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CommonText(
+          const CommonText(
             text: "Shop by Company",
             fontSize: 18,
             color: AppColor.primaryColor,
             fontWeight: FontWeight.w600,
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           Obx(
             () => productController.companyLoad.value
                 ? Expanded(
