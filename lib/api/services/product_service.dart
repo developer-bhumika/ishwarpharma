@@ -6,6 +6,7 @@ import 'package:ishwarpharma/model/company_model.dart';
 import 'package:ishwarpharma/model/history_model.dart';
 import 'package:ishwarpharma/model/product_detail_model.dart';
 import 'package:ishwarpharma/model/product_model.dart';
+import 'package:ishwarpharma/model/slider_model.dart';
 import 'package:ishwarpharma/view/dashboard/product_detail_screen.dart';
 
 class ProductService {
@@ -13,9 +14,15 @@ class ProductService {
 
   ProductService(this.productApi);
 
-  Future<ProductModel?> getProduct() async {
+  Future<ProductModel?> getProduct(String text) async {
     try {
-      final response = await productApi.getProduct();
+      final body = FormData.fromMap({
+        "search_all": text,
+        "page": 1,
+        "per_page": 10,
+      });
+
+      final response = await productApi.getProduct(body);
       if (response != null) {
         return ProductModel.fromJson(response.data);
       }
@@ -31,6 +38,19 @@ class ProductService {
       final response = await productApi.getCompany();
       if (response != null) {
         return CompanyModel.fromJson(response.data);
+      }
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+    return null;
+  }
+
+  Future<SliderModel?> getSlider() async {
+    try {
+      final response = await productApi.getSlider();
+      if (response != null) {
+        return SliderModel.fromJson(response.data);
       }
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -146,6 +166,7 @@ class ProductService {
         "remark": remark,
         "case": caseData
       });
+      print(formData);
       final response = await productApi.addCart(formData);
       if (response != null) {
         return CartModel.fromJson(response.data);

@@ -82,7 +82,7 @@ class ProductsScreen extends StatelessWidget {
                                   rate: productController.searchList[index].rate ?? "0",
                                   scheme: productController.searchList[index].free_scheme ?? "0",
                                   caseData: productController.searchList[index].case_value ?? "0",
-                                  mrp: productController.searchList[index].mrp ?? "0",
+                                  mrp: productController.searchList[index].mrp.toString(),
                                   pack: productController.searchList[index].pack ?? "0",
                                 ));
                               },
@@ -91,7 +91,7 @@ class ProductsScreen extends StatelessWidget {
                                     "${productController.searchList[index].brand ?? ""} ${productController.searchList[index].pack ?? ""}",
                                 company: productController.searchList[index].company ?? "",
                                 rate: productController.searchList[index].rate ?? "",
-                                mrp: productController.searchList[index].mrp ?? "",
+                                mrp: productController.searchList[index].mrp.toString(),
                                 free: productController.productDetailModel.value.data?.free_scheme == ""
                                     ? "0"
                                     : productController.productList[index].free_scheme ?? "0",
@@ -118,7 +118,7 @@ class ProductsScreen extends StatelessWidget {
                                   rate: productController.productList[index].rate ?? "0",
                                   scheme: productController.productList[index].free_scheme ?? "0",
                                   caseData: productController.productList[index].case_value ?? "0",
-                                  mrp: productController.productList[index].mrp ?? "0",
+                                  mrp: productController.productList[index].mrp.toString(),
                                   pack: productController.productList[index].pack ?? "0",
                                 ));
                               },
@@ -127,7 +127,7 @@ class ProductsScreen extends StatelessWidget {
                                     "${productController.productList[index].brand ?? ""} ${productController.productList[index].pack ?? ""}",
                                 company: productController.productList[index].company ?? "",
                                 rate: productController.productList[index].rate ?? "",
-                                mrp: productController.productList[index].mrp ?? "",
+                                mrp: productController.productList[index].mrp.toString(),
                                 searchText: productController.search.text,
                                 searchTextList: productController.searchTextList,
                                 free: productController.productDetailModel.value.data?.free_scheme == ""

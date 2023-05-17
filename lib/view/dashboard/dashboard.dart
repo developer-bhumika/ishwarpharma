@@ -5,11 +5,6 @@ import 'package:ishwarpharma/controller/product_controller.dart';
 import 'package:ishwarpharma/utils/constant.dart';
 import 'package:ishwarpharma/view/about_us_screen.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
-import 'package:ishwarpharma/view/dashboard/cart_screen.dart';
-import 'package:ishwarpharma/view/dashboard/history_screen.dart';
-import 'package:ishwarpharma/view/dashboard/home_screen.dart';
-import 'package:ishwarpharma/view/dashboard/notification_screen.dart';
-import 'package:ishwarpharma/view/dashboard/products_screen.dart';
 import 'package:ishwarpharma/view/setting/setting_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,12 +38,8 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
               child: Image.asset(AppImage.logo),
             ),
           ),
-          title: const CommonText(
-            text: "Ishwar Pharma",
-            color: AppColor.white,
-            fontWeight: FontWeight.w800,
-            fontSize: 20,
-          ),
+          title:
+              const CommonText(text: "Ishwar Pharma", color: AppColor.white, fontWeight: FontWeight.w800, fontSize: 20),
           actions: [
             InkWell(
                 onTap: () async {
@@ -126,6 +117,7 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
               showUnselectedLabels: false,
               selectedItemColor: AppColor.white,
               unselectedItemColor: AppColor.white.withOpacity(0.5),
+              currentIndex: bottomBarController.selectedIndex.value,
               onTap: (v) {
                 bottomBarController.selectedIndex.value = v;
               },

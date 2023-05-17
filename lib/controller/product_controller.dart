@@ -15,8 +15,8 @@ import 'package:ishwarpharma/model/company_model.dart';
 import 'package:ishwarpharma/model/history_model.dart';
 import 'package:ishwarpharma/model/product_detail_model.dart';
 import 'package:ishwarpharma/model/product_model.dart';
+import 'package:ishwarpharma/model/slider_model.dart';
 import 'package:ishwarpharma/utils/constant.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -86,7 +86,7 @@ class ProductController extends GetxController {
     } else {
       try {
         isLoading.value = true;
-        final resp = await productService.getProduct();
+        final resp = await productService.getProduct(search.text);
         if (resp != null) {
           productModel.value = resp;
           if (productModel.value.success ?? false) {
@@ -215,6 +215,57 @@ class ProductController extends GetxController {
         }
       } catch (e) {
         companyLoad.value = false;
+      }
+    }
+  }
+
+  Rx<SliderModel> sliderModel = SliderModel().obs;
+  RxList<SliderDataModel> sliderList = <SliderDataModel>[].obs;
+  RxBool sliderLoad = false.obs;
+  getSlider() async {
+    sliderLoad.value = true;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    if (preferences.getString('slider') != null) {
+      final data = preferences.getString('slider');
+      sliderModel.value = SliderModel.fromJson(jsonDecode(data ?? ""));
+      sliderList.value = sliderModel.value.data ?? [];
+      if (sliderList.isNotEmpty) {
+        sliderLoad.value = false;
+      } else {
+        sliderLoad.value = false;
+      }
+    } else {
+      try {
+        sliderLoad.value = true;
+        final resp = await productService.getSlider();
+        if (resp != null) {
+          sliderModel.value = resp;
+          if (sliderModel.value.success ?? false) {
+            sliderList.value = sliderModel.value.data ?? [];
+            if (sliderList.isNotEmpty) {
+              var jsonRes = jsonDecode(jsonEncode(sliderModel));
+              await preferences.setString('slider', json.encode(jsonRes));
+            }
+            sliderLoad.value = false;
+          } else {
+            Get.snackbar("Error", sliderModel.value.message ?? "",
+                messageText: Text(
+                  sliderModel.value.message ?? "",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
+                    color: Colors.green.shade900,
+                  ),
+                ),
+                backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
+                colorText: Colors.green.shade900);
+            sliderLoad.value = false;
+          }
+        } else {
+          sliderLoad.value = false;
+        }
+      } catch (e) {
+        sliderLoad.value = false;
       }
     }
   }
@@ -693,6 +744,7 @@ class ProductController extends GetxController {
   void onInit() {
     super.onInit();
     getCompany();
+    getSlider();
     getCart();
     getProduct();
   }

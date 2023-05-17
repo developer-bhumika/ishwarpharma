@@ -44,6 +44,7 @@ class _CartScreenState extends State<CartScreen> {
             : productController.cartList.isEmpty
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Image.asset(width: 150, height: 150, AppImage.cart),
                       const CommonText(
@@ -106,45 +107,48 @@ class _CartScreenState extends State<CartScreen> {
                                     ),
                                     content: FormBuilder(
                                       key: _formKey,
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          CommonTextField(
-                                            labelText: "Firm Name",
-                                            hintText: "Firm Name",
-                                            isDense: true,
-                                            controller: productController.firm,
-                                            validator: FormBuilderValidators.required(),
-                                          ),
-                                          const SizedBox(height: 10),
-                                          CommonTextField(
-                                            labelText: "Place",
-                                            hintText: "Place",
-                                            isDense: true,
-                                            controller: productController.place,
-                                            validator: FormBuilderValidators.required(),
-                                          ),
-                                          const SizedBox(height: 10),
-                                          CommonTextField(
-                                            labelText: "Email",
-                                            hintText: "Email",
-                                            isDense: true,
-                                            controller: productController.email,
-                                            validator: FormBuilderValidators.compose([
-                                              FormBuilderValidators.required(),
-                                              FormBuilderValidators.email(),
-                                            ]),
-                                          ),
-                                          const SizedBox(height: 10),
-                                          CommonTextField(
-                                            labelText: "Mobile Number",
-                                            hintText: "Mobile Number",
-                                            isDense: true,
-                                            keyBoardType: TextInputType.number,
-                                            controller: productController.moNo,
-                                            validator: FormBuilderValidators.required(),
-                                          ),
-                                        ],
+                                      child: SingleChildScrollView(
+                                        physics: const BouncingScrollPhysics(),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            CommonTextField(
+                                              labelText: "Firm Name",
+                                              hintText: "Firm Name",
+                                              isDense: true,
+                                              controller: productController.firm,
+                                              validator: FormBuilderValidators.required(),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            CommonTextField(
+                                              labelText: "Place",
+                                              hintText: "Place",
+                                              isDense: true,
+                                              controller: productController.place,
+                                              validator: FormBuilderValidators.required(),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            CommonTextField(
+                                              labelText: "Email",
+                                              hintText: "Email",
+                                              isDense: true,
+                                              controller: productController.email,
+                                              validator: FormBuilderValidators.compose([
+                                                FormBuilderValidators.required(),
+                                                FormBuilderValidators.email(),
+                                              ]),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            CommonTextField(
+                                              labelText: "Mobile Number",
+                                              hintText: "Mobile Number",
+                                              isDense: true,
+                                              keyBoardType: TextInputType.number,
+                                              controller: productController.moNo,
+                                              validator: FormBuilderValidators.required(),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                     actions: [

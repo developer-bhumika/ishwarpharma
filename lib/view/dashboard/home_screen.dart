@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ishwarpharma/controller/product_controller.dart';
@@ -18,6 +19,26 @@ class HomeScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Obx(
+            () => CarouselSlider(
+              options: CarouselOptions(height: 200.0),
+              items: productController.sliderList.map((i) {
+                return Builder(
+                  builder: (BuildContext context) {
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      decoration: const BoxDecoration(color: Colors.amber),
+                      child: Image.network(
+                        i.sliderUrl ?? "",
+                        fit: BoxFit.fill,
+                      ),
+                    );
+                  },
+                );
+              }).toList(),
+            ),
+          ),
           const CommonText(
             text: "Shop by Company",
             fontSize: 18,

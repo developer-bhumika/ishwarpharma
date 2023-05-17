@@ -7,9 +7,9 @@ class ProductApi {
 
   ProductApi({required this.dioClient});
 
-  Future<Response?> getProduct() async {
+  Future<Response?> getProduct(FormData body) async {
     try {
-      final Response? response = await dioClient.get(Endpoints.getProduct);
+      final Response response = await dioClient.post(Endpoints.getProduct, data: body);
       return response;
     } catch (e) {
       rethrow;
@@ -19,6 +19,15 @@ class ProductApi {
   Future<Response?> getCompany() async {
     try {
       final Response? response = await dioClient.get(Endpoints.getCompany);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response?> getSlider() async {
+    try {
+      final Response? response = await dioClient.get(Endpoints.getSlider);
       return response;
     } catch (e) {
       rethrow;

@@ -20,7 +20,7 @@ class ProductDataModel {
   String? key;
   String? pack;
   String? rate;
-  String? mrp;
+  double? mrp;
   @JsonKey(name: 'case')
   String? productCase;
   String? content;
