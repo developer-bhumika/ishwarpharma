@@ -48,6 +48,7 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                   if (await productController.isInternet()) {
                     productController.reLoad.value = true;
                     await productController.getCompany();
+                    await productController.getSlider();
                     await productController.getProduct();
                     await productController.getCart();
                     await productController.getHistory();
@@ -110,36 +111,36 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
           ],
         ),
         body: Obx(() => bottomBarController.pageList.elementAt(bottomBarController.selectedIndex.value)),
-        bottomNavigationBar: Obx(() => BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              backgroundColor: AppColor.primaryColor,
-              showSelectedLabels: false,
-              showUnselectedLabels: false,
-              selectedItemColor: AppColor.white,
-              unselectedItemColor: AppColor.white.withOpacity(0.5),
-              currentIndex: bottomBarController.selectedIndex.value,
-              onTap: (v) {
-                bottomBarController.selectedIndex.value = v;
-              },
-              items: [
-                const BottomNavigationBarItem(label: "", icon: Icon(Icons.home)),
-                const BottomNavigationBarItem(label: "", icon: Icon(Icons.data_array)),
-                BottomNavigationBarItem(
-                    label: "",
-                    icon: badges.Badge(
-                        badgeStyle: badges.BadgeStyle(
-                          badgeColor: Colors.red.shade700,
-                        ),
-                        badgeContent: Text(
-                          productController.cartList.length.toString(),
-                          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
-                        ),
-                        child: const Icon(Icons.shopping_cart))),
-                const BottomNavigationBarItem(label: "", icon: Icon(Icons.history)),
-                const BottomNavigationBarItem(label: "", icon: Icon(Icons.download)),
-                const BottomNavigationBarItem(label: "", icon: Icon(Icons.notifications_active)),
-              ],
-            )),
+        bottomNavigationBar: Obx(
+          () => BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: AppColor.primaryColor,
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+            selectedItemColor: AppColor.white,
+            unselectedItemColor: AppColor.white.withOpacity(0.5),
+            currentIndex: bottomBarController.selectedIndex.value,
+            onTap: (v) {
+              bottomBarController.selectedIndex.value = v;
+            },
+            items: [
+              const BottomNavigationBarItem(label: "", icon: Icon(Icons.home)),
+              const BottomNavigationBarItem(label: "", icon: Icon(Icons.inventory_2)),
+              BottomNavigationBarItem(
+                  label: "",
+                  icon: badges.Badge(
+                      badgeStyle: badges.BadgeStyle(badgeColor: Colors.red.shade700),
+                      badgeContent: Text(
+                        productController.cartList.length.toString(),
+                        style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                      ),
+                      child: const Icon(Icons.shopping_cart))),
+              const BottomNavigationBarItem(label: "", icon: Icon(Icons.history)),
+              const BottomNavigationBarItem(label: "", icon: Icon(Icons.download)),
+              const BottomNavigationBarItem(label: "", icon: Icon(Icons.notifications_active)),
+            ],
+          ),
+        ),
       ),
     );
   }

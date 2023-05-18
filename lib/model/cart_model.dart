@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'cart_model.g.dart';
 
@@ -29,6 +30,8 @@ class CartData {
   String? amount;
   String? created_at;
   String? updated_at;
+  Rx<bool> edit = false.obs;
+  Rx<bool> load = false.obs;
 
   CartData(
       {this.id,

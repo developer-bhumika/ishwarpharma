@@ -78,13 +78,40 @@ class _CartScreenState extends State<CartScreen> {
                                 view: true,
                               ));
                             },
-                            child: CartCard(
-                              brand: productController.cartList[index].brand_name ?? "",
-                              qty: productController.cartList[index].qty ?? "",
-                              index: index,
-                              company: productController.cartList[index].company ?? "",
-                              content: productController.cartList[index].content ?? "",
-                              price: productController.cartList[index].mrp ?? "0",
+                            child: Obx(
+                              () => CartCard(
+                                brand: productController.cartList[index].brand_name ?? "",
+                                qty: productController.cartList[index].qty ?? "",
+                                index: index,
+                                company: productController.cartList[index].company ?? "",
+                                content: productController.cartList[index].content ?? "",
+                                price: productController.cartList[index].mrp ?? "0",
+                                edit: productController.cartList[index].edit.value,
+                                load: productController.cartList[index].load.value,
+                                saveOnTap: () async {
+                                  productController.cartList[index].load.value = true;
+                                  bool? res = await productController.editCart(
+                                      productController.cartList[index].id, productController.cartList[index].qty);
+                                  if (res != null && res) {
+                                    productController.cartList[index].load.value = false;
+                                    productController.cartList[index].edit.value = false;
+                                  }
+                                },
+                                addOnTap: () {
+                                  int qty = int.parse(productController.cartList[index].qty ?? "");
+                                  setState(() => qty++);
+                                  productController.cartList[index].qty = qty.toString();
+                                },
+                                minusOnTap: () {
+                                  int qty = int.parse(productController.cartList[index].qty ?? "");
+
+                                  if (qty > 1) {
+                                    setState(() => qty--);
+                                    productController.cartList[index].qty = qty.toString();
+                                  }
+                                },
+                                editOnTap: () => productController.cartList[index].edit.value = true,
+                              ),
                             ),
                           ),
                         ),

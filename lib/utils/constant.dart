@@ -26,11 +26,14 @@ class Endpoints {
   static const int connectionTimeout = 15000;
 
   static const String getProduct = '/get-products';
-  static const String getCompany = '/get-company';
+  static const String getCompany = '/recommended-company';
   static const String getSlider = '/slider';
   static const String productDetail = '/get-product';
+  static const String updateCart = '/update-cart';
   static const String cart = '/cart';
   static const String deleteCart = '/delete-cart';
   static const String orderHistory = '/order-history';
   static const String placeOrder = '/place-order';
+  static const String downloadPrice = '/download-price';
+  static const String downloadProduct = '/download-product';
 }

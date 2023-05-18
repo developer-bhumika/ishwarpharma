@@ -1,24 +1,18 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ishwarpharma/api/service_locator.dart';
 import 'package:ishwarpharma/api/services/product_service.dart';
 import 'package:ishwarpharma/model/cart_model.dart';
 import 'package:ishwarpharma/model/company_model.dart';
+import 'package:ishwarpharma/model/download_model.dart';
 import 'package:ishwarpharma/model/history_model.dart';
 import 'package:ishwarpharma/model/product_detail_model.dart';
 import 'package:ishwarpharma/model/product_model.dart';
 import 'package:ishwarpharma/model/slider_model.dart';
-import 'package:ishwarpharma/utils/constant.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductController extends GetxController {
@@ -53,6 +47,33 @@ class ProductController extends GetxController {
     }
   }
 
+  RxBool editCartLoad = false.obs;
+
+  Future<bool?> editCart(int? id, String? qty) async {
+    try {
+      editCartLoad.value = true;
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
+      final resp = await productService.editCart(id, qty, androidInfo.id);
+      if (resp != null) {
+        if (resp["success"] ?? false) {
+          editCartLoad.value = false;
+          return true;
+        } else {
+          Get.snackbar("Error", resp["message"] ?? "",
+              backgroundColor: const Color(0xff81B29A).withOpacity(0.9), colorText: Colors.green.shade900);
+          editCartLoad.value = false;
+          return true;
+        }
+      } else {
+        editCartLoad.value = false;
+      }
+    } catch (e) {
+      editCartLoad.value = false;
+    }
+    return true;
+  }
+
   getProduct() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
@@ -63,24 +84,6 @@ class ProductController extends GetxController {
       productList.value = productModel.value.data ?? [];
       if (productList.isNotEmpty) {
         productList.sort((a, b) => a.brand!.compareTo(b.brand ?? ""));
-        // for (int i = 0; i < num.parse(productList.length.toString()); i++) {
-        //   if (productList[i].brand![0] == "0" ||
-        //       productList[i].brand![0] == "1" ||
-        //       productList[i].brand![0] == "2" ||
-        //       productList[i].brand![0] == "3" ||
-        //       productList[i].brand![0] == "4" ||
-        //       productList[i].brand![0] == "5" ||
-        //       productList[i].brand![0] == "6" ||
-        //       productList[i].brand![0] == "7" ||
-        //       productList[i].brand![0] == "8" ||
-        //       productList[i].brand![0] == "9") {
-        //     productIndList.add(productList[i]);
-        //   }
-        // }
-        // productIndList.forEach((e) {
-        //   productList.remove(e);
-        // });
-        // print(productList[0].brand);
         isLoading.value = false;
       }
     } else {
@@ -95,7 +98,6 @@ class ProductController extends GetxController {
               productList.sort((a, b) => a.brand!.compareTo(b.brand ?? ""));
               var jsonRes = jsonDecode(jsonEncode(productModel));
               await preferences.setString('product', json.encode(jsonRes));
-              print(preferences.getString('product'));
             }
             isLoading.value = false;
           } else {
@@ -293,23 +295,11 @@ class ProductController extends GetxController {
       }
     } else {
       for (var element in productList) {
-        if (element.brand?.toLowerCase().contains(search.text.toLowerCase()) ??
-                false /*||
-                (element.brand?.toLowerCase().contains(search.text.toLowerCase()) ?? false) ||
-                (element.content?.toLowerCase().contains(search.text.toLowerCase()) ?? false)*/
-            ) {
+        if (element.brand?.toLowerCase().contains(search.text.toLowerCase()) ?? false) {
           searchList.add(element);
-        } else if (element.company?.toLowerCase().contains(search.text.toLowerCase()) ??
-                false /*||
-                (element.brand?.toLowerCase().contains(search.text.toLowerCase()) ?? false) ||
-                (element.content?.toLowerCase().contains(search.text.toLowerCase()) ?? false)*/
-            ) {
+        } else if (element.company?.toLowerCase().contains(search.text.toLowerCase()) ?? false) {
           searchList.add(element);
-        } else if (element.content?.toLowerCase().contains(search.text.toLowerCase()) ??
-                false /*||
-                (element.brand?.toLowerCase().contains(search.text.toLowerCase()) ?? false) ||
-                (element.content?.toLowerCase().contains(search.text.toLowerCase()) ?? false)*/
-            ) {
+        } else if (element.content?.toLowerCase().contains(search.text.toLowerCase()) ?? false) {
           searchList.add(element);
         }
       }
@@ -432,47 +422,49 @@ class ProductController extends GetxController {
   RxList<HistoryData> historyList = <HistoryData>[].obs;
   getHistory() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    if (preferences.getString('history') != null) {
-      isHistoryLoading.value = true;
-      final data = preferences.getString('history');
-      historyModel.value = HistoryModel.fromJson(jsonDecode(data ?? ""));
-      historyList.value = historyModel.value.data ?? [];
-      if (historyList.isNotEmpty) {
-        isHistoryLoading.value = false;
-      }
-    } else {
-      try {
-        isHistoryLoading.value = true;
-        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-        final resp = await productService.getHistory(androidInfo.id);
-        if (resp != null) {
-          historyModel.value = resp;
-          if (historyModel.value.success ?? false) {
-            historyList.value = historyModel.value.data ?? [];
-            if (historyList.isNotEmpty) {
-              var jsonRes = jsonDecode(jsonEncode(historyModel));
-              await preferences.setString('history', json.encode(jsonRes));
-            }
-            isHistoryLoading.value = false;
-          } else {
-            Get.snackbar("Error", historyModel.value.message ?? "",
-                messageText: Text(
-                  historyModel.value.message ?? "",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 13,
-                    color: Colors.green.shade900,
+    if (await isInternet()) {
+      if (preferences.getString('history') == null) {
+        try {
+          isHistoryLoading.value = true;
+          AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+          final resp = await productService.getHistory(androidInfo.id);
+          if (resp != null) {
+            historyModel.value = resp;
+            if (historyModel.value.success ?? false) {
+              historyList.value = historyModel.value.data ?? [];
+              if (historyList.isNotEmpty) {
+                var jsonRes = jsonDecode(jsonEncode(historyModel));
+                await preferences.setString('history', json.encode(jsonRes));
+              }
+              isHistoryLoading.value = false;
+            } else {
+              Get.snackbar("Error", historyModel.value.message ?? "",
+                  messageText: Text(
+                    historyModel.value.message ?? "",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                      color: Colors.green.shade900,
+                    ),
                   ),
-                ),
-                backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
-                colorText: Colors.green.shade900);
+                  backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
+                  colorText: Colors.green.shade900);
+              isHistoryLoading.value = false;
+            }
+          } else {
             isHistoryLoading.value = false;
           }
-        } else {
+        } catch (e) {
           isHistoryLoading.value = false;
         }
-      } catch (e) {
-        isHistoryLoading.value = false;
+      } else {
+        isHistoryLoading.value = true;
+        final data = preferences.getString('history');
+        historyModel.value = HistoryModel.fromJson(jsonDecode(data ?? ""));
+        historyList.value = historyModel.value.data ?? [];
+        if (historyList.isNotEmpty) {
+          isHistoryLoading.value = false;
+        }
       }
     }
   }
@@ -514,7 +506,6 @@ class ProductController extends GetxController {
           addCartLoading.value = false;
           quantity.value = 1;
           remarkCon.clear();
-          getCart();
           Get.back();
           Get.snackbar("Success", cartModel.value.message ?? "",
               messageText: Text(
@@ -527,6 +518,7 @@ class ProductController extends GetxController {
               ),
               backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
               colorText: Colors.green.shade900);
+          getCart();
         } else {
           Get.snackbar("Error", cartModel.value.message ?? "");
           addCartLoading.value = false;
@@ -539,205 +531,49 @@ class ProductController extends GetxController {
     }
   }
 
-  downloadPdf(Products e) async {
-    final pdf = pw.Document();
-    final ByteData image = await rootBundle.load(AppImage.logo);
-    Uint8List imageData = (image).buffer.asUint8List();
-    pdf.addPage(
-      pw.Page(
-        pageFormat: PdfPageFormat.a4,
-        build: (pw.Context context) {
-          return pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
-            pw.Row(
-              children: [
-                pw.Image(
-                  pw.MemoryImage(imageData),
+  RxBool downloadsPriceLoad = false.obs;
+  RxBool downloadsProductLoad = false.obs;
+  Rx<DownloadModel> downloadModel = DownloadModel().obs;
+  RxList<DownloadDataModel> downloadPriceList = <DownloadDataModel>[].obs;
+  RxList<DownloadDataModel> downloadProductList = <DownloadDataModel>[].obs;
+  getDownloads({bool? pass}) async {
+    try {
+      downloadsPriceLoad.value = true;
+      downloadsProductLoad.value = true;
+      final resp = await productService.getDownloads(pass ?? false);
+      if (resp != null) {
+        downloadModel.value = resp;
+        if (downloadModel.value.success ?? false) {
+          if (pass ?? false) {
+            downloadProductList.value = downloadModel.value.data ?? [];
+            downloadsProductLoad.value = false;
+          } else {
+            downloadPriceList.value = downloadModel.value.data ?? [];
+            downloadsPriceLoad.value = false;
+          }
+        } else {
+          Get.snackbar("Error", downloadModel.value.message ?? "",
+              messageText: Text(
+                downloadModel.value.message ?? "",
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13,
+                  color: Colors.green.shade900,
                 ),
-                pw.SizedBox(width: 30),
-                pw.Text(
-                  "Ishwar Pharma",
-                  style: pw.TextStyle(
-                    fontWeight: pw.FontWeight.bold,
-                    color: PdfColors.green800,
-                    fontSize: 30,
-                  ),
-                ),
-              ],
-            ),
-            pw.Divider(color: PdfColors.green800, height: 25),
-            pw.SizedBox(height: 20),
-            pw.Table(
-              border: pw.TableBorder.all(color: PdfColors.green800),
-              columnWidths: {
-                0: pw.FlexColumnWidth(4),
-                1: pw.FlexColumnWidth(8),
-                2: pw.FlexColumnWidth(4),
-                3: pw.FlexColumnWidth(2),
-                4: pw.FlexColumnWidth(3),
-              },
-              // defaultColumnWidth: pw.TableColumnWidth(),
-              children: [
-                pw.TableRow(
-                  children: [
-                    pw.Column(children: [
-                      pw.Padding(
-                        padding: pw.EdgeInsets.symmetric(vertical: 10),
-                        child: pw.Text(
-                          'Brand',
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-                        ),
-                      )
-                    ]),
-                    pw.Column(children: [
-                      pw.Padding(
-                        padding: pw.EdgeInsets.symmetric(vertical: 10),
-                        child: pw.Text(
-                          'Content',
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-                        ),
-                      )
-                    ]),
-                    pw.Column(children: [
-                      pw.Padding(
-                        padding: pw.EdgeInsets.symmetric(vertical: 10),
-                        child: pw.Text(
-                          'Company',
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-                        ),
-                      )
-                    ]),
-                    pw.Column(children: [
-                      pw.Padding(
-                        padding: pw.EdgeInsets.symmetric(vertical: 10),
-                        child: pw.Text(
-                          'Qty',
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-                        ),
-                      )
-                    ]),
-                    pw.Column(children: [
-                      pw.Padding(
-                        padding: pw.EdgeInsets.symmetric(vertical: 10),
-                        child: pw.Text(
-                          'Amount',
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-                        ),
-                      )
-                    ]),
-                  ],
-                ),
-                pw.TableRow(
-                  children: [
-                    pw.Column(children: [
-                      pw.Padding(
-                        padding: pw.EdgeInsets.all(10),
-                        child: pw.Text(
-                          e.brand_name ?? "",
-                        ),
-                      )
-                    ]),
-                    pw.Column(children: [
-                      pw.Padding(
-                        padding: pw.EdgeInsets.all(10),
-                        child: pw.Text(
-                          e.content ?? "",
-                          style: pw.TextStyle(fontSize: 12),
-                        ),
-                      )
-                    ]),
-                    pw.Column(children: [
-                      pw.Padding(
-                        padding: pw.EdgeInsets.all(10),
-                        child: pw.Text(
-                          e.company ?? "",
-                        ),
-                      )
-                    ]),
-                    pw.Column(children: [
-                      pw.Padding(
-                        padding: pw.EdgeInsets.all(10),
-                        child: pw.Text(
-                          e.qty ?? "",
-                        ),
-                      )
-                    ]),
-                    pw.Column(children: [
-                      pw.Padding(
-                        padding: pw.EdgeInsets.all(10),
-                        child: pw.Text(
-                          e.amount ?? "",
-                        ),
-                      )
-                    ]),
-                  ],
-                ),
-              ],
-            )
-            // pw.Row(
-            //   crossAxisAlignment: pw.CrossAxisAlignment.start,
-            //   children: [
-            //     pw.Column(
-            //       crossAxisAlignment: pw.CrossAxisAlignment.start,
-            //       children: [
-            //         pw.Row(
-            //           crossAxisAlignment: pw.CrossAxisAlignment.start,
-            //           children: [
-            //             pw.Text('Brand    : ', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-            //             pw.Text(e.brand_name ?? ""),
-            //           ],
-            //         ),
-            //         pw.SizedBox(height: 5),
-            //         pw.Row(
-            //           crossAxisAlignment: pw.CrossAxisAlignment.start,
-            //           children: [
-            //             pw.Text('Company : ', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-            //             pw.Text(e.company ?? ""),
-            //           ],
-            //         ),
-            //         pw.SizedBox(height: 5),
-            //         pw.Row(
-            //           crossAxisAlignment: pw.CrossAxisAlignment.start,
-            //           children: [
-            //             pw.Text('content  : ', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-            //             pw.Text(e.content ?? ""),
-            //           ],
-            //         ),
-            //       ],
-            //     ),
-            //     pw.SizedBox(width: 20),
-            //     pw.Column(children: [
-            //       pw.Text('Qty', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-            //       pw.Text(e.qty ?? ""),
-            //     ]),
-            //     pw.SizedBox(width: 20),
-            //     pw.Column(children: [
-            //       pw.Text('Amount', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-            //       pw.Text(e.amount ?? ""),
-            //     ]),
-            //   ],
-            // ),
-
-            // pw.Row(
-            //   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     pw.Text(
-            //       e.amount ?? "0",
-            //       style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-            //     ),
-            //     pw.Text(
-            //       e.qty ?? "0",
-            //       style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-            //     ),
-            //   ],
-            // )
-          ]); // Center
-        },
-      ),
-    );
-
-    String date = DateTime.now().toString().replaceAll(':', '');
-    final file = File("/storage/emulated/0/Download/ishwarpharma-$date.pdf");
-    await file.writeAsBytes(await pdf.save());
+              ),
+              backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
+              colorText: Colors.green.shade900);
+          downloadsPriceLoad.value = false;
+          downloadsProductLoad.value = false;
+        }
+      } else {
+        downloadsPriceLoad.value = false;
+        downloadsProductLoad.value = false;
+      }
+    } catch (e) {
+      downloadsPriceLoad.value = false;
+      downloadsProductLoad.value = false;
+    }
   }
 
   @override

@@ -25,6 +25,15 @@ class ProductApi {
     }
   }
 
+  Future<Response?> getDownloads(bool pass) async {
+    try {
+      final Response? response = await dioClient.get(pass ? Endpoints.downloadProduct : Endpoints.downloadPrice);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<Response?> getSlider() async {
     try {
       final Response? response = await dioClient.get(Endpoints.getSlider);
@@ -37,6 +46,15 @@ class ProductApi {
   Future<Response?> productDetail(int? id) async {
     try {
       final Response? response = await dioClient.get("${Endpoints.productDetail}/$id");
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response?> editCart(FormData body) async {
+    try {
+      final Response response = await dioClient.post(Endpoints.updateCart, data: body);
       return response;
     } catch (e) {
       rethrow;

@@ -7,14 +7,34 @@ import 'package:ishwarpharma/view/common_widget/common_text.dart';
 
 class CartCard extends StatelessWidget {
   bool? view;
+  bool? edit;
+  bool? load;
   String? brand;
   String? qty;
   int? index;
   String? company;
   String? content;
   String? price;
-  CartCard({Key? key, this.view, this.brand, this.qty, this.index, this.company, this.content, this.price})
-      : super(key: key);
+  void Function()? editOnTap;
+  void Function()? saveOnTap;
+  void Function()? addOnTap;
+  void Function()? minusOnTap;
+  CartCard({
+    Key? key,
+    this.view,
+    this.edit,
+    this.load,
+    this.brand,
+    this.qty,
+    this.index,
+    this.company,
+    this.content,
+    this.price,
+    this.editOnTap,
+    this.saveOnTap,
+    this.addOnTap,
+    this.minusOnTap,
+  }) : super(key: key);
   final productController = Get.find<ProductController>();
 
   @override
@@ -46,7 +66,6 @@ class CartCard extends StatelessWidget {
               CommonText(text: content ?? ""),
               const SizedBox(height: 5),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CommonText(
                     text: "${price ?? " "} ",
@@ -54,12 +73,70 @@ class CartCard extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                     color: AppColor.primaryColor,
                   ),
-                  CommonText(
-                    text: "${qty ?? " "} Unit",
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: AppColor.primaryColor,
-                  ),
+                  const Spacer(),
+                  edit ?? false
+                      ? Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(color: AppColor.primaryColor), borderRadius: BorderRadius.circular(5)),
+                          child: Row(
+                            children: [
+                              InkWell(
+                                onTap: minusOnTap,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(3.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColor.primaryColor.withOpacity(0.3),
+                                      borderRadius: BorderRadius.circular(3),
+                                    ),
+                                    child: const Icon(Icons.remove, color: AppColor.primaryColor),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              CommonText(
+                                text: qty ?? "0",
+                                color: Colors.black,
+                                fontSize: 17,
+                              ),
+                              const SizedBox(width: 12),
+                              InkWell(
+                                onTap: addOnTap,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(3.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColor.primaryColor.withOpacity(0.3),
+                                      borderRadius: BorderRadius.circular(3),
+                                    ),
+                                    child: const Icon(
+                                      Icons.add,
+                                      color: AppColor.primaryColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : CommonText(
+                          text: "${qty ?? " "} Unit",
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: AppColor.primaryColor,
+                        ),
+                  const SizedBox(width: 5),
+                  edit ?? false
+                      ? load ?? false
+                          ? SizedBox(width: 25, height: 25, child: ProgressView())
+                          : InkWell(
+                              onTap: saveOnTap,
+                              child: const Icon(Icons.save, size: 35, color: AppColor.primaryColor),
+                            )
+                      : InkWell(
+                          onTap: editOnTap,
+                          child: const Icon(Icons.edit, size: 18, color: AppColor.primaryColor),
+                        ),
                 ],
               ),
             ],
@@ -76,7 +153,7 @@ class CartCard extends StatelessWidget {
                       width: 20,
                       child: ProgressView(),
                     )
-                  : Icon(Icons.delete, color: AppColor.primaryColor),
+                  : const Icon(Icons.delete, color: AppColor.primaryColor),
             ),
           )
         ],

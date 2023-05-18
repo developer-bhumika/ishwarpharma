@@ -14,7 +14,7 @@ class BottomBarController extends GetxController {
     ProductsScreen(),
     CartScreen(),
     HistoryScreen(),
-    NotificationScreen(),
     DownloadScreen(),
+    NotificationScreen(),
   ].obs;
 }

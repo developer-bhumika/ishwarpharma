@@ -3,11 +3,11 @@ import 'package:ishwarpharma/api/dio_exceptions.dart';
 import 'package:ishwarpharma/api/request/product_api.dart';
 import 'package:ishwarpharma/model/cart_model.dart';
 import 'package:ishwarpharma/model/company_model.dart';
+import 'package:ishwarpharma/model/download_model.dart';
 import 'package:ishwarpharma/model/history_model.dart';
 import 'package:ishwarpharma/model/product_detail_model.dart';
 import 'package:ishwarpharma/model/product_model.dart';
 import 'package:ishwarpharma/model/slider_model.dart';
-import 'package:ishwarpharma/view/dashboard/product_detail_screen.dart';
 
 class ProductService {
   final ProductApi productApi;
@@ -46,6 +46,19 @@ class ProductService {
     return null;
   }
 
+  Future<DownloadModel?> getDownloads(bool pass) async {
+    try {
+      final response = await productApi.getDownloads(pass);
+      if (response != null) {
+        return DownloadModel.fromJson(response.data);
+      }
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+    return null;
+  }
+
   Future<SliderModel?> getSlider() async {
     try {
       final response = await productApi.getSlider();
@@ -64,6 +77,20 @@ class ProductService {
       final response = await productApi.productDetail(id);
       if (response != null) {
         return ProductDetailModel.fromJson(response.data);
+      }
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+    return null;
+  }
+
+  Future<dynamic> editCart(int? id, String? qty, String dId) async {
+    try {
+      final body = FormData.fromMap({'device_id': dId, 'qty': qty.toString(), 'id': id.toString()});
+      final response = await productApi.editCart(body);
+      if (response != null) {
+        return response.data;
       }
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

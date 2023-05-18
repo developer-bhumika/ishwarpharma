@@ -1,14 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ishwarpharma/controller/product_controller.dart';
 import 'package:ishwarpharma/utils/constant.dart';
+import 'package:ishwarpharma/utils/indicator.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
 import 'package:ishwarpharma/view/common_widget/company_card.dart';
 
 class HomeScreen extends StatelessWidget {
-  TabController? tabController;
-  HomeScreen({Key? key, this.tabController}) : super(key: key);
+  HomeScreen({Key? key}) : super(key: key);
 
   final productController = Get.find<ProductController>();
 
@@ -19,32 +20,37 @@ class HomeScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 5),
           Obx(
-            () => CarouselSlider(
-              options: CarouselOptions(height: 200.0),
-              items: productController.sliderList.map((i) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                      decoration: const BoxDecoration(color: Colors.amber),
-                      child: Image.network(
-                        i.sliderUrl ?? "",
-                        fit: BoxFit.fill,
-                      ),
-                    );
-                  },
-                );
-              }).toList(),
-            ),
+            () => productController.companyLoad.value
+                ? SizedBox(height: 200, width: Get.width, child: ProgressView())
+                : CarouselSlider(
+                    options: CarouselOptions(height: 200.0, autoPlay: true, viewportFraction: 1),
+                    items: productController.sliderList.map((i) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: CachedNetworkImage(
+                                imageUrl: i.sliderUrl ?? "",
+                                fit: BoxFit.fill,
+                                placeholder: (context, url) => SizedBox(height: 25, width: 25, child: ProgressView()),
+                                errorWidget: (context, url, error) => const Center(child: Icon(Icons.error)),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }).toList(),
+                  ),
           ),
+          const SizedBox(height: 15),
           const CommonText(
-            text: "Shop by Company",
-            fontSize: 18,
-            color: AppColor.primaryColor,
-            fontWeight: FontWeight.w600,
-          ),
+              text: "Shop by Company", fontSize: 18, color: AppColor.primaryColor, fontWeight: FontWeight.w600),
           const SizedBox(height: 15),
           Obx(
             () => productController.companyLoad.value
@@ -52,9 +58,7 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
-                        Center(
-                          child: CircularProgressIndicator(color: AppColor.primaryColor),
-                        ),
+                        Center(child: CircularProgressIndicator(color: AppColor.primaryColor)),
                       ],
                     ),
                   )
@@ -76,20 +80,24 @@ class HomeScreen extends StatelessWidget {
                         ),
                       )
                     : Expanded(
-                        child: ListView.separated(
+                        child: GridView.builder(
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            mainAxisSpacing: 10,
+                            crossAxisSpacing: 10,
+                            childAspectRatio: 1,
+                          ),
                           physics: const BouncingScrollPhysics(),
                           itemCount: productController.companyList.length,
-                          separatorBuilder: (context, index) => const SizedBox(height: 10),
                           itemBuilder: (context, index) => InkWell(
                             onTap: () {
-                              productController.search.text = productController.companyList[index].company!;
+                              productController.search.text = productController.companyList[index].name!;
 
                               productController.searchProduct(productController.search.text);
-
-                              tabController?.animateTo(1, curve: const ElasticInCurve());
                             },
                             child: CompanyCard(
-                              companyName: productController.companyList[index].company ?? "",
+                              imageUrl: productController.companyList[index].logoUrl ?? "",
+                              companyName: productController.companyList[index].name ?? "",
                             ),
                           ),
                         ),

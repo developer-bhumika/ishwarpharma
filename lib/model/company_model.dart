@@ -15,9 +15,14 @@ class CompanyModel {
 
 @JsonSerializable()
 class CompanyData {
-  String? company;
+  int? id;
+  String? name;
+  String? logo;
+  String? created_at;
+  String? updated_at;
+  String? logoUrl;
 
-  CompanyData({this.company});
+  CompanyData({this.id, this.name, this.logo, this.created_at, this.updated_at, this.logoUrl});
 
   factory CompanyData.fromJson(Map<String, dynamic> json) => _$CompanyDataFromJson(json);
   Map<String, dynamic> toJson() => _$CompanyDataToJson(this);
