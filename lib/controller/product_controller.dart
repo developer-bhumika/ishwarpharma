@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ishwarpharma/api/service_locator.dart';
@@ -13,6 +14,7 @@ import 'package:ishwarpharma/model/history_model.dart';
 import 'package:ishwarpharma/model/product_detail_model.dart';
 import 'package:ishwarpharma/model/product_model.dart';
 import 'package:ishwarpharma/model/slider_model.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductController extends GetxController {
@@ -27,6 +29,8 @@ class ProductController extends GetxController {
   TextEditingController email = TextEditingController();
   TextEditingController moNo = TextEditingController();
   RxBool reLoad = false.obs;
+  String? selectedCity;
+  RxList<String> cityList = ["Surat", "Vapi", "Ahmedabad", "Vadodara"].obs;
 
   Future<bool> isInternet() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -528,6 +532,22 @@ class ProductController extends GetxController {
       }
     } catch (e) {
       addCartLoading.value = false;
+    }
+  }
+
+  downloadFile(int? id) async {
+    await Permission.storage.request();
+    try {
+      final taskId = await FlutterDownloader.enqueue(
+        url: downloadPriceList[id ?? 0].pricepdfUrl ?? "",
+        savedDir: "/storage/emulated/0/Download",
+        showNotification: true,
+        saveInPublicStorage: true,
+        openFileFromNotification: true,
+      );
+      print(taskId);
+    } catch (e) {
+      print(e);
     }
   }
 

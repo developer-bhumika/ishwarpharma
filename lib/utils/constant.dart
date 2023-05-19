@@ -1,16 +1,36 @@
 import 'package:flutter/material.dart';
 
 class AppColor {
-  static const Color primaryColor = Color(0xff009640);
-  static const Color secondaryColor = Color(0xffa8c748);
+  static const Color primaryColor = Color(0xff00A651);
+  static const Color secondaryColor = Color(0xff96BF24);
+  static const Color borderColor = Color(0xffEBF5ED);
+  static const Color dartFontColor = Color(0xff2D4D3C);
+  static const Color greyGreen = Color(0xff889990);
+
   static const Color white = Colors.white;
   static const Color black = Colors.black;
 }
 
 class AppImage {
   static const String imagePath = "assets/img/";
-  static const String logo = "${imagePath}appLogo.png";
-  static const String cart = "${imagePath}cart.png";
+  static const String logo = "${imagePath}logo.png";
+  static const String more = "${imagePath}more.svg";
+  static const String refresh = "${imagePath}refresh.svg";
+  static const String searchColor = "${imagePath}searchColor.svg";
+  static const String cartColor = "${imagePath}cartColor.svg";
+  static const String notificationColor = "${imagePath}notificationColor.svg";
+  static const String downloadColor = "${imagePath}downloadColor.svg";
+  static const String historyColor = "${imagePath}historyColor.svg";
+  static const String homeColor = "${imagePath}homeColor.svg";
+  static const String emptyCart = "${imagePath}cart.png";
+  static const String searchText = "${imagePath}searchText.svg";
+  static const String filter = "${imagePath}filter.svg";
+  static const String cart = "${imagePath}cart.svg";
+  static const String download = "${imagePath}download.svg";
+  static const String history = "${imagePath}history.svg";
+  static const String home = "${imagePath}home.svg";
+  static const String notification = "${imagePath}notification.svg";
+  static const String search = "${imagePath}search.svg";
 }
 
 class Endpoints {

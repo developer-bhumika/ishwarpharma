@@ -44,7 +44,8 @@ class ProductCard extends StatelessWidget {
 
       children.add(TextSpan(
         text: source.substring(match.start, match.end),
-        style: TextStyle(fontWeight: FontWeight.bold, color: AppColor.primaryColor, backgroundColor: Colors.yellow),
+        style:
+            const TextStyle(fontWeight: FontWeight.bold, color: AppColor.primaryColor, backgroundColor: Colors.yellow),
       ));
 
       if (i == matches.length - 1 && match.end != source.length) {
@@ -60,71 +61,41 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5),
-      ),
-      margin: const EdgeInsets.only(bottom: 5),
-      child: Container(
-        decoration: BoxDecoration(
+    return Container(
+      decoration: BoxDecoration(
+          color: AppColor.white,
           borderRadius: BorderRadius.circular(5),
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              AppColor.secondaryColor.withOpacity(0.2),
-              AppColor.primaryColor.withOpacity(0.2),
-            ],
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              /*   searchText?.contains(" ") ?? false
-                  ? Text.rich(
-                      TextSpan(
-                        children: [
-                          for (int i = 0; i < num.parse(searchTextList?.length.toString() ?? "0"); i++)
-                            // highlightOccurrences(title ?? '', searchTextList?[i] ?? '')
-                        ],
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    )
-                  :*/
-              Text.rich(
-                TextSpan(
-                  children: highlightOccurrences(title ?? '', searchText ?? ''),
-                  style: TextStyle(color: Colors.black),
-                ),
+          border: Border.all(color: AppColor.borderColor)),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text.rich(
+              TextSpan(
+                children: highlightOccurrences(title ?? '', searchText ?? ''),
+                style: const TextStyle(color: AppColor.primaryColor),
               ),
-              // CommonText(
-              //   text: title ?? "",
-              //   fontWeight: FontWeight.w600,
-              //   color: /* isCheck ?? false ? AppColor.primaryColor : */ Colors.black,
-              // ),
-              const Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ProductCardColumn(title: "Company", subTitle: company ?? "", searchText: searchText),
-                  ProductCardColumn(title: "Rate", subTitle: rate ?? ""),
-                  ProductCardColumn(title: "MRP", subTitle: mrp ?? ""),
-                  ProductCardColumn(title: "Free", subTitle: free ?? ""),
-                ],
+            ),
+            const Divider(color: AppColor.borderColor),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ProductCardColumn(title: "Company", subTitle: company ?? "", searchText: searchText, flex: 2),
+                ProductCardColumn(title: "Rate", subTitle: rate ?? ""),
+                ProductCardColumn(title: "MRP", subTitle: mrp ?? ""),
+                ProductCardColumn(title: "Free", subTitle: free ?? ""),
+              ],
+            ),
+            const Divider(color: AppColor.borderColor),
+            Text.rich(
+              TextSpan(
+                children: highlightOccurrences(subTitle ?? '', searchText ?? ''),
+                style: const TextStyle(color: AppColor.dartFontColor),
               ),
-              const Divider(),
-              Text.rich(
-                TextSpan(
-                  children: highlightOccurrences(subTitle ?? '', searchText ?? ''),
-                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

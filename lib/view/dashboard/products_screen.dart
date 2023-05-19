@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ishwarpharma/controller/product_controller.dart';
 import 'package:ishwarpharma/utils/constant.dart';
+import 'package:ishwarpharma/view/about_us_screen.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
 import 'package:ishwarpharma/view/common_widget/product_card.dart';
 import 'package:ishwarpharma/view/dashboard/product_detail_screen.dart';
+import 'package:ishwarpharma/view/setting/setting_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductsScreen extends StatelessWidget {
   ProductsScreen({Key? key}) : super(key: key);
@@ -15,25 +19,239 @@ class ProductsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(10),
-          child: TextFormField(
-            cursorColor: AppColor.primaryColor,
-            onChanged: (v) {
-              if (v.isEmpty) {
-                productController.searchList.clear();
-              } else {
-                productController.searchProduct(v);
-              }
-            },
-            controller: productController.search,
-            decoration: const InputDecoration(
-              hintText: "Search medicine",
-              prefixIcon: Icon(Icons.search, size: 25, color: AppColor.primaryColor),
-              border: OutlineInputBorder(borderSide: BorderSide(color: AppColor.primaryColor)),
-              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: AppColor.primaryColor)),
-              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: AppColor.primaryColor)),
-              isDense: true,
+        Container(
+          height: 157,
+          width: Get.width,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [AppColor.primaryColor, AppColor.secondaryColor],
+            ),
+          ),
+          child: SafeArea(
+            child: Column(
+              children: [
+                const SizedBox(height: 25),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(width: 16),
+                    Image.asset(AppImage.logo),
+                    const Spacer(),
+                    InkWell(
+                      onTap: () async {
+                        SharedPreferences preferences = await SharedPreferences.getInstance();
+                        preferences.clear();
+                        if (await productController.isInternet()) {
+                          productController.reLoad.value = true;
+                          await productController.getCompany();
+                          await productController.getSlider();
+                          await productController.getProduct();
+                          await productController.getCart();
+                          await productController.getHistory();
+                          productController.reLoad.value = false;
+                          Get.snackbar(
+                            "Success",
+                            "Data reload successfully",
+                            messageText: Text(
+                              "Data reload successfully",
+                              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: Colors.green.shade900),
+                            ),
+                            backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
+                            colorText: Colors.green.shade900,
+                          );
+                        } else {
+                          Get.snackbar("Network", "Check your internet connection",
+                              messageText: Text(
+                                "Check your internet connection",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 13,
+                                  color: Colors.green.shade900,
+                                ),
+                              ),
+                              backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
+                              colorText: Colors.green.shade900);
+                        }
+                      },
+                      child: Obx(
+                        () => productController.reLoad.value
+                            ? const SizedBox(
+                                width: 20,
+                                child: CircularProgressIndicator(color: AppColor.white, strokeWidth: 2),
+                              )
+                            : SvgPicture.asset(AppImage.refresh),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    PopupMenuButton<int>(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      splashRadius: 20,
+                      icon: SvgPicture.asset(AppImage.more),
+                      itemBuilder: (context) => [
+                        const PopupMenuItem(value: 1, child: Text("Setting")),
+                        const PopupMenuItem(value: 2, child: Text("About Us")),
+                      ],
+                      onSelected: (val) {
+                        if (val == 1) {
+                          Get.to(SettingScreen());
+                        } else {
+                          Get.to(AboutUsScreen());
+                        }
+                      },
+                    ),
+                    const SizedBox(width: 16),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: TextFormField(
+                    cursorColor: AppColor.primaryColor,
+                    onChanged: (v) {
+                      if (v.isEmpty) {
+                        productController.searchList.clear();
+                      } else {
+                        productController.searchProduct(v);
+                      }
+                    },
+                    controller: productController.search,
+                    decoration: InputDecoration(
+                      fillColor: AppColor.white,
+                      filled: true,
+                      border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(7)),
+                      hintText: "Search medicine",
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: SvgPicture.asset(AppImage.searchText),
+                      ),
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: InkWell(
+                          onTap: () {
+                            Get.bottomSheet(
+                              shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+                              ),
+                              backgroundColor: AppColor.white,
+                              Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 13),
+                                    Row(
+                                      children: [
+                                        const CommonText(text: "Filter by", fontSize: 16, color: Colors.black),
+                                        const Spacer(),
+                                        InkWell(
+                                            onTap: () => Get.back(),
+                                            child: const Icon(Icons.close, color: AppColor.greyGreen)),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 30),
+                                    const CommonText(text: "Category", color: AppColor.dartFontColor),
+                                    const SizedBox(height: 20),
+                                    StatefulBuilder(
+                                      builder: (context, setState) => Container(
+                                        height: 48,
+                                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(6),
+                                            color: const Color(0xffE3EFE6),
+                                            border: Border.all(color: AppColor.borderColor)),
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButton<String>(
+                                            icon: const Icon(Icons.arrow_drop_down, color: AppColor.primaryColor),
+                                            hint: const Padding(
+                                              padding: EdgeInsets.only(left: 8.0),
+                                              child: CommonText(text: 'Select City', color: Colors.black),
+                                            ),
+                                            borderRadius: BorderRadius.circular(6),
+                                            value: productController.selectedCity,
+                                            isDense: true,
+                                            isExpanded: true,
+                                            onChanged: (String? newValue) {
+                                              productController.selectedCity = newValue!;
+                                              setState(() {});
+                                            },
+                                            items: productController.cityList.map((value) {
+                                              return DropdownMenuItem(
+                                                value: value,
+                                                child: Text(value,
+                                                    style: const TextStyle(color: AppColor.black, fontSize: 15)),
+                                              );
+                                            }).toList(),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 20),
+                                    const CommonText(text: "City", color: AppColor.dartFontColor),
+                                    const SizedBox(height: 20),
+                                    StatefulBuilder(
+                                      builder: (context, setState) => Container(
+                                        height: 48,
+                                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(6),
+                                            color: const Color(0xffE3EFE6),
+                                            border: Border.all(color: AppColor.borderColor)),
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButton<String>(
+                                            icon: const Icon(Icons.arrow_drop_down, color: AppColor.primaryColor),
+                                            hint: const Padding(
+                                              padding: EdgeInsets.only(left: 8.0),
+                                              child: CommonText(text: 'Select City', color: Colors.black),
+                                            ),
+                                            borderRadius: BorderRadius.circular(6),
+                                            value: productController.selectedCity,
+                                            isDense: true,
+                                            isExpanded: true,
+                                            onChanged: (String? newValue) {
+                                              productController.selectedCity = newValue!;
+                                              setState(() {});
+                                            },
+                                            items: productController.cityList.map((value) {
+                                              return DropdownMenuItem(
+                                                value: value,
+                                                child: Text(value,
+                                                    style: const TextStyle(color: AppColor.black, fontSize: 15)),
+                                              );
+                                            }).toList(),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 23),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      children: [
+                                        MaterialButton(
+                                            height: 52,
+                                            color: AppColor.primaryColor,
+                                            onPressed: () {},
+                                            child: const CommonText(
+                                              text: "Apply",
+                                              color: AppColor.white,
+                                            )),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                          child: SvgPicture.asset(AppImage.filter),
+                        ),
+                      ),
+                      isDense: true,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

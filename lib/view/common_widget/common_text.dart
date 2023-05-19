@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ishwarpharma/utils/constant.dart';
 
 class CommonText extends StatelessWidget {
   final String? text;
@@ -20,7 +21,7 @@ class CommonText extends StatelessWidget {
     return Text(
       text ?? "",
       style: TextStyle(
-        color: color ?? Colors.black,
+        color: color ?? AppColor.dartFontColor,
         fontSize: fontSize ?? 14,
         fontWeight: fontWeight ?? FontWeight.w400,
       ),

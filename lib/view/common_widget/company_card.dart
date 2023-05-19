@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:ishwarpharma/utils/constant.dart';
 import 'package:ishwarpharma/utils/indicator.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
 
@@ -11,27 +10,25 @@ class CompanyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
-        border: Border.all(color: AppColor.primaryColor),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(color: const Color(0xffC9DECE).withOpacity(0.24), blurRadius: 17),
+        ],
         borderRadius: BorderRadius.circular(5),
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            AppColor.secondaryColor.withOpacity(0.2),
-            AppColor.primaryColor.withOpacity(0.2),
-          ],
-        ),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            height: 85,
-            width: 85,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+            height: 90,
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
+            ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
               child: CachedNetworkImage(
                   imageUrl: imageUrl ?? "",
                   fit: BoxFit.fill,
@@ -39,8 +36,10 @@ class CompanyCard extends StatelessWidget {
                   errorWidget: (e, es, esq) => const Icon(Icons.error)),
             ),
           ),
-          const Spacer(),
-          CommonText(text: companyName, fontWeight: FontWeight.w500),
+          Expanded(
+            child: CommonText(text: companyName ?? "", fontWeight: FontWeight.w500),
+          ),
+          const SizedBox(),
         ],
       ),
     );

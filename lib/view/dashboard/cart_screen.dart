@@ -46,7 +46,7 @@ class _CartScreenState extends State<CartScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Image.asset(width: 150, height: 150, AppImage.cart),
+                      Image.asset(width: 150, height: 150, AppImage.emptyCart),
                       const CommonText(
                         fontSize: 20,
                         textAlign: TextAlign.center,

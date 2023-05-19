@@ -56,10 +56,22 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                 fontWeight: FontWeight.w600,
                                 fontSize: 16),
                           ),
-                          const CircleAvatar(
-                            radius: 15,
-                            backgroundColor: AppColor.primaryColor,
-                            child: Icon(Icons.download, color: AppColor.white),
+                          InkWell(
+                            onTap: () async {
+                              final taskId = await FlutterDownloader.enqueue(
+                                url: productController.downloadProductList[index].pricepdfUrl ?? "",
+                                savedDir: "/storage/emulated/0/Download",
+                                showNotification: true,
+                                saveInPublicStorage: true,
+                                openFileFromNotification: true,
+                              );
+                              print(taskId);
+                            },
+                            child: const CircleAvatar(
+                              radius: 15,
+                              backgroundColor: AppColor.primaryColor,
+                              child: Icon(Icons.download, color: AppColor.white),
+                            ),
                           ),
                         ],
                       ),
@@ -95,20 +107,8 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                 fontSize: 16),
                           ),
                           InkWell(
-                            onTap: () async {
-                              productController.downloadPriceList[index].pricepdfUrl;
-                              try {
-                                final taskId = await FlutterDownloader.enqueue(
-                                  url: productController.downloadPriceList[index].pricepdfUrl ?? "",
-                                  savedDir: "/storage/emulated/0/Download",
-                                  showNotification: true, // show download progress in status bar (for Android)
-                                  openFileFromNotification:
-                                      true, // click on notification to open downloaded file (for Android)
-                                );
-                                print(taskId);
-                              } on Exception catch (e) {
-                                print(e);
-                              }
+                            onTap: () {
+                              productController.downloadFile(index);
                             },
                             child: const CircleAvatar(
                               radius: 15,

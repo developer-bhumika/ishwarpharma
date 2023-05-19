@@ -22,10 +22,8 @@ Future<void> main() async {
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
-        appBarTheme: const AppBarTheme(
-          color: AppColor.primaryColor,
-        ),
+        scaffoldBackgroundColor: const Color(0xffF2FFF5),
+        appBarTheme: const AppBarTheme(color: AppColor.primaryColor),
       ),
       home: const DashBoard(),
     ),
