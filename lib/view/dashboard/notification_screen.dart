@@ -23,26 +23,27 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [AppColor.primaryColor, AppColor.secondaryColor],
+        appBar: AppBar(
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [AppColor.primaryColor, AppColor.secondaryColor],
+              ),
             ),
           ),
+          centerTitle: true,
+          title: CommonText(
+            text: "Notification",
+            color: AppColor.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
         ),
-        centerTitle: true,
-        title: CommonText(
-          text: "Notification",
-          color: AppColor.white,
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      body: Padding(
+        body:
+            Column() /*Padding(
         padding: const EdgeInsets.all(12.0),
         child: ListView.separated(
             physics: const BouncingScrollPhysics(),
@@ -82,7 +83,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     ],
                   ),
                 )),
-      ),
-    );
+      ),*/
+        );
   }
 }

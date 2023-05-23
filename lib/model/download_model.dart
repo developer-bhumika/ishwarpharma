@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'download_model.g.dart';
 
@@ -21,6 +22,7 @@ class DownloadDataModel {
   String? created_at;
   String? updated_at;
   String? pricepdfUrl;
+  Rx<bool> load = false.obs;
 
   DownloadDataModel({this.id, this.name, this.price_pdf, this.created_at, this.updated_at, this.pricepdfUrl});
 

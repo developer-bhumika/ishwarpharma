@@ -25,9 +25,18 @@ class ProductApi {
     }
   }
 
-  Future<Response?> getDownloads(bool pass) async {
+  Future<Response?> getDownloadsPrice() async {
     try {
-      final Response? response = await dioClient.get(pass ? Endpoints.downloadProduct : Endpoints.downloadPrice);
+      final Response? response = await dioClient.get(Endpoints.downloadPrice);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response?> getDownloadsProduct() async {
+    try {
+      final Response? response = await dioClient.get(Endpoints.downloadProduct);
       return response;
     } catch (e) {
       rethrow;

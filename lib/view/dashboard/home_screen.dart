@@ -84,8 +84,8 @@ class HomeScreen extends StatelessWidget {
                             itemBuilder: (context, index) => InkWell(
                               onTap: () {
                                 productController.search.text = productController.companyList[index].name!;
-
                                 productController.searchProduct(productController.search.text);
+                                // productController.selectedIndex.value = 1;
                               },
                               child: CompanyCard(
                                 imageUrl: productController.companyList[index].logoUrl ?? "",

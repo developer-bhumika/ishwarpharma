@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:get/get.dart';
 import 'package:ishwarpharma/controller/product_controller.dart';
 import 'package:ishwarpharma/utils/constant.dart';
 import 'package:ishwarpharma/utils/indicator.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
+import 'package:open_file/open_file.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class DownloadScreen extends StatefulWidget {
   DownloadScreen({Key? key}) : super(key: key);
@@ -19,8 +21,20 @@ class _DownloadScreenState extends State<DownloadScreen> {
   @override
   void initState() {
     super.initState();
+    getStoragePermission();
     productController.getDownloads();
-    productController.getDownloads(pass: true);
+    productController.getDownLoadProduct();
+  }
+
+  getStoragePermission() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.storage,
+    ].request();
+
+    print(statuses[Permission.storage]);
+    if (await Permission.storage.request().isDenied) {
+      // Either the permission was already granted before or the user just granted it.
+    }
   }
 
   @override
@@ -72,18 +86,34 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                   fontWeight: FontWeight.w600,
                                   fontSize: 16),
                             ),
-                            InkWell(
-                              onTap: () async {
-                                final taskId = await FlutterDownloader.enqueue(
-                                  url: productController.downloadProductList[index].pricepdfUrl ?? "",
-                                  savedDir: "/storage/emulated/0/Download",
-                                  showNotification: true,
-                                  saveInPublicStorage: true,
-                                  openFileFromNotification: true,
-                                );
-                                print(taskId);
-                              },
-                              child: Icon(Icons.download, color: AppColor.primaryColor),
+                            Obx(
+                              () => productController.downloadProductList[index].load.value
+                                  ? CircularPercentIndicator(
+                                      radius: 20.0,
+                                      lineWidth: 3.0,
+                                      percent: productController.progressDownload.value,
+                                      center: CommonText(
+                                        text: "${productController.progressDownload.value * 100}%",
+                                        fontSize: 11,
+                                      ),
+                                      progressColor: AppColor.primaryColor,
+                                    )
+                                  : InkWell(
+                                      onTap: () {
+                                        productController.downloadProductList[index].load.value = true;
+                                        productController.downloadFile(
+                                            productController.downloadProductList[index].productpdfUrl, index);
+                                        // final taskId = await FlutterDownloader.enqueue(
+                                        //   url: productController.downloadProductList[index].pricepdfUrl ?? "",
+                                        //   savedDir: "/storage/emulated/0/Download",
+                                        //   showNotification: true,
+                                        //   saveInPublicStorage: true,
+                                        //   openFileFromNotification: true,
+                                        // );
+                                        // print(taskId);
+                                      },
+                                      child: Icon(Icons.download, color: AppColor.primaryColor),
+                                    ),
                             ),
                           ],
                         ),
@@ -110,11 +140,26 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                   fontWeight: FontWeight.w600,
                                   fontSize: 16),
                             ),
-                            InkWell(
-                              onTap: () {
-                                productController.downloadFile(index);
-                              },
-                              child: Icon(Icons.download, color: AppColor.primaryColor),
+                            Obx(
+                              () => productController.downloadPriceList[index].load.value
+                                  ? CircularPercentIndicator(
+                                      radius: 20.0,
+                                      lineWidth: 5.0,
+                                      percent: productController.progressDownload.value,
+                                      center: CommonText(
+                                        text: "${productController.progressDownload.value * 100}%",
+                                        fontSize: 13,
+                                      ),
+                                      progressColor: AppColor.primaryColor,
+                                    )
+                                  : InkWell(
+                                      onTap: () {
+                                        productController.downloadPriceList[index].load.value = true;
+                                        productController.downloadFile(
+                                            productController.downloadPriceList[index].pricepdfUrl, index);
+                                      },
+                                      child: Icon(Icons.download, color: AppColor.primaryColor),
+                                    ),
                             ),
                           ],
                         ),

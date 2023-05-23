@@ -4,6 +4,7 @@ import 'package:ishwarpharma/api/request/product_api.dart';
 import 'package:ishwarpharma/model/cart_model.dart';
 import 'package:ishwarpharma/model/company_model.dart';
 import 'package:ishwarpharma/model/download_model.dart';
+import 'package:ishwarpharma/model/download_product_model.dart';
 import 'package:ishwarpharma/model/history_model.dart';
 import 'package:ishwarpharma/model/product_detail_model.dart';
 import 'package:ishwarpharma/model/product_model.dart';
@@ -46,11 +47,24 @@ class ProductService {
     return null;
   }
 
-  Future<DownloadModel?> getDownloads(bool pass) async {
+  Future<DownloadModel?> getDownloadPrice() async {
     try {
-      final response = await productApi.getDownloads(pass);
+      final response = await productApi.getDownloadsPrice();
       if (response != null) {
         return DownloadModel.fromJson(response.data);
+      }
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+    return null;
+  }
+
+  Future<DownLoadProductModel?> getDownloadProduct() async {
+    try {
+      final response = await productApi.getDownloadsProduct();
+      if (response != null) {
+        return DownLoadProductModel.fromJson(response.data);
       }
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

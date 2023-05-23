@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_file_downloader/flutter_file_downloader.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ishwarpharma/api/service_locator.dart';
@@ -10,10 +10,18 @@ import 'package:ishwarpharma/api/services/product_service.dart';
 import 'package:ishwarpharma/model/cart_model.dart';
 import 'package:ishwarpharma/model/company_model.dart';
 import 'package:ishwarpharma/model/download_model.dart';
+import 'package:ishwarpharma/model/download_product_model.dart';
 import 'package:ishwarpharma/model/history_model.dart';
 import 'package:ishwarpharma/model/product_detail_model.dart';
 import 'package:ishwarpharma/model/product_model.dart';
 import 'package:ishwarpharma/model/slider_model.dart';
+import 'package:ishwarpharma/view/dashboard/cart_screen.dart';
+import 'package:ishwarpharma/view/dashboard/download.dart';
+import 'package:ishwarpharma/view/dashboard/history_screen.dart';
+import 'package:ishwarpharma/view/dashboard/home_screen.dart';
+import 'package:ishwarpharma/view/dashboard/notification_screen.dart';
+import 'package:ishwarpharma/view/dashboard/products_screen.dart';
+import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,6 +40,8 @@ class ProductController extends GetxController {
   RxBool reLoad = false.obs;
   String? selectedCity;
   RxList<String> cityList = ["Surat", "Vapi", "Ahmedabad", "Vadodara"].obs;
+
+  RxBool notification = false.obs;
 
   Future<bool> isInternet() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -85,59 +95,60 @@ class ProductController extends GetxController {
   RxBool pageLoad = true.obs;
 
   getProduct(int page) async {
-    // SharedPreferences preferences = await SharedPreferences.getInstance();
+    SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    // if (preferences.getString('product') != null) {
-    //   isLoading.value = true;
-    //   final data = preferences.getString('product');
-    //   productModel.value = ProductModel.fromJson(jsonDecode(data ?? ""));
-    //   productList.value = productModel.value.data ?? [];
-    //   if (productList.isNotEmpty) {
-    //     productList.sort((a, b) => a.brand!.compareTo(b.brand ?? ""));
-    //     isLoading.value = false;
-    //   }
-    // } else {
-    try {
-      if (page == 1) {
-        isLoading.value = true;
-        productList.clear();
-      }
-      final resp = await productService.getProduct(search.text, page);
-      if (resp != null) {
-        productModel.value = resp;
-        if (productModel.value.success ?? false) {
-          productList.addAll(productModel.value.data ?? []);
-          refreshController.loadComplete();
-          if (productList.isNotEmpty) {
-            productList.sort((a, b) => a.brand!.compareTo(b.brand ?? ""));
-            // var jsonRes = jsonDecode(jsonEncode(productModel));
-            // await preferences.setString('product', json.encode(jsonRes));
-          }
-          if (productModel.value.data?.isEmpty ?? true) {
-            pageLoad.value = false;
-          }
-          isLoading.value = false;
-        } else {
-          Get.snackbar("Error", productModel.value.message ?? "",
-              messageText: Text(
-                productModel.value.message ?? "",
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 13,
-                  color: Colors.green.shade900,
-                ),
-              ),
-              backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
-              colorText: Colors.green.shade900);
-          isLoading.value = false;
-        }
-      } else {
+    if (preferences.getString('product') != null) {
+      isLoading.value = true;
+      final data = preferences.getString('product');
+      productModel.value = ProductModel.fromJson(jsonDecode(data ?? ""));
+      productList.addAll(productModel.value.data ?? []);
+      refreshController.loadComplete();
+      if (productList.isNotEmpty) {
+        productList.sort((a, b) => a.brand!.compareTo(b.brand ?? ""));
         isLoading.value = false;
       }
-    } catch (e) {
-      isLoading.value = false;
+    } else {
+      try {
+        if (page == 1) {
+          isLoading.value = true;
+          productList.clear();
+        }
+        final resp = await productService.getProduct(search.text, page);
+        if (resp != null) {
+          productModel.value = resp;
+          if (productModel.value.success ?? false) {
+            productList.addAll(productModel.value.data ?? []);
+            refreshController.loadComplete();
+            if (productList.isNotEmpty) {
+              productList.sort((a, b) => a.brand!.compareTo(b.brand ?? ""));
+              var jsonRes = jsonDecode(jsonEncode(productModel));
+              await preferences.setString('product', json.encode(jsonRes));
+            }
+            if (productModel.value.data?.isEmpty ?? true) {
+              pageLoad.value = false;
+            }
+            isLoading.value = false;
+          } else {
+            Get.snackbar("Error", productModel.value.message ?? "",
+                messageText: Text(
+                  productModel.value.message ?? "",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
+                    color: Colors.green.shade900,
+                  ),
+                ),
+                backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
+                colorText: Colors.green.shade900);
+            isLoading.value = false;
+          }
+        } else {
+          isLoading.value = false;
+        }
+      } catch (e) {
+        isLoading.value = false;
+      }
     }
-    // }
   }
 
   Rx<ProductDetailModel> productDetailModel = ProductDetailModel().obs;
@@ -548,18 +559,44 @@ class ProductController extends GetxController {
     }
   }
 
-  downloadFile(int? id) async {
-    await Permission.storage.request();
+  RxDouble progressDownload = 0.0.obs;
+  downloadFile(
+    String? url,
+    index,
+  ) async {
     try {
-      final taskId = await FlutterDownloader.enqueue(
-        url: downloadPriceList[id ?? 0].pricepdfUrl ?? "",
-        savedDir: "/storage/emulated/0/Download",
-        showNotification: true,
-        saveInPublicStorage: true,
-        openFileFromNotification: true,
-      );
-      print(taskId);
+      //You can download a single file
+      FileDownloader.downloadFile(
+          url: url ?? "",
+          name: 'ishwarpharma',
+          onProgress: (String? fileName, double? progress) {
+            progressDownload.value = (progress! / 100);
+          },
+          onDownloadCompleted: (String path) async {
+            downloadPriceList[index].load.value = false;
+            downloadProductList[index].load.value = false;
+            await OpenFile.open(path);
+            print('FILE DOWNLOADED TO PATH: $path');
+            Get.snackbar("Success", "File downloaded successfully" ?? "",
+                messageText: Text(
+                  "File downloaded successfully" ?? "",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
+                    color: Colors.green.shade900,
+                  ),
+                ),
+                backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
+                colorText: Colors.green.shade900);
+          },
+          onDownloadError: (String error) {
+            downloadPriceList[index].load.value = false;
+            downloadProductList[index].load.value = false;
+            print('DOWNLOAD ERROR: $error');
+          });
     } catch (e) {
+      downloadPriceList[index].load.value = false;
+      downloadProductList[index].load.value = false;
       print(e);
     }
   }
@@ -567,23 +604,19 @@ class ProductController extends GetxController {
   RxBool downloadsPriceLoad = false.obs;
   RxBool downloadsProductLoad = false.obs;
   Rx<DownloadModel> downloadModel = DownloadModel().obs;
+  Rx<DownLoadProductModel> downloadProductModel = DownLoadProductModel().obs;
   RxList<DownloadDataModel> downloadPriceList = <DownloadDataModel>[].obs;
-  RxList<DownloadDataModel> downloadProductList = <DownloadDataModel>[].obs;
-  getDownloads({bool? pass}) async {
+  RxList<DownloadProductDataModel> downloadProductList = <DownloadProductDataModel>[].obs;
+  getDownloads() async {
     try {
       downloadsPriceLoad.value = true;
-      downloadsProductLoad.value = true;
-      final resp = await productService.getDownloads(pass ?? false);
+
+      final resp = await productService.getDownloadPrice();
       if (resp != null) {
         downloadModel.value = resp;
         if (downloadModel.value.success ?? false) {
-          if (pass ?? false) {
-            downloadProductList.value = downloadModel.value.data ?? [];
-            downloadsProductLoad.value = false;
-          } else {
-            downloadPriceList.value = downloadModel.value.data ?? [];
-            downloadsPriceLoad.value = false;
-          }
+          downloadPriceList.value = downloadModel.value.data ?? [];
+          downloadsPriceLoad.value = false;
         } else {
           Get.snackbar("Error", downloadModel.value.message ?? "",
               messageText: Text(
@@ -597,14 +630,42 @@ class ProductController extends GetxController {
               backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
               colorText: Colors.green.shade900);
           downloadsPriceLoad.value = false;
-          downloadsProductLoad.value = false;
         }
       } else {
         downloadsPriceLoad.value = false;
-        downloadsProductLoad.value = false;
       }
     } catch (e) {
       downloadsPriceLoad.value = false;
+    }
+  }
+
+  getDownLoadProduct() async {
+    try {
+      downloadsProductLoad.value = true;
+      final resp = await productService.getDownloadProduct();
+      if (resp != null) {
+        downloadProductModel.value = resp;
+        if (downloadProductModel.value.success ?? false) {
+          downloadProductList.value = downloadProductModel.value.data ?? [];
+          downloadsProductLoad.value = false;
+        } else {
+          Get.snackbar("Error", downloadProductModel.value.message ?? "",
+              messageText: Text(
+                downloadProductModel.value.message ?? "",
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13,
+                  color: Colors.green.shade900,
+                ),
+              ),
+              backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
+              colorText: Colors.green.shade900);
+          downloadsProductLoad.value = false;
+        }
+      } else {
+        downloadsProductLoad.value = false;
+      }
+    } catch (e) {
       downloadsProductLoad.value = false;
     }
   }
