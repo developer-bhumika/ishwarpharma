@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ishwarpharma/controller/bottombar_controller.dart';
 import 'package:ishwarpharma/controller/product_controller.dart';
+import 'package:ishwarpharma/main.dart';
 import 'package:ishwarpharma/utils/constant.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:ishwarpharma/view/about_us_screen.dart';
@@ -19,6 +20,7 @@ class DashBoard extends StatefulWidget {
 class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
   final productController = Get.put<ProductController>(ProductController());
   final bottomBarController = Get.put<BottomBarController>(BottomBarController());
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +34,7 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
         body: Obx(() => bottomBarController.pageList.elementAt(bottomBarController.selectedIndex.value)),
         bottomNavigationBar: Obx(
           () => BottomNavigationBar(
+            key: bottomWidgetKey,
             type: BottomNavigationBarType.fixed,
             backgroundColor: AppColor.white,
             showSelectedLabels: false,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ishwarpharma/controller/product_controller.dart';
+import 'package:ishwarpharma/main.dart';
 import 'package:ishwarpharma/utils/constant.dart';
 import 'package:ishwarpharma/utils/indicator.dart';
 import 'package:ishwarpharma/view/about_us_screen.dart';
@@ -16,7 +17,6 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
 
   final productController = Get.find<ProductController>();
-
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
@@ -85,7 +85,9 @@ class HomeScreen extends StatelessWidget {
                               onTap: () {
                                 productController.search.text = productController.companyList[index].name!;
                                 productController.searchProduct(productController.search.text);
-                                // productController.selectedIndex.value = 1;
+                                BottomNavigationBar navigationBar =
+                                    bottomWidgetKey.currentWidget as BottomNavigationBar;
+                                navigationBar.onTap!(1);
                               },
                               child: CompanyCard(
                                 imageUrl: productController.companyList[index].logoUrl ?? "",

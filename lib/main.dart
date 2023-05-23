@@ -5,6 +5,8 @@ import 'package:ishwarpharma/api/service_locator.dart';
 import 'package:ishwarpharma/utils/constant.dart';
 import 'package:ishwarpharma/view/dashboard/dashboard.dart';
 
+var bottomWidgetKey = GlobalKey<State<BottomNavigationBar>>();
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
