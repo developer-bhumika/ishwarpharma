@@ -51,6 +51,7 @@ class Endpoints {
 
   static const String getProduct = '/get-products';
   static const String getCompany = '/recommended-company';
+  static const String getCategory = '/get-category';
   static const String getSlider = '/slider';
   static const String productDetail = '/get-product';
   static const String updateCart = '/update-cart';

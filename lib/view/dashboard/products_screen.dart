@@ -185,7 +185,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                             icon: const Icon(Icons.arrow_drop_down, color: AppColor.primaryColor),
                                             hint: const Padding(
                                               padding: EdgeInsets.only(left: 8.0),
-                                              child: CommonText(text: 'Select City', color: Colors.black),
+                                              child: CommonText(text: 'Select Category', color: Colors.black),
                                             ),
                                             borderRadius: BorderRadius.circular(6),
                                             value: productController.selectedCity,
@@ -195,7 +195,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                               productController.selectedCity = newValue!;
                                               setState(() {});
                                             },
-                                            items: productController.cityList.map((value) {
+                                            items: productController.categoryType.map((value) {
                                               return DropdownMenuItem(
                                                 value: value,
                                                 child: Text(value,
@@ -206,43 +206,43 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(height: 20),
-                                    const CommonText(text: "City", color: AppColor.dartFontColor),
-                                    const SizedBox(height: 20),
-                                    StatefulBuilder(
-                                      builder: (context, setState) => Container(
-                                        height: 48,
-                                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(6),
-                                            color: const Color(0xffE3EFE6),
-                                            border: Border.all(color: AppColor.borderColor)),
-                                        child: DropdownButtonHideUnderline(
-                                          child: DropdownButton<String>(
-                                            icon: const Icon(Icons.arrow_drop_down, color: AppColor.primaryColor),
-                                            hint: const Padding(
-                                              padding: EdgeInsets.only(left: 8.0),
-                                              child: CommonText(text: 'Select City', color: Colors.black),
-                                            ),
-                                            borderRadius: BorderRadius.circular(6),
-                                            value: productController.selectedCity,
-                                            isDense: true,
-                                            isExpanded: true,
-                                            onChanged: (String? newValue) {
-                                              productController.selectedCity = newValue!;
-                                              setState(() {});
-                                            },
-                                            items: productController.cityList.map((value) {
-                                              return DropdownMenuItem(
-                                                value: value,
-                                                child: Text(value,
-                                                    style: const TextStyle(color: AppColor.black, fontSize: 15)),
-                                              );
-                                            }).toList(),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    // const SizedBox(height: 20),
+                                    // const CommonText(text: "City", color: AppColor.dartFontColor),
+                                    // const SizedBox(height: 20),
+                                    // StatefulBuilder(
+                                    //   builder: (context, setState) => Container(
+                                    //     height: 48,
+                                    //     padding: const EdgeInsets.symmetric(horizontal: 12),
+                                    //     decoration: BoxDecoration(
+                                    //         borderRadius: BorderRadius.circular(6),
+                                    //         color: const Color(0xffE3EFE6),
+                                    //         border: Border.all(color: AppColor.borderColor)),
+                                    //     child: DropdownButtonHideUnderline(
+                                    //       child: DropdownButton<String>(
+                                    //         icon: const Icon(Icons.arrow_drop_down, color: AppColor.primaryColor),
+                                    //         hint: const Padding(
+                                    //           padding: EdgeInsets.only(left: 8.0),
+                                    //           child: CommonText(text: 'Select City', color: Colors.black),
+                                    //         ),
+                                    //         borderRadius: BorderRadius.circular(6),
+                                    //         value: productController.selectedCity,
+                                    //         isDense: true,
+                                    //         isExpanded: true,
+                                    //         onChanged: (String? newValue) {
+                                    //           productController.selectedCity = newValue!;
+                                    //           setState(() {});
+                                    //         },
+                                    //         items: productController.cityList.map((value) {
+                                    //           return DropdownMenuItem(
+                                    //             value: value,
+                                    //             child: Text(value,
+                                    //                 style: const TextStyle(color: AppColor.black, fontSize: 15)),
+                                    //           );
+                                    //         }).toList(),
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                    // ),
                                     const SizedBox(height: 23),
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -250,7 +250,14 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                         MaterialButton(
                                             height: 52,
                                             color: AppColor.primaryColor,
-                                            onPressed: () {},
+                                            onPressed: () async {
+                                              SharedPreferences preferences = await SharedPreferences.getInstance();
+                                              preferences.remove('product');
+                                              productController.search.text = productController.selectedCity!;
+                                              productController.searchProduct(productController.search.text);
+                                              productController.getProduct(1);
+                                              Get.back();
+                                            },
                                             child: const CommonText(
                                               text: "Apply",
                                               color: AppColor.white,

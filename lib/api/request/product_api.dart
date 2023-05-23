@@ -25,6 +25,15 @@ class ProductApi {
     }
   }
 
+  Future<Response?> getCategory() async {
+    try {
+      final Response? response = await dioClient.get(Endpoints.getCategory);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<Response?> getDownloadsPrice() async {
     try {
       final Response? response = await dioClient.get(Endpoints.downloadPrice);
