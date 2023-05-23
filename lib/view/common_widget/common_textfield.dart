@@ -53,7 +53,7 @@ class CommonTextField extends StatelessWidget {
                 text: labelText,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: AppColor.black.withOpacity(0.7),
+                color: AppColor.dartFontColor,
               )
             : const SizedBox(),
         labelText != null ? const SizedBox(height: 5) : const SizedBox(),
@@ -73,26 +73,28 @@ class CommonTextField extends StatelessWidget {
             suffixIcon: suffixIcon ?? const SizedBox(),
             isDense: isDense,
             border: OutlineInputBorder(
-              borderSide: const BorderSide(color: AppColor.primaryColor),
-              borderRadius: BorderRadius.circular(5),
+              borderSide: const BorderSide(color: AppColor.borderColorProduct),
+              borderRadius: BorderRadius.circular(6),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: AppColor.primaryColor),
-              borderRadius: BorderRadius.circular(5),
+              borderSide: const BorderSide(color: AppColor.borderColorProduct),
+              borderRadius: BorderRadius.circular(6),
             ),
             enabledBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: AppColor.primaryColor),
-              borderRadius: BorderRadius.circular(5),
+              borderSide: const BorderSide(color: AppColor.borderColorProduct),
+              borderRadius: BorderRadius.circular(6),
             ),
             errorBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: AppColor.primaryColor),
-              borderRadius: BorderRadius.circular(5),
+              borderSide: const BorderSide(color: AppColor.borderColorProduct),
+              borderRadius: BorderRadius.circular(6),
             ),
             disabledBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: AppColor.primaryColor),
-              borderRadius: BorderRadius.circular(5),
+              borderSide: const BorderSide(color: AppColor.borderColorProduct),
+              borderRadius: BorderRadius.circular(6),
             ),
             hintText: hintText,
+            filled: true,
+            fillColor: AppColor.lightGreen,
             hintStyle: TextStyle(
               color: hintTextColor ?? AppColor.black.withOpacity(0.70),
               fontWeight: hintTextFontWeight ?? FontWeight.w400,

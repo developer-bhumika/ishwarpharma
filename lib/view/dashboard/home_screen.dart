@@ -126,7 +126,7 @@ class HomeScreen extends StatelessWidget {
                         productController.reLoad.value = true;
                         await productController.getCompany();
                         await productController.getSlider();
-                        await productController.getProduct();
+                        await productController.getProduct(1);
                         await productController.getCart();
                         await productController.getHistory();
                         productController.reLoad.value = false;

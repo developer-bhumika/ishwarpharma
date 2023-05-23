@@ -5,6 +5,7 @@ class CommonText extends StatelessWidget {
   final String? text;
   final Color? color;
   final double? fontSize;
+  final double? textHeight;
   final FontWeight? fontWeight;
   final TextAlign? textAlign;
   const CommonText({
@@ -12,6 +13,7 @@ class CommonText extends StatelessWidget {
     this.text,
     this.color,
     this.fontSize,
+    this.textHeight,
     this.fontWeight,
     this.textAlign,
   });
@@ -24,6 +26,7 @@ class CommonText extends StatelessWidget {
         color: color ?? AppColor.dartFontColor,
         fontSize: fontSize ?? 14,
         fontWeight: fontWeight ?? FontWeight.w400,
+        height: textHeight,
       ),
       textAlign: textAlign ?? TextAlign.start,
     );

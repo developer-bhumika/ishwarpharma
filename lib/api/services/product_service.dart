@@ -14,12 +14,12 @@ class ProductService {
 
   ProductService(this.productApi);
 
-  Future<ProductModel?> getProduct(String text) async {
+  Future<ProductModel?> getProduct(String text, int page) async {
     try {
       final body = FormData.fromMap({
         "search_all": text,
-        "page": 1,
-        "per_page": 10,
+        "page": page,
+        "per_page": 50,
       });
 
       final response = await productApi.getProduct(body);

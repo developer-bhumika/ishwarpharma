@@ -6,6 +6,10 @@ class AppColor {
   static const Color borderColor = Color(0xffEBF5ED);
   static const Color dartFontColor = Color(0xff2D4D3C);
   static const Color greyGreen = Color(0xff889990);
+  static const Color teal = Color(0xffDBFFED);
+  static const Color borderColorProduct = Color(0xffE3EFE6);
+  static const Color textColor = Color(0xff1C211E);
+  static const Color lightGreen = Color(0xffF2FBF4);
 
   static const Color white = Colors.white;
   static const Color black = Colors.black;

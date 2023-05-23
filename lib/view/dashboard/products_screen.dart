@@ -8,12 +8,30 @@ import 'package:ishwarpharma/view/common_widget/common_text.dart';
 import 'package:ishwarpharma/view/common_widget/product_card.dart';
 import 'package:ishwarpharma/view/dashboard/product_detail_screen.dart';
 import 'package:ishwarpharma/view/setting/setting_screen.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ProductsScreen extends StatelessWidget {
+class ProductsScreen extends StatefulWidget {
   ProductsScreen({Key? key}) : super(key: key);
 
+  @override
+  State<ProductsScreen> createState() => _ProductsScreenState();
+}
+
+class _ProductsScreenState extends State<ProductsScreen> {
   final productController = Get.find<ProductController>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    productController.getProduct(productController.page.value);
+  }
+
+  void _onLoading() {
+    productController.page.value++;
+    productController.getProduct(productController.page.value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +65,7 @@ class ProductsScreen extends StatelessWidget {
                           productController.reLoad.value = true;
                           await productController.getCompany();
                           await productController.getSlider();
-                          await productController.getProduct();
+                          await productController.getProduct(1);
                           await productController.getCart();
                           await productController.getHistory();
                           productController.reLoad.value = false;
@@ -319,39 +337,46 @@ class ProductsScreen extends StatelessWidget {
                               ),
                             ),
                           )
-                        : ListView.separated(
-                            itemCount: productController.productList.length,
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.all(10),
+                        : SmartRefresher(
+                            controller: productController.refreshController,
+                            enablePullUp: productController.pageLoad.value,
+                            enablePullDown: false,
+                            onLoading: _onLoading,
                             physics: const BouncingScrollPhysics(),
-                            separatorBuilder: (context, index) => const SizedBox(height: 10),
-                            itemBuilder: (context, index) => InkWell(
-                              onTap: () {
-                                Get.to(ProductDetailScreen(
-                                  id: productController.productList[index].id,
-                                  brand_name: productController.productList[index].brand ?? "",
-                                  content: productController.productList[index].content ?? "",
-                                  type: productController.productList[index].type ?? "",
+                            child: ListView.separated(
+                              itemCount: productController.productList.length,
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.all(10),
+                              physics: const BouncingScrollPhysics(),
+                              separatorBuilder: (context, index) => const SizedBox(height: 10),
+                              itemBuilder: (context, index) => InkWell(
+                                onTap: () {
+                                  Get.to(ProductDetailScreen(
+                                    id: productController.productList[index].id,
+                                    brand_name: productController.productList[index].brand ?? "",
+                                    content: productController.productList[index].content ?? "",
+                                    type: productController.productList[index].type ?? "",
+                                    company: productController.productList[index].company ?? "",
+                                    rate: productController.productList[index].rate ?? "0",
+                                    scheme: productController.productList[index].free_scheme ?? "0",
+                                    caseData: productController.productList[index].case_value ?? "0",
+                                    mrp: productController.productList[index].mrp.toString(),
+                                    pack: productController.productList[index].pack ?? "0",
+                                  ));
+                                },
+                                child: ProductCard(
+                                  title:
+                                      "${productController.productList[index].brand ?? ""} ${productController.productList[index].pack ?? ""}",
                                   company: productController.productList[index].company ?? "",
-                                  rate: productController.productList[index].rate ?? "0",
-                                  scheme: productController.productList[index].free_scheme ?? "0",
-                                  caseData: productController.productList[index].case_value ?? "0",
+                                  rate: productController.productList[index].rate ?? "",
                                   mrp: productController.productList[index].mrp.toString(),
-                                  pack: productController.productList[index].pack ?? "0",
-                                ));
-                              },
-                              child: ProductCard(
-                                title:
-                                    "${productController.productList[index].brand ?? ""} ${productController.productList[index].pack ?? ""}",
-                                company: productController.productList[index].company ?? "",
-                                rate: productController.productList[index].rate ?? "",
-                                mrp: productController.productList[index].mrp.toString(),
-                                searchText: productController.search.text,
-                                searchTextList: productController.searchTextList,
-                                free: productController.productDetailModel.value.data?.free_scheme == ""
-                                    ? "0"
-                                    : productController.productList[index].free_scheme ?? "0",
-                                subTitle: productController.productList[index].content ?? "",
+                                  searchText: productController.search.text,
+                                  searchTextList: productController.searchTextList,
+                                  free: productController.productDetailModel.value.data?.free_scheme == ""
+                                      ? "0"
+                                      : productController.productList[index].free_scheme ?? "0",
+                                  subTitle: productController.productList[index].content ?? "",
+                                ),
                               ),
                             ),
                           ),

@@ -25,28 +25,49 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Obx(
-        () => productController.isHistoryLoading.value
-            ? ProgressView()
-            : productController.historyList.isEmpty
-                ? const Center(
-                    child: CommonText(
-                      fontSize: 20,
-                      textAlign: TextAlign.center,
-                      fontWeight: FontWeight.w700,
-                      color: AppColor.primaryColor,
-                      text: "Your History is Empty",
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [AppColor.primaryColor, AppColor.secondaryColor],
+            ),
+          ),
+        ),
+        centerTitle: true,
+        title: CommonText(
+          text: "History",
+          color: AppColor.white,
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Obx(
+          () => productController.isHistoryLoading.value
+              ? ProgressView()
+              : productController.historyList.isEmpty
+                  ? const Center(
+                      child: CommonText(
+                        fontSize: 20,
+                        textAlign: TextAlign.center,
+                        fontWeight: FontWeight.w700,
+                        color: AppColor.primaryColor,
+                        text: "Your History is Empty",
+                      ),
+                    )
+                  : ListView.separated(
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: productController.historyList.length,
+                      separatorBuilder: (context, index) => const SizedBox(height: 10),
+                      itemBuilder: (context, index) =>
+                          HistoryCard(products: productController.historyList[index].products),
                     ),
-                  )
-                : ListView.separated(
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: productController.historyList.length,
-                    separatorBuilder: (context, index) => const SizedBox(height: 10),
-                    itemBuilder: (context, index) =>
-                        HistoryCard(products: productController.historyList[index].products),
-                  ),
+        ),
       ),
     );
   }

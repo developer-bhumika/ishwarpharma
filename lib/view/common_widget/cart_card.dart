@@ -42,24 +42,16 @@ class CartCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        border: Border.all(color: AppColor.primaryColor),
-        borderRadius: BorderRadius.circular(5),
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            AppColor.secondaryColor.withOpacity(0.2),
-            AppColor.primaryColor.withOpacity(0.2),
-          ],
-        ),
-      ),
+          border: Border.all(color: AppColor.borderColorProduct),
+          borderRadius: BorderRadius.circular(6),
+          color: AppColor.white),
       child: Stack(
         alignment: Alignment.topRight,
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CommonText(text: brand ?? "", fontWeight: FontWeight.w600),
+              CommonText(text: brand ?? "", fontWeight: FontWeight.w600, color: AppColor.primaryColor),
               const SizedBox(height: 5),
               CommonText(text: company ?? "", fontWeight: FontWeight.w500),
               const SizedBox(height: 5),

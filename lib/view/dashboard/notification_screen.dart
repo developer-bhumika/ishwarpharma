@@ -22,56 +22,67 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: ListView.separated(
-          physics: const BouncingScrollPhysics(),
-          itemCount: 4,
-          separatorBuilder: (context, index) => const SizedBox(height: 10),
-          itemBuilder: (context, index) => Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColor.primaryColor),
-                  borderRadius: BorderRadius.circular(5),
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      AppColor.secondaryColor.withOpacity(0.2),
-                      AppColor.primaryColor.withOpacity(0.2),
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [AppColor.primaryColor, AppColor.secondaryColor],
+            ),
+          ),
+        ),
+        centerTitle: true,
+        title: CommonText(
+          text: "Notification",
+          color: AppColor.white,
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: ListView.separated(
+            physics: const BouncingScrollPhysics(),
+            itemCount: 4,
+            separatorBuilder: (context, index) => const SizedBox(height: 10),
+            itemBuilder: (context, index) => Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColor.borderColorProduct),
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.white,
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const CommonText(
+                              text: "Notification title",
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              color: AppColor.primaryColor,
+                            ),
+                            const SizedBox(height: 5),
+                            const CommonText(
+                              text: "Description",
+                            ),
+                            const SizedBox(height: 5),
+                            CommonText(
+                              text: DateTime.now().toString(),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(Icons.notifications, color: AppColor.primaryColor),
                     ],
                   ),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const CommonText(
-                            text: "Notification title",
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                          ),
-                          const SizedBox(height: 5),
-                          const CommonText(
-                            text: "Description",
-                          ),
-                          const SizedBox(height: 5),
-                          CommonText(
-                            text: DateTime.now().toString(),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const CircleAvatar(
-                      radius: 15,
-                      backgroundColor: AppColor.primaryColor,
-                      child: Icon(Icons.notifications, color: AppColor.white),
-                    ),
-                  ],
-                ),
-              )),
+                )),
+      ),
     );
   }
 }

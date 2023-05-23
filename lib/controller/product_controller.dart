@@ -15,6 +15,7 @@ import 'package:ishwarpharma/model/product_detail_model.dart';
 import 'package:ishwarpharma/model/product_model.dart';
 import 'package:ishwarpharma/model/slider_model.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductController extends GetxController {
@@ -78,53 +79,65 @@ class ProductController extends GetxController {
     return true;
   }
 
-  getProduct() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
+  final RefreshController refreshController = RefreshController(initialRefresh: false);
+  ScrollController scrollController = ScrollController();
+  RxInt page = 1.obs;
+  RxBool pageLoad = true.obs;
 
-    if (preferences.getString('product') != null) {
-      isLoading.value = true;
-      final data = preferences.getString('product');
-      productModel.value = ProductModel.fromJson(jsonDecode(data ?? ""));
-      productList.value = productModel.value.data ?? [];
-      if (productList.isNotEmpty) {
-        productList.sort((a, b) => a.brand!.compareTo(b.brand ?? ""));
-        isLoading.value = false;
-      }
-    } else {
-      try {
+  getProduct(int page) async {
+    // SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    // if (preferences.getString('product') != null) {
+    //   isLoading.value = true;
+    //   final data = preferences.getString('product');
+    //   productModel.value = ProductModel.fromJson(jsonDecode(data ?? ""));
+    //   productList.value = productModel.value.data ?? [];
+    //   if (productList.isNotEmpty) {
+    //     productList.sort((a, b) => a.brand!.compareTo(b.brand ?? ""));
+    //     isLoading.value = false;
+    //   }
+    // } else {
+    try {
+      if (page == 1) {
         isLoading.value = true;
-        final resp = await productService.getProduct(search.text);
-        if (resp != null) {
-          productModel.value = resp;
-          if (productModel.value.success ?? false) {
-            productList.value = productModel.value.data ?? [];
-            if (productList.isNotEmpty) {
-              productList.sort((a, b) => a.brand!.compareTo(b.brand ?? ""));
-              var jsonRes = jsonDecode(jsonEncode(productModel));
-              await preferences.setString('product', json.encode(jsonRes));
-            }
-            isLoading.value = false;
-          } else {
-            Get.snackbar("Error", productModel.value.message ?? "",
-                messageText: Text(
-                  productModel.value.message ?? "",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 13,
-                    color: Colors.green.shade900,
-                  ),
-                ),
-                backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
-                colorText: Colors.green.shade900);
-            isLoading.value = false;
+        productList.clear();
+      }
+      final resp = await productService.getProduct(search.text, page);
+      if (resp != null) {
+        productModel.value = resp;
+        if (productModel.value.success ?? false) {
+          productList.addAll(productModel.value.data ?? []);
+          refreshController.loadComplete();
+          if (productList.isNotEmpty) {
+            productList.sort((a, b) => a.brand!.compareTo(b.brand ?? ""));
+            // var jsonRes = jsonDecode(jsonEncode(productModel));
+            // await preferences.setString('product', json.encode(jsonRes));
           }
+          if (productModel.value.data?.isEmpty ?? true) {
+            pageLoad.value = false;
+          }
+          isLoading.value = false;
         } else {
+          Get.snackbar("Error", productModel.value.message ?? "",
+              messageText: Text(
+                productModel.value.message ?? "",
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13,
+                  color: Colors.green.shade900,
+                ),
+              ),
+              backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
+              colorText: Colors.green.shade900);
           isLoading.value = false;
         }
-      } catch (e) {
+      } else {
         isLoading.value = false;
       }
+    } catch (e) {
+      isLoading.value = false;
     }
+    // }
   }
 
   Rx<ProductDetailModel> productDetailModel = ProductDetailModel().obs;
@@ -602,6 +615,6 @@ class ProductController extends GetxController {
     getCompany();
     getSlider();
     getCart();
-    getProduct();
+    // getProduct();
   }
 }
