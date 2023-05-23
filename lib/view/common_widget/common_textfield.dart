@@ -70,7 +70,7 @@ class CommonTextField extends StatelessWidget {
           controller: controller,
           validator: validator,
           decoration: InputDecoration(
-            suffixIcon: suffixIcon ?? const SizedBox(),
+            suffixIcon: suffixIcon,
             isDense: isDense,
             border: OutlineInputBorder(
               borderSide: const BorderSide(color: AppColor.borderColorProduct),

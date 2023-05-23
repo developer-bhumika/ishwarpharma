@@ -8,6 +8,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:ishwarpharma/api/service_locator.dart';
 import 'package:ishwarpharma/api/services/product_service.dart';
 import 'package:ishwarpharma/model/cart_model.dart';
+import 'package:ishwarpharma/model/category_model.dart';
 import 'package:ishwarpharma/model/company_model.dart';
 import 'package:ishwarpharma/model/download_model.dart';
 import 'package:ishwarpharma/model/download_product_model.dart';
@@ -102,7 +103,6 @@ class ProductController extends GetxController {
       final data = preferences.getString('product');
       productModel.value = ProductModel.fromJson(jsonDecode(data ?? ""));
       productList.addAll(productModel.value.data ?? []);
-      refreshController.loadComplete();
       if (productList.isNotEmpty) {
         productList.sort((a, b) => a.brand!.compareTo(b.brand ?? ""));
         isLoading.value = false;
@@ -246,6 +246,45 @@ class ProductController extends GetxController {
       } catch (e) {
         companyLoad.value = false;
       }
+    }
+  }
+
+  Rx<CategoryModel> categoryModel = CategoryModel().obs;
+  RxList<CategoryData> categoryList = <CategoryData>[].obs;
+  RxList<String> categoryType = <String>[].obs;
+  RxBool categoryLoad = false.obs;
+  getCategory() async {
+    try {
+      categoryLoad.value = true;
+      final resp = await productService.getCategory();
+      if (resp != null) {
+        categoryModel.value = resp;
+        if (categoryModel.value.success ?? false) {
+          categoryList.value = categoryModel.value.data ?? [];
+          categoryList.forEach((element) {
+            categoryType.add(element.type ?? "");
+          });
+
+          categoryLoad.value = false;
+        } else {
+          Get.snackbar("Error", categoryModel.value.message ?? "",
+              messageText: Text(
+                categoryModel.value.message ?? "",
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13,
+                  color: Colors.green.shade900,
+                ),
+              ),
+              backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
+              colorText: Colors.green.shade900);
+          categoryLoad.value = false;
+        }
+      } else {
+        categoryLoad.value = false;
+      }
+    } catch (e) {
+      categoryLoad.value = false;
     }
   }
 
@@ -676,6 +715,7 @@ class ProductController extends GetxController {
     getCompany();
     getSlider();
     getCart();
+    getCategory();
     // getProduct();
   }
 }

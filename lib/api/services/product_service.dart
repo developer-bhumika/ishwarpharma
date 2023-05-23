@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:ishwarpharma/api/dio_exceptions.dart';
 import 'package:ishwarpharma/api/request/product_api.dart';
 import 'package:ishwarpharma/model/cart_model.dart';
+import 'package:ishwarpharma/model/category_model.dart';
 import 'package:ishwarpharma/model/company_model.dart';
 import 'package:ishwarpharma/model/download_model.dart';
 import 'package:ishwarpharma/model/download_product_model.dart';
@@ -39,6 +40,19 @@ class ProductService {
       final response = await productApi.getCompany();
       if (response != null) {
         return CompanyModel.fromJson(response.data);
+      }
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+    return null;
+  }
+
+  Future<CategoryModel?> getCategory() async {
+    try {
+      final response = await productApi.getCategory();
+      if (response != null) {
+        return CategoryModel.fromJson(response.data);
       }
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
