@@ -29,16 +29,24 @@ class HomeScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: const [
                 Expanded(
-                  child: Divider(color: Color(0xffC8F1DC), endIndent: 13),
+                  child: Divider(
+                    color: Color(0xffC8F1DC),
+                    endIndent: 13,
+                    thickness: 1,
+                  ),
                 ),
                 CommonText(
-                  text: "Shop by Company",
-                  fontSize: 18,
+                  text: "Search By Company",
+                  fontSize: 14,
                   color: AppColor.primaryColor,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                 ),
                 Expanded(
-                  child: Divider(color: Color(0xffC8F1DC), indent: 13),
+                  child: Divider(
+                    color: Color(0xffC8F1DC),
+                    indent: 13,
+                    thickness: 1,
+                  ),
                 ),
               ],
             ),
@@ -208,13 +216,21 @@ class HomeScreen extends StatelessWidget {
                         child: ProgressView()),
                   )
                 : CarouselSlider(
-                    options: CarouselOptions(height: 160.0, autoPlay: true, viewportFraction: 1),
+                    options: CarouselOptions(
+                      height: 160.0,
+                      autoPlay: true,
+                      // disableCenter: true,
+                      viewportFraction: 0.9,
+                      initialPage: 1,
+                      enableInfiniteScroll: true,
+                    ),
                     items: productController.sliderList.map((i) {
                       return Builder(
                         builder: (BuildContext context) {
                           return Container(
                             width: MediaQuery.of(context).size.width,
                             margin: const EdgeInsets.symmetric(horizontal: 12.0),
+                            transform: Matrix4.translationValues(-350 / 25, 0, 0),
                             decoration: BoxDecoration(
                               color: AppColor.white,
                               borderRadius: BorderRadius.circular(10),

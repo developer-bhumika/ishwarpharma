@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ishwarpharma/controller/product_controller.dart';
 import 'package:ishwarpharma/utils/constant.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
+import 'package:intl/intl.dart';
 
 class NotificationScreen extends StatefulWidget {
   NotificationScreen({Key? key}) : super(key: key);
@@ -23,31 +24,30 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [AppColor.primaryColor, AppColor.secondaryColor],
-              ),
+      appBar: AppBar(
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [AppColor.primaryColor, AppColor.secondaryColor],
             ),
           ),
-          centerTitle: true,
-          title: CommonText(
-            text: "Notification",
-            color: AppColor.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
         ),
-        body:
-            Column() /*Padding(
+        centerTitle: true,
+        title: CommonText(
+          text: "Notification",
+          color: AppColor.white,
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      body: Padding(
         padding: const EdgeInsets.all(12.0),
         child: ListView.separated(
             physics: const BouncingScrollPhysics(),
-            itemCount: 4,
+            itemCount: productController.notificationList.length,
             separatorBuilder: (context, index) => const SizedBox(height: 10),
             itemBuilder: (context, index) => Container(
                   padding: const EdgeInsets.all(10),
@@ -62,19 +62,21 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const CommonText(
-                              text: "Notification title",
+                            CommonText(
+                              text: productController.notificationList[index]['title'],
                               fontWeight: FontWeight.w600,
                               fontSize: 16,
                               color: AppColor.primaryColor,
                             ),
                             const SizedBox(height: 5),
-                            const CommonText(
-                              text: "Description",
+                            CommonText(
+                              text: productController.notificationList[index]['body'],
                             ),
                             const SizedBox(height: 5),
                             CommonText(
-                              text: DateTime.now().toString(),
+                              text: DateFormat("yyyy-MM-dd")
+                                  .add_jm()
+                                  .format(DateTime.parse(productController.notificationList[index]["time"])),
                             ),
                           ],
                         ),
@@ -83,7 +85,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     ],
                   ),
                 )),
-      ),*/
-        );
+      ),
+    );
   }
 }

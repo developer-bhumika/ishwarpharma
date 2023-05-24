@@ -45,7 +45,7 @@ class HistoryCard extends StatelessWidget {
                         const SizedBox(height: 5),
                         CommonText(text: e.company, fontWeight: FontWeight.w500),
                         const SizedBox(height: 5),
-                        CommonText(text: e.content),
+                        CommonText(text: e.content, fontSize: 12),
                         const SizedBox(height: 5),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

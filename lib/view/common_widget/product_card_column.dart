@@ -52,12 +52,12 @@ class ProductCardColumn extends StatelessWidget {
       child: Column(
         crossAxisAlignment: alignment ?? CrossAxisAlignment.start,
         children: [
-          CommonText(text: title ?? "", fontWeight: FontWeight.w500, color: AppColor.greyGreen),
+          CommonText(text: title ?? "", fontWeight: FontWeight.w400, color: AppColor.greyGreen, fontSize: 12),
           const SizedBox(height: 5),
           Text.rich(
             TextSpan(
               children: highlightOccurrences(subTitle ?? '', searchText ?? ''),
-              style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+              style: const TextStyle(color: AppColor.textColor, fontWeight: FontWeight.w500, fontSize: 13),
             ),
           ),
         ],

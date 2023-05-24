@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_file_downloader/flutter_file_downloader.dart';
 import 'package:get/get.dart';
@@ -16,14 +17,7 @@ import 'package:ishwarpharma/model/history_model.dart';
 import 'package:ishwarpharma/model/product_detail_model.dart';
 import 'package:ishwarpharma/model/product_model.dart';
 import 'package:ishwarpharma/model/slider_model.dart';
-import 'package:ishwarpharma/view/dashboard/cart_screen.dart';
-import 'package:ishwarpharma/view/dashboard/download.dart';
-import 'package:ishwarpharma/view/dashboard/history_screen.dart';
-import 'package:ishwarpharma/view/dashboard/home_screen.dart';
-import 'package:ishwarpharma/view/dashboard/notification_screen.dart';
-import 'package:ishwarpharma/view/dashboard/products_screen.dart';
-import 'package:open_file/open_file.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,6 +32,8 @@ class ProductController extends GetxController {
   TextEditingController place = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController moNo = TextEditingController();
+  RxList<dynamic> notificationList = <dynamic>[].obs;
+
   RxBool reLoad = false.obs;
   String? selectedCity;
   RxList<String> cityList = ["Surat", "Vapi", "Ahmedabad", "Vadodara"].obs;
@@ -98,7 +94,7 @@ class ProductController extends GetxController {
   getProduct(int page) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    if (preferences.getString('product') != null) {
+    if ((!await isInternet()) && preferences.getString('product') != null) {
       isLoading.value = true;
       final data = preferences.getString('product');
       productModel.value = ProductModel.fromJson(jsonDecode(data ?? ""));
@@ -458,6 +454,10 @@ class ProductController extends GetxController {
       if (resp != null) {
         if (resp['success'] ?? false) {
           Get.back();
+          SharedPreferences preferences = await SharedPreferences.getInstance();
+
+          preferences.remove('history');
+          await getHistory();
           orderPlaceLoading.value = false;
           email.clear();
           firm.clear();
@@ -489,49 +489,48 @@ class ProductController extends GetxController {
   RxList<HistoryData> historyList = <HistoryData>[].obs;
   getHistory() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    if (await isInternet()) {
-      if (preferences.getString('history') == null) {
-        try {
-          isHistoryLoading.value = true;
-          AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-          final resp = await productService.getHistory(androidInfo.id);
-          if (resp != null) {
-            historyModel.value = resp;
-            if (historyModel.value.success ?? false) {
-              historyList.value = historyModel.value.data ?? [];
-              if (historyList.isNotEmpty) {
-                var jsonRes = jsonDecode(jsonEncode(historyModel));
-                await preferences.setString('history', json.encode(jsonRes));
-              }
-              isHistoryLoading.value = false;
-            } else {
-              Get.snackbar("Error", historyModel.value.message ?? "",
-                  messageText: Text(
-                    historyModel.value.message ?? "",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 13,
-                      color: Colors.green.shade900,
-                    ),
-                  ),
-                  backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
-                  colorText: Colors.green.shade900);
-              isHistoryLoading.value = false;
+
+    if (preferences.getString('history') == null) {
+      try {
+        isHistoryLoading.value = true;
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        final resp = await productService.getHistory(androidInfo.id);
+        if (resp != null) {
+          historyModel.value = resp;
+          if (historyModel.value.success ?? false) {
+            historyList.value = historyModel.value.data ?? [];
+            if (historyList.isNotEmpty) {
+              var jsonRes = jsonDecode(jsonEncode(historyModel));
+              await preferences.setString('history', json.encode(jsonRes));
             }
+            isHistoryLoading.value = false;
           } else {
+            Get.snackbar("Error", historyModel.value.message ?? "",
+                messageText: Text(
+                  historyModel.value.message ?? "",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
+                    color: Colors.green.shade900,
+                  ),
+                ),
+                backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
+                colorText: Colors.green.shade900);
             isHistoryLoading.value = false;
           }
-        } catch (e) {
+        } else {
           isHistoryLoading.value = false;
         }
-      } else {
-        isHistoryLoading.value = true;
-        final data = preferences.getString('history');
-        historyModel.value = HistoryModel.fromJson(jsonDecode(data ?? ""));
-        historyList.value = historyModel.value.data ?? [];
-        if (historyList.isNotEmpty) {
-          isHistoryLoading.value = false;
-        }
+      } catch (e) {
+        isHistoryLoading.value = false;
+      }
+    } else {
+      isHistoryLoading.value = true;
+      final data = preferences.getString('history');
+      historyModel.value = HistoryModel.fromJson(jsonDecode(data ?? ""));
+      historyList.value = historyModel.value.data ?? [];
+      if (historyList.isNotEmpty) {
+        isHistoryLoading.value = false;
       }
     }
   }
@@ -614,7 +613,7 @@ class ProductController extends GetxController {
           onDownloadCompleted: (String path) async {
             downloadPriceList[index].load.value = false;
             downloadProductList[index].load.value = false;
-            await OpenFile.open(path);
+            OpenFilex.open(path);
             print('FILE DOWNLOADED TO PATH: $path');
             Get.snackbar("Success", "File downloaded successfully" ?? "",
                 messageText: Text(

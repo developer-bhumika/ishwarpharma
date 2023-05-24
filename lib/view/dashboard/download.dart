@@ -4,7 +4,6 @@ import 'package:ishwarpharma/controller/product_controller.dart';
 import 'package:ishwarpharma/utils/constant.dart';
 import 'package:ishwarpharma/utils/indicator.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
-import 'package:open_file/open_file.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -93,7 +92,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                       lineWidth: 3.0,
                                       percent: productController.progressDownload.value,
                                       center: CommonText(
-                                        text: "${productController.progressDownload.value * 100}%",
+                                        text: "${(productController.progressDownload.value * 100).toInt()}%",
                                         fontSize: 11,
                                       ),
                                       progressColor: AppColor.primaryColor,
@@ -147,7 +146,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                       lineWidth: 5.0,
                                       percent: productController.progressDownload.value,
                                       center: CommonText(
-                                        text: "${productController.progressDownload.value * 100}%",
+                                        text: "${(productController.progressDownload.value * 100).toInt()}%",
                                         fontSize: 13,
                                       ),
                                       progressColor: AppColor.primaryColor,

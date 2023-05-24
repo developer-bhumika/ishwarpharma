@@ -138,7 +138,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       fillColor: AppColor.white,
                       filled: true,
                       border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(7)),
-                      hintText: "Search medicine",
+                      hintText: "Search Medicine",
+                      hintStyle: TextStyle(color: AppColor.greyGreen, fontSize: 14, fontWeight: FontWeight.w400),
                       prefixIcon: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: SvgPicture.asset(AppImage.searchText),
@@ -162,7 +163,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                     const SizedBox(height: 13),
                                     Row(
                                       children: [
-                                        const CommonText(text: "Filter by", fontSize: 16, color: Colors.black),
+                                        const CommonText(
+                                          text: "Filter by",
+                                          fontSize: 16,
+                                          color: AppColor.textColor,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                         const Spacer(),
                                         InkWell(
                                             onTap: () => Get.back(),
@@ -170,7 +176,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                       ],
                                     ),
                                     const SizedBox(height: 30),
-                                    const CommonText(text: "Category", color: AppColor.dartFontColor),
+                                    const CommonText(
+                                      text: "Category",
+                                      color: AppColor.dartFontColor,
+                                      fontSize: 13,
+                                    ),
                                     const SizedBox(height: 20),
                                     StatefulBuilder(
                                       builder: (context, setState) => Container(
@@ -185,7 +195,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                             icon: const Icon(Icons.arrow_drop_down, color: AppColor.primaryColor),
                                             hint: const Padding(
                                               padding: EdgeInsets.only(left: 8.0),
-                                              child: CommonText(text: 'Select Category', color: Colors.black),
+                                              child: CommonText(
+                                                text: 'Select Category',
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w500,
+                                              ),
                                             ),
                                             borderRadius: BorderRadius.circular(6),
                                             value: productController.selectedCity,
@@ -261,6 +275,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                             child: const CommonText(
                                               text: "Apply",
                                               color: AppColor.white,
+                                              fontWeight: FontWeight.w600,
                                             )),
                                       ],
                                     )

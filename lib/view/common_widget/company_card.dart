@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:ishwarpharma/utils/constant.dart';
 import 'package:ishwarpharma/utils/indicator.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
 
@@ -37,7 +38,7 @@ class CompanyCard extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: CommonText(text: companyName ?? "", fontWeight: FontWeight.w500),
+            child: CommonText(text: companyName ?? "", fontWeight: FontWeight.w500, color: AppColor.textColor),
           ),
           const SizedBox(),
         ],

@@ -74,10 +74,13 @@ class ProductCard extends StatelessWidget {
             Text.rich(
               TextSpan(
                 children: highlightOccurrences(title ?? '', searchText ?? ''),
-                style: const TextStyle(color: AppColor.primaryColor),
+                style: const TextStyle(color: AppColor.primaryColor, fontWeight: FontWeight.w500),
               ),
             ),
-            const Divider(color: AppColor.borderColor),
+            const Divider(
+              color: AppColor.borderColor,
+              thickness: 1,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,11 +91,14 @@ class ProductCard extends StatelessWidget {
                 ProductCardColumn(title: "Free", subTitle: free ?? ""),
               ],
             ),
-            const Divider(color: AppColor.borderColor),
+            const Divider(
+              color: AppColor.borderColor,
+              thickness: 1,
+            ),
             Text.rich(
               TextSpan(
                 children: highlightOccurrences(subTitle ?? '', searchText ?? ''),
-                style: const TextStyle(color: AppColor.dartFontColor),
+                style: const TextStyle(color: AppColor.dartFontColor, fontSize: 12),
               ),
             ),
           ],
