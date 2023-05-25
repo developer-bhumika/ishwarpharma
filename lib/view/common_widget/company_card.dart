@@ -32,7 +32,7 @@ class CompanyCard extends StatelessWidget {
               borderRadius: const BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
               child: CachedNetworkImage(
                   imageUrl: imageUrl ?? "",
-                  fit: BoxFit.fill,
+                  fit: BoxFit.contain,
                   placeholder: (context, url) => Center(child: SizedBox(height: 25, width: 25, child: ProgressView())),
                   errorWidget: (e, es, esq) => const Icon(Icons.error)),
             ),

@@ -20,6 +20,7 @@ class ProductsScreen extends StatefulWidget {
 
 class _ProductsScreenState extends State<ProductsScreen> {
   final productController = Get.find<ProductController>();
+  ScrollController? scrollController;
 
   @override
   void initState() {
@@ -145,148 +146,175 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         child: SvgPicture.asset(AppImage.searchText),
                       ),
                       suffixIcon: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: InkWell(
-                          onTap: () {
-                            Get.bottomSheet(
-                              shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-                              ),
-                              backgroundColor: AppColor.white,
-                              Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 13),
-                                    Row(
-                                      children: [
-                                        const CommonText(
-                                          text: "Filter by",
-                                          fontSize: 16,
-                                          color: AppColor.textColor,
-                                          fontWeight: FontWeight.w400,
+                          padding: const EdgeInsets.all(12.0),
+                          child: Obx(
+                            () => productController.isFilter.value
+                                ? InkWell(
+                                    onTap: () {
+                                      productController.search.clear();
+                                      productController.selectedCity = null;
+                                      productController.isFilter.value = false;
+                                      productController.page.value = 1;
+                                      productController.getProduct(productController.page.value);
+                                    },
+                                    child: Icon(
+                                      Icons.clear,
+                                      color: AppColor.greyGreen,
+                                      size: 30,
+                                    ))
+                                : InkWell(
+                                    onTap: () {
+                                      Get.bottomSheet(
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
                                         ),
-                                        const Spacer(),
-                                        InkWell(
-                                            onTap: () => Get.back(),
-                                            child: const Icon(Icons.close, color: AppColor.greyGreen)),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 30),
-                                    const CommonText(
-                                      text: "Category",
-                                      color: AppColor.dartFontColor,
-                                      fontSize: 13,
-                                    ),
-                                    const SizedBox(height: 20),
-                                    StatefulBuilder(
-                                      builder: (context, setState) => Container(
-                                        height: 48,
-                                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(6),
-                                            color: const Color(0xffE3EFE6),
-                                            border: Border.all(color: AppColor.borderColor)),
-                                        child: DropdownButtonHideUnderline(
-                                          child: DropdownButton<String>(
-                                            icon: const Icon(Icons.arrow_drop_down, color: AppColor.primaryColor),
-                                            hint: const Padding(
-                                              padding: EdgeInsets.only(left: 8.0),
-                                              child: CommonText(
-                                                text: 'Select Category',
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w500,
+                                        backgroundColor: AppColor.white,
+                                        Padding(
+                                          padding: const EdgeInsets.all(12.0),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(height: 13),
+                                              Row(
+                                                children: [
+                                                  const CommonText(
+                                                    text: "Filter by",
+                                                    fontSize: 16,
+                                                    color: AppColor.textColor,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                  const Spacer(),
+                                                  InkWell(
+                                                      onTap: () => Get.back(),
+                                                      child: const Icon(Icons.close, color: AppColor.greyGreen)),
+                                                ],
                                               ),
-                                            ),
-                                            borderRadius: BorderRadius.circular(6),
-                                            value: productController.selectedCity,
-                                            isDense: true,
-                                            isExpanded: true,
-                                            onChanged: (String? newValue) {
-                                              productController.selectedCity = newValue!;
-                                              setState(() {});
-                                            },
-                                            items: productController.categoryType.map((value) {
-                                              return DropdownMenuItem(
-                                                value: value,
-                                                child: Text(value,
-                                                    style: const TextStyle(color: AppColor.black, fontSize: 15)),
-                                              );
-                                            }).toList(),
+                                              const SizedBox(height: 30),
+                                              const CommonText(
+                                                text: "Category",
+                                                color: AppColor.dartFontColor,
+                                                fontSize: 13,
+                                              ),
+                                              const SizedBox(height: 20),
+                                              StatefulBuilder(
+                                                builder: (context, setState) => Container(
+                                                  height: 48,
+                                                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                                                  decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(6),
+                                                      color: const Color(0xffE3EFE6),
+                                                      border: Border.all(color: AppColor.borderColor)),
+                                                  child: DropdownButtonHideUnderline(
+                                                    child: DropdownButton<String>(
+                                                      icon: const Icon(Icons.arrow_drop_down,
+                                                          color: AppColor.primaryColor),
+                                                      hint: const Padding(
+                                                        padding: EdgeInsets.only(left: 8.0),
+                                                        child: CommonText(
+                                                          text: 'Select Category',
+                                                          color: Colors.black,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                      borderRadius: BorderRadius.circular(6),
+                                                      value: productController.selectedCity,
+                                                      isDense: true,
+                                                      isExpanded: true,
+                                                      onChanged: (String? newValue) {
+                                                        productController.selectedCity = newValue!;
+                                                        setState(() {});
+                                                      },
+                                                      items: productController.categoryType.map((value) {
+                                                        return DropdownMenuItem(
+                                                          value: value,
+                                                          child: Text(value,
+                                                              style:
+                                                                  const TextStyle(color: AppColor.black, fontSize: 15)),
+                                                        );
+                                                      }).toList(),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              // const SizedBox(height: 20),
+                                              // const CommonText(text: "City", color: AppColor.dartFontColor),
+                                              // const SizedBox(height: 20),
+                                              // StatefulBuilder(
+                                              //   builder: (context, setState) => Container(
+                                              //     height: 48,
+                                              //     padding: const EdgeInsets.symmetric(horizontal: 12),
+                                              //     decoration: BoxDecoration(
+                                              //         borderRadius: BorderRadius.circular(6),
+                                              //         color: const Color(0xffE3EFE6),
+                                              //         border: Border.all(color: AppColor.borderColor)),
+                                              //     child: DropdownButtonHideUnderline(
+                                              //       child: DropdownButton<String>(
+                                              //         icon: const Icon(Icons.arrow_drop_down, color: AppColor.primaryColor),
+                                              //         hint: const Padding(
+                                              //           padding: EdgeInsets.only(left: 8.0),
+                                              //           child: CommonText(text: 'Select City', color: Colors.black),
+                                              //         ),
+                                              //         borderRadius: BorderRadius.circular(6),
+                                              //         value: productController.selectedCity,
+                                              //         isDense: true,
+                                              //         isExpanded: true,
+                                              //         onChanged: (String? newValue) {
+                                              //           productController.selectedCity = newValue!;
+                                              //           setState(() {});
+                                              //         },
+                                              //         items: productController.cityList.map((value) {
+                                              //           return DropdownMenuItem(
+                                              //             value: value,
+                                              //             child: Text(value,
+                                              //                 style: const TextStyle(color: AppColor.black, fontSize: 15)),
+                                              //           );
+                                              //         }).toList(),
+                                              //       ),
+                                              //     ),
+                                              //   ),
+                                              // ),
+                                              const SizedBox(height: 23),
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                children: [
+                                                  MaterialButton(
+                                                      height: 52,
+                                                      color: AppColor.primaryColor,
+                                                      onPressed: () async {
+                                                        if (productController.selectedCity == null) {
+                                                          Get.snackbar("Error", "Please select category",
+                                                              backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
+                                                              colorText: Colors.green.shade900);
+                                                        } else {
+                                                          SharedPreferences preferences =
+                                                              await SharedPreferences.getInstance();
+                                                          preferences.remove('product');
+                                                          productController.search.text =
+                                                              productController.selectedCity!;
+                                                          productController
+                                                              .searchProduct(productController.search.text);
+                                                          productController.getProduct(1);
+                                                          productController.isFilter.value = true;
+                                                          Get.back();
+                                                        }
+                                                      },
+                                                      child: const CommonText(
+                                                        text: "Apply",
+                                                        color: AppColor.white,
+                                                        fontWeight: FontWeight.w600,
+                                                      )),
+                                                ],
+                                              )
+                                            ],
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                    // const SizedBox(height: 20),
-                                    // const CommonText(text: "City", color: AppColor.dartFontColor),
-                                    // const SizedBox(height: 20),
-                                    // StatefulBuilder(
-                                    //   builder: (context, setState) => Container(
-                                    //     height: 48,
-                                    //     padding: const EdgeInsets.symmetric(horizontal: 12),
-                                    //     decoration: BoxDecoration(
-                                    //         borderRadius: BorderRadius.circular(6),
-                                    //         color: const Color(0xffE3EFE6),
-                                    //         border: Border.all(color: AppColor.borderColor)),
-                                    //     child: DropdownButtonHideUnderline(
-                                    //       child: DropdownButton<String>(
-                                    //         icon: const Icon(Icons.arrow_drop_down, color: AppColor.primaryColor),
-                                    //         hint: const Padding(
-                                    //           padding: EdgeInsets.only(left: 8.0),
-                                    //           child: CommonText(text: 'Select City', color: Colors.black),
-                                    //         ),
-                                    //         borderRadius: BorderRadius.circular(6),
-                                    //         value: productController.selectedCity,
-                                    //         isDense: true,
-                                    //         isExpanded: true,
-                                    //         onChanged: (String? newValue) {
-                                    //           productController.selectedCity = newValue!;
-                                    //           setState(() {});
-                                    //         },
-                                    //         items: productController.cityList.map((value) {
-                                    //           return DropdownMenuItem(
-                                    //             value: value,
-                                    //             child: Text(value,
-                                    //                 style: const TextStyle(color: AppColor.black, fontSize: 15)),
-                                    //           );
-                                    //         }).toList(),
-                                    //       ),
-                                    //     ),
-                                    //   ),
-                                    // ),
-                                    const SizedBox(height: 23),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      children: [
-                                        MaterialButton(
-                                            height: 52,
-                                            color: AppColor.primaryColor,
-                                            onPressed: () async {
-                                              SharedPreferences preferences = await SharedPreferences.getInstance();
-                                              preferences.remove('product');
-                                              productController.search.text = productController.selectedCity!;
-                                              productController.searchProduct(productController.search.text);
-                                              productController.getProduct(1);
-                                              Get.back();
-                                            },
-                                            child: const CommonText(
-                                              text: "Apply",
-                                              color: AppColor.white,
-                                              fontWeight: FontWeight.w600,
-                                            )),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                          child: SvgPicture.asset(AppImage.filter),
-                        ),
-                      ),
+                                      );
+                                    },
+                                    child: SvgPicture.asset(AppImage.filter),
+                                  ),
+                          )),
                       isDense: true,
                     ),
                   ),

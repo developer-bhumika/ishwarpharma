@@ -36,6 +36,7 @@ class ProductController extends GetxController {
 
   RxBool reLoad = false.obs;
   String? selectedCity;
+  RxBool isFilter = false.obs;
   RxList<String> cityList = ["Surat", "Vapi", "Ahmedabad", "Vadodara"].obs;
 
   RxBool notification = false.obs;
@@ -258,7 +259,11 @@ class ProductController extends GetxController {
         if (categoryModel.value.success ?? false) {
           categoryList.value = categoryModel.value.data ?? [];
           categoryList.forEach((element) {
-            categoryType.add(element.type ?? "");
+            if (element.type == "0" || element.type == "") {
+              categoryType.remove(element.type);
+            } else {
+              categoryType.add(element.type?.replaceAll("\n", " ") ?? "");
+            }
           });
 
           categoryLoad.value = false;

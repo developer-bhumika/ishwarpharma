@@ -14,13 +14,15 @@ class DownloadScreen extends StatefulWidget {
   State<DownloadScreen> createState() => _DownloadScreenState();
 }
 
-class _DownloadScreenState extends State<DownloadScreen> {
+class _DownloadScreenState extends State<DownloadScreen> with TickerProviderStateMixin {
   final productController = Get.find<ProductController>();
+  TabController? tabController;
 
   @override
   void initState() {
     super.initState();
     getStoragePermission();
+    tabController = TabController(length: 2, vsync: this, initialIndex: 0);
     productController.getDownloads();
     productController.getDownLoadProduct();
   }
@@ -61,111 +63,132 @@ class _DownloadScreenState extends State<DownloadScreen> {
       body: Obx(
         () => productController.downloadsProductLoad.value && productController.downloadsPriceLoad.value
             ? ProgressView()
-            : Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  children: [
-                    ListView.separated(
-                      shrinkWrap: true,
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: productController.downloadProductList.length,
-                      separatorBuilder: (context, index) => const SizedBox(height: 10),
-                      itemBuilder: (context, index) => Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: AppColor.borderColorProduct),
-                          borderRadius: BorderRadius.circular(6),
-                          color: AppColor.white,
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: CommonText(
-                                  text: productController.downloadProductList[index].name ?? "",
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16),
-                            ),
-                            Obx(
-                              () => productController.downloadProductList[index].load.value
-                                  ? CircularPercentIndicator(
-                                      radius: 20.0,
-                                      lineWidth: 3.0,
-                                      percent: productController.progressDownload.value,
-                                      center: CommonText(
-                                        text: "${(productController.progressDownload.value * 100).toInt()}%",
-                                        fontSize: 11,
-                                      ),
-                                      progressColor: AppColor.primaryColor,
-                                    )
-                                  : InkWell(
-                                      onTap: () {
-                                        productController.downloadProductList[index].load.value = true;
-                                        productController.downloadFile(
-                                            productController.downloadProductList[index].productpdfUrl, index);
-                                        // final taskId = await FlutterDownloader.enqueue(
-                                        //   url: productController.downloadProductList[index].pricepdfUrl ?? "",
-                                        //   savedDir: "/storage/emulated/0/Download",
-                                        //   showNotification: true,
-                                        //   saveInPublicStorage: true,
-                                        //   openFileFromNotification: true,
-                                        // );
-                                        // print(taskId);
-                                      },
-                                      child: Icon(Icons.download, color: AppColor.primaryColor),
-                                    ),
-                            ),
-                          ],
-                        ),
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TabBar(
+                    controller: tabController,
+                    tabs: [
+                      Tab(
+                        text: "Product Catalog",
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    ListView.separated(
-                      shrinkWrap: true,
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: productController.downloadPriceList.length,
-                      separatorBuilder: (context, index) => const SizedBox(height: 10),
-                      itemBuilder: (context, index) => Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: AppColor.borderColorProduct),
-                          borderRadius: BorderRadius.circular(6),
-                          color: AppColor.white,
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: CommonText(
-                                  text: productController.downloadPriceList[index].name ?? "",
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16),
-                            ),
-                            Obx(
-                              () => productController.downloadPriceList[index].load.value
-                                  ? CircularPercentIndicator(
-                                      radius: 20.0,
-                                      lineWidth: 5.0,
-                                      percent: productController.progressDownload.value,
-                                      center: CommonText(
-                                        text: "${(productController.progressDownload.value * 100).toInt()}%",
-                                        fontSize: 13,
-                                      ),
-                                      progressColor: AppColor.primaryColor,
-                                    )
-                                  : InkWell(
-                                      onTap: () {
-                                        productController.downloadPriceList[index].load.value = true;
-                                        productController.downloadFile(
-                                            productController.downloadPriceList[index].pricepdfUrl, index);
-                                      },
-                                      child: Icon(Icons.download, color: AppColor.primaryColor),
-                                    ),
-                            ),
-                          ],
-                        ),
+                      Tab(
+                        text: "Price List",
                       ),
+                    ],
+                    labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: "Poppins"),
+                    indicatorColor: AppColor.primaryColor,
+                    labelColor: AppColor.primaryColor,
+                    unselectedLabelColor: AppColor.textColor,
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      controller: tabController,
+                      children: [
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(),
+                          padding: EdgeInsets.all(15),
+                          itemCount: productController.downloadProductList.length,
+                          separatorBuilder: (context, index) => const SizedBox(height: 10),
+                          itemBuilder: (context, index) => Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: AppColor.borderColorProduct),
+                              borderRadius: BorderRadius.circular(6),
+                              color: AppColor.white,
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: CommonText(
+                                      text: productController.downloadProductList[index].name ?? "",
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16),
+                                ),
+                                Obx(
+                                  () => productController.downloadProductList[index].load.value
+                                      ? CircularPercentIndicator(
+                                          radius: 20.0,
+                                          lineWidth: 3.0,
+                                          percent: productController.progressDownload.value,
+                                          center: CommonText(
+                                            text: "${(productController.progressDownload.value * 100).toInt()}%",
+                                            fontSize: 11,
+                                          ),
+                                          progressColor: AppColor.primaryColor,
+                                        )
+                                      : InkWell(
+                                          onTap: () {
+                                            productController.downloadProductList[index].load.value = true;
+                                            productController.downloadFile(
+                                                productController.downloadProductList[index].productpdfUrl, index);
+                                            // final taskId = await FlutterDownloader.enqueue(
+                                            //   url: productController.downloadProductList[index].pricepdfUrl ?? "",
+                                            //   savedDir: "/storage/emulated/0/Download",
+                                            //   showNotification: true,
+                                            //   saveInPublicStorage: true,
+                                            //   openFileFromNotification: true,
+                                            // );
+                                            // print(taskId);
+                                          },
+                                          child: Icon(Icons.download, color: AppColor.primaryColor),
+                                        ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        ListView.separated(
+                          shrinkWrap: true,
+                          padding: EdgeInsets.all(15),
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: productController.downloadPriceList.length,
+                          separatorBuilder: (context, index) => const SizedBox(height: 10),
+                          itemBuilder: (context, index) => Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: AppColor.borderColorProduct),
+                              borderRadius: BorderRadius.circular(6),
+                              color: AppColor.white,
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: CommonText(
+                                      text: productController.downloadPriceList[index].name ?? "",
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16),
+                                ),
+                                Obx(
+                                  () => productController.downloadPriceList[index].load.value
+                                      ? CircularPercentIndicator(
+                                          radius: 20.0,
+                                          lineWidth: 5.0,
+                                          percent: productController.progressDownload.value,
+                                          center: CommonText(
+                                            text: "${(productController.progressDownload.value * 100).toInt()}%",
+                                            fontSize: 13,
+                                          ),
+                                          progressColor: AppColor.primaryColor,
+                                        )
+                                      : InkWell(
+                                          onTap: () {
+                                            productController.downloadPriceList[index].load.value = true;
+                                            productController.downloadFile(
+                                                productController.downloadPriceList[index].pricepdfUrl, index);
+                                          },
+                                          child: Icon(Icons.download, color: AppColor.primaryColor),
+                                        ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  )
+                ],
               ),
       ),
     );

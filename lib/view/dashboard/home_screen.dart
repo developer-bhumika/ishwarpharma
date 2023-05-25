@@ -81,11 +81,11 @@ class HomeScreen extends StatelessWidget {
                           child: GridView.builder(
                             shrinkWrap: true,
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,
                               mainAxisSpacing: 10,
                               crossAxisSpacing: 10,
-                              childAspectRatio: 0.95,
+                              childAspectRatio: MediaQuery.of(context).size.aspectRatio / 0.5,
                             ),
                             physics: const BouncingScrollPhysics(),
                             itemCount: productController.companyList.length,
@@ -229,8 +229,8 @@ class HomeScreen extends StatelessWidget {
                         builder: (BuildContext context) {
                           return Container(
                             width: MediaQuery.of(context).size.width,
-                            margin: const EdgeInsets.symmetric(horizontal: 12.0),
-                            transform: Matrix4.translationValues(-350 / 25, 0, 0),
+                            margin: const EdgeInsets.symmetric(horizontal: 6.0),
+                            transform: Matrix4.translationValues(-350 / 20, 0, 0),
                             decoration: BoxDecoration(
                               color: AppColor.white,
                               borderRadius: BorderRadius.circular(10),

@@ -194,7 +194,11 @@ class _CartScreenState extends State<CartScreen> {
                                                 isDense: true,
                                                 keyBoardType: TextInputType.number,
                                                 controller: productController.moNo,
-                                                validator: FormBuilderValidators.required(),
+                                                validator: FormBuilderValidators.compose([
+                                                  FormBuilderValidators.required(),
+                                                  FormBuilderValidators.equalLength(10,
+                                                      errorText: "Please enter 10 digit mobile number"),
+                                                ]),
                                               ),
                                             ],
                                           ),
@@ -244,7 +248,7 @@ class _CartScreenState extends State<CartScreen> {
                                   );
                                 },
                                 color: AppColor.primaryColor,
-                                btnText: "PlaceOrder")
+                                btnText: "Place Order")
                       ],
                     ),
         ),
