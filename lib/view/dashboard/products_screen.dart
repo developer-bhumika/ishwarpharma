@@ -20,12 +20,12 @@ class ProductsScreen extends StatefulWidget {
 
 class _ProductsScreenState extends State<ProductsScreen> {
   final productController = Get.find<ProductController>();
-  ScrollController? scrollController;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    productController.page.value = 1;
     productController.getProduct(productController.page.value);
   }
 
@@ -130,7 +130,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     onChanged: (v) {
                       if (v.isEmpty) {
                         productController.searchList.clear();
+                        productController.page.value = 1;
+                        productController.getProduct(productController.page.value);
                       } else {
+                        // productController.page.value = 1;
+                        productController.getProduct(1, text: v);
                         productController.searchProduct(v);
                       }
                     },
@@ -140,7 +144,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       filled: true,
                       border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(7)),
                       hintText: "Search Medicine",
-                      hintStyle: TextStyle(color: AppColor.greyGreen, fontSize: 14, fontWeight: FontWeight.w400),
+                      hintStyle: const TextStyle(color: AppColor.greyGreen, fontSize: 14, fontWeight: FontWeight.w400),
                       prefixIcon: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: SvgPicture.asset(AppImage.searchText),
@@ -151,17 +155,15 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             () => productController.isFilter.value
                                 ? InkWell(
                                     onTap: () {
+                                      productController.productList.clear();
                                       productController.search.clear();
                                       productController.selectedCity = null;
                                       productController.isFilter.value = false;
                                       productController.page.value = 1;
                                       productController.getProduct(productController.page.value);
                                     },
-                                    child: Icon(
-                                      Icons.clear,
-                                      color: AppColor.greyGreen,
-                                      size: 30,
-                                    ))
+                                    child: const Icon(Icons.clear, color: AppColor.greyGreen, size: 30),
+                                  )
                                 : InkWell(
                                     onTap: () {
                                       Get.bottomSheet(
@@ -380,7 +382,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 mrp: productController.searchList[index].mrp.toString(),
                                 free: productController.productDetailModel.value.data?.free_scheme == ""
                                     ? "0"
-                                    : productController.productList[index].free_scheme ?? "0",
+                                    : productController.searchList[index].free_scheme ?? "0",
                                 subTitle: productController.searchList[index].content ?? "",
                                 searchTextList: productController.searchTextList,
                                 searchText: productController.search.text,

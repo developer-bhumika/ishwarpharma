@@ -61,6 +61,9 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
+    String brandName = title?.replaceAll(exp, '') ?? "";
+    String content = subTitle?.replaceAll(exp, '') ?? "";
     return Container(
       decoration: BoxDecoration(
           color: AppColor.white,
@@ -73,7 +76,7 @@ class ProductCard extends StatelessWidget {
           children: [
             Text.rich(
               TextSpan(
-                children: highlightOccurrences(title ?? '', searchText ?? ''),
+                children: highlightOccurrences(brandName, searchText ?? ' '),
                 style: const TextStyle(color: AppColor.primaryColor, fontWeight: FontWeight.w500),
               ),
             ),
@@ -97,7 +100,7 @@ class ProductCard extends StatelessWidget {
             ),
             Text.rich(
               TextSpan(
-                children: highlightOccurrences(subTitle ?? '', searchText ?? ''),
+                children: highlightOccurrences(content, searchText ?? ''),
                 style: const TextStyle(color: AppColor.dartFontColor, fontSize: 12),
               ),
             ),

@@ -87,12 +87,12 @@ class ProductController extends GetxController {
     return true;
   }
 
-  final RefreshController refreshController = RefreshController(initialRefresh: false);
+  RefreshController refreshController = RefreshController(initialRefresh: false);
   ScrollController scrollController = ScrollController();
   RxInt page = 1.obs;
   RxBool pageLoad = true.obs;
 
-  getProduct(int page) async {
+  getProduct(int page, {String? text}) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     if ((!await isInternet()) && preferences.getString('product') != null) {
@@ -110,7 +110,7 @@ class ProductController extends GetxController {
           isLoading.value = true;
           productList.clear();
         }
-        final resp = await productService.getProduct(search.text, page);
+        final resp = await productService.getProduct(text ?? search.text, page);
         if (resp != null) {
           productModel.value = resp;
           if (productModel.value.success ?? false) {
@@ -123,6 +123,8 @@ class ProductController extends GetxController {
             }
             if (productModel.value.data?.isEmpty ?? true) {
               pageLoad.value = false;
+            } else {
+              pageLoad.value = true;
             }
             isLoading.value = false;
           } else {
@@ -363,11 +365,13 @@ class ProductController extends GetxController {
       }
     } else {
       for (var element in productList) {
+        RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
+        String brandName = element.content?.replaceAll(exp, '') ?? "";
         if (element.brand?.toLowerCase().contains(search.text.toLowerCase()) ?? false) {
           searchList.add(element);
         } else if (element.company?.toLowerCase().contains(search.text.toLowerCase()) ?? false) {
           searchList.add(element);
-        } else if (element.content?.toLowerCase().contains(search.text.toLowerCase()) ?? false) {
+        } else if (brandName.toLowerCase().contains(search.text.toLowerCase()) ?? false) {
           searchList.add(element);
         }
       }

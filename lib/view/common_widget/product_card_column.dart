@@ -47,6 +47,8 @@ class ProductCardColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
+    String companyName = subTitle?.replaceAll(exp, '') ?? "";
     return Expanded(
       flex: flex ?? 1,
       child: Column(
@@ -56,7 +58,7 @@ class ProductCardColumn extends StatelessWidget {
           const SizedBox(height: 5),
           Text.rich(
             TextSpan(
-              children: highlightOccurrences(subTitle ?? '', searchText ?? ''),
+              children: highlightOccurrences(companyName, searchText ?? ''),
               style: const TextStyle(color: AppColor.textColor, fontWeight: FontWeight.w500, fontSize: 13),
             ),
           ),

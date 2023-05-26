@@ -70,7 +70,7 @@ class _DownloadScreenState extends State<DownloadScreen> with TickerProviderStat
                     controller: tabController,
                     tabs: [
                       Tab(
-                        text: "Product Catalog",
+                        text: "Product Catalogues",
                       ),
                       Tab(
                         text: "Price List",
