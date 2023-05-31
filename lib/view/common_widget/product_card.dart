@@ -64,6 +64,7 @@ class ProductCard extends StatelessWidget {
     RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
     String brandName = title?.replaceAll(exp, '') ?? "";
     String content = subTitle?.replaceAll(exp, '') ?? "";
+
     return Container(
       decoration: BoxDecoration(
           color: AppColor.white,

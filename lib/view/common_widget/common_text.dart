@@ -23,11 +23,11 @@ class CommonText extends StatelessWidget {
     return Text(
       text ?? "",
       style: TextStyle(
-        color: color ?? AppColor.dartFontColor,
-        fontSize: fontSize ?? 14,
-        fontWeight: fontWeight ?? FontWeight.w400,
-        height: textHeight,
-      ),
+          color: color ?? AppColor.dartFontColor,
+          fontSize: fontSize ?? 14,
+          fontWeight: fontWeight ?? FontWeight.w400,
+          height: textHeight,
+          fontFamily: "Poppins"),
       textAlign: textAlign ?? TextAlign.start,
     );
   }

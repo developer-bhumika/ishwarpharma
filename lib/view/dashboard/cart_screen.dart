@@ -11,6 +11,7 @@ import 'package:ishwarpharma/view/common_widget/common_button.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
 import 'package:ishwarpharma/view/common_widget/common_textfield.dart';
 import 'package:ishwarpharma/view/dashboard/product_detail_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CartScreen extends StatefulWidget {
   CartScreen({Key? key}) : super(key: key);
@@ -27,6 +28,15 @@ class _CartScreenState extends State<CartScreen> {
   void initState() {
     super.initState();
     productController.getCart();
+    getData();
+  }
+
+  getData() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    productController.firm.text = pref.getString('name') ?? "";
+    productController.email.text = pref.getString('email') ?? "";
+    productController.place.text = pref.getString('place') ?? "";
+    productController.moNo.text = pref.getString('mobile') ?? "";
   }
 
   @override
@@ -230,8 +240,13 @@ class _CartScreenState extends State<CartScreen> {
                                                   sizeBoxWidth: 20,
                                                   load: productController.orderPlaceLoading.value,
                                                   height: 40,
-                                                  onTap: () {
+                                                  onTap: () async {
+                                                    SharedPreferences pref = await SharedPreferences.getInstance();
                                                     if (_formKey.currentState!.validate()) {
+                                                      pref.setString('name', productController.firm.text);
+                                                      pref.setString('email', productController.email.text);
+                                                      pref.setString('place', productController.place.text);
+                                                      pref.setString('mobile', productController.moNo.text);
                                                       productController.orderPlace();
                                                     }
                                                   },

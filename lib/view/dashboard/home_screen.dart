@@ -10,6 +10,7 @@ import 'package:ishwarpharma/utils/indicator.dart';
 import 'package:ishwarpharma/view/about_us_screen.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
 import 'package:ishwarpharma/view/common_widget/company_card.dart';
+import 'package:ishwarpharma/view/dashboard/contact_us_screen.dart';
 import 'package:ishwarpharma/view/setting/setting_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -181,12 +182,17 @@ class HomeScreen extends StatelessWidget {
                     itemBuilder: (context) => [
                       const PopupMenuItem(value: 1, child: Text("Setting")),
                       const PopupMenuItem(value: 2, child: Text("About Us")),
+                      const PopupMenuItem(value: 3, child: Text("Contact Us")),
                     ],
                     onSelected: (val) {
                       if (val == 1) {
                         Get.to(SettingScreen());
-                      } else {
+                      }
+                      if (val == 2) {
                         Get.to(AboutUsScreen());
+                      }
+                      if (val == 3) {
+                        Get.to(ContactUsScreen());
                       }
                     },
                   ),
