@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -73,38 +74,47 @@ class ContactUsScreen extends StatelessWidget {
                         flex: 4,
                         child: InkWell(
                           onTap: () async {
-                            List<Location> coordinates = await locationFromAddress(
-                                "7 DEVKARAN MANSION, 24 VITHALDAS ROAD, DAWA BAZAR, MUMBAI 400002");
-                            // final uri = Uri.parse(
-                            //     'https://www.google.com/maps/search/?api=1&query=${coordinates[0].latitude},${coordinates[0].longitude}');
-                            // if (await canLaunchUrl(uri)) {
-                            //   await launchUrl(uri);
+                            AndroidIntent intent;
+                            intent = AndroidIntent(
+                              action: 'action_view',
+                              data: Uri.encodeFull('google.navigation:q=24 VITHALDAS ROAD, DAWA BAZAR, MUMBAI 400002'),
+                              package: 'com.google.android.apps.maps',
+                            );
+                            intent.launch();
+
+                            // List<Location> coordinates = await locationFromAddress(
+                            //     "7 DEVKARAN MANSION, 24 VITHALDAS ROAD, DAWA BAZAR, MUMBAI 400002");
+                            // // final uri = Uri.parse(
+                            // //     'https://www.google.com/maps/search/?api=1&query=${coordinates[0].latitude},${coordinates[0].longitude}');
+                            // // if (await canLaunchUrl(uri)) {
+                            // //   await launchUrl(uri);
+                            // // } else {
+                            // //   throw 'Could not launch $uri';
+                            // // }
+                            //
+                            // String appleUrl =
+                            //     'https://maps.apple.com/?saddr=&daddr=${coordinates[0].latitude},${coordinates[0].longitude}&directionsmode=driving';
+                            // String googleUrl =
+                            //     'https://www.google.com/maps/search/?api=1&query=${coordinates[0].latitude},${coordinates[0].longitude}';
+                            // // 'https://www.google.com/maps/search/${Uri.encodeFull("7 DEVKARAN MANSION, 24 VITHALDAS ROAD, DAWA BAZAR, MUMBAI 400002")}';
+                            //
+                            // if (Platform.isIOS) {
+                            //   if (await canLaunchUrl(Uri.parse(appleUrl))) {
+                            //     await launchUrl(Uri.parse(appleUrl));
+                            //   } else {
+                            //     if (await canLaunchUrl(Uri.parse(googleUrl))) {
+                            //       await launchUrl(Uri.parse(googleUrl));
+                            //     } else {
+                            //       throw 'Could not open the map.';
+                            //     }
+                            //   }
                             // } else {
-                            //   throw 'Could not launch $uri';
+                            //   if (await canLaunchUrl(Uri.parse(googleUrl))) {
+                            //     await launchUrl(Uri.parse(googleUrl));
+                            //   } else {
+                            //     throw 'Could not open the map.';
+                            //   }
                             // }
-
-                            String appleUrl =
-                                'https://maps.apple.com/?saddr=&daddr=${coordinates[0].latitude},${coordinates[0].longitude}&directionsmode=driving';
-                            String googleUrl =
-                                'https://www.google.com/maps/search/${Uri.encodeFull("7 DEVKARAN MANSION, 24 VITHALDAS ROAD, DAWA BAZAR, MUMBAI 400002")}';
-
-                            if (Platform.isIOS) {
-                              if (await canLaunchUrl(Uri.parse(appleUrl))) {
-                                await launchUrl(Uri.parse(appleUrl));
-                              } else {
-                                if (await canLaunchUrl(Uri.parse(googleUrl))) {
-                                  await launchUrl(Uri.parse(googleUrl));
-                                } else {
-                                  throw 'Could not open the map.';
-                                }
-                              }
-                            } else {
-                              if (await canLaunchUrl(Uri.parse(googleUrl))) {
-                                await launchUrl(Uri.parse(googleUrl));
-                              } else {
-                                throw 'Could not open the map.';
-                              }
-                            }
                           },
                           child: CommonText(
                             text: "7 DEVKARAN MANSION, 24 VITHALDAS ROAD, DAWA BAZAR, MUMBAI 400002",
