@@ -23,39 +23,55 @@ class ProductCard extends StatelessWidget {
       this.searchTextList,
       this.searchText})
       : super(key: key);
-
   List<TextSpan> highlightOccurrences(String source, String query) {
-    if (query.isEmpty || !source.toLowerCase().contains(query.toLowerCase())) {
+    if (query.isEmpty) {
       return [TextSpan(text: source)];
     }
-    final matches = query.toLowerCase().allMatches(source.toLowerCase());
+
+    var matches = <Match>[];
+    for (final token in query.trim().toLowerCase().split(' ')) {
+      matches.addAll(token.allMatches(source.toLowerCase()));
+    }
+
+    if (matches.isEmpty) {
+      return [TextSpan(text: source)];
+    }
+    matches.sort((a, b) => a.start.compareTo(b.start));
 
     int lastMatchEnd = 0;
-
     final List<TextSpan> children = [];
-    for (var i = 0; i < matches.length; i++) {
-      final match = matches.elementAt(i);
-
-      if (match.start != lastMatchEnd) {
+    for (final match in matches) {
+      if (match.end <= lastMatchEnd) {
+        // already matched -> ignore
+      } else if (match.start <= lastMatchEnd) {
+        children.add(TextSpan(
+          text: source.substring(lastMatchEnd, match.end),
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, backgroundColor: Colors.yellow),
+        ));
+      } else if (match.start > lastMatchEnd) {
         children.add(TextSpan(
           text: source.substring(lastMatchEnd, match.start),
         ));
-      }
 
-      children.add(TextSpan(
-        text: source.substring(match.start, match.end),
-        style:
-            const TextStyle(fontWeight: FontWeight.bold, color: AppColor.primaryColor, backgroundColor: Colors.yellow),
-      ));
-
-      if (i == matches.length - 1 && match.end != source.length) {
         children.add(TextSpan(
-          text: source.substring(match.end, source.length),
+          text: source.substring(match.start, match.end),
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, backgroundColor: Colors.yellow),
         ));
       }
 
-      lastMatchEnd = match.end;
+      if (lastMatchEnd < match.end) {
+        lastMatchEnd = match.end;
+      }
     }
+
+    if (lastMatchEnd < source.length) {
+      children.add(TextSpan(
+        text: source.substring(lastMatchEnd, source.length),
+      ));
+    }
+
     return children;
   }
 
@@ -64,7 +80,6 @@ class ProductCard extends StatelessWidget {
     RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
     String brandName = title?.replaceAll(exp, '') ?? "";
     String content = subTitle?.replaceAll(exp, '') ?? "";
-
     return Container(
       decoration: BoxDecoration(
           color: AppColor.white,
@@ -78,7 +93,8 @@ class ProductCard extends StatelessWidget {
             Text.rich(
               TextSpan(
                 children: highlightOccurrences(brandName, searchText ?? ' '),
-                style: const TextStyle(color: AppColor.primaryColor, fontWeight: FontWeight.w500),
+                style: const TextStyle(
+                    color: AppColor.primaryColor, fontWeight: FontWeight.w500),
               ),
             ),
             const Divider(
@@ -89,10 +105,23 @@ class ProductCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ProductCardColumn(title: "Company", subTitle: company ?? "", searchText: searchText, flex: 2),
-                ProductCardColumn(title: "Rate", subTitle: rate ?? ""),
-                ProductCardColumn(title: "MRP", subTitle: mrp ?? ""),
-                ProductCardColumn(title: "Free", subTitle: free ?? ""),
+                ProductCardColumn(
+                    title: "Company",
+                    subTitle: company ?? "",
+                    searchText: searchText ?? "",
+                    flex: 2),
+                ProductCardColumn(
+                  title: "Rate",
+                  subTitle: rate ?? "",
+                  searchText: "",
+                ),
+                ProductCardColumn(
+                    title: "MRP", subTitle: mrp ?? "", searchText: ""),
+                ProductCardColumn(
+                  title: "Free",
+                  subTitle: free ?? "",
+                  searchText: "",
+                ),
               ],
             ),
             const Divider(
@@ -102,7 +131,8 @@ class ProductCard extends StatelessWidget {
             Text.rich(
               TextSpan(
                 children: highlightOccurrences(content, searchText ?? ''),
-                style: const TextStyle(color: AppColor.dartFontColor, fontSize: 12),
+                style: const TextStyle(
+                    color: AppColor.dartFontColor, fontSize: 12),
               ),
             ),
           ],

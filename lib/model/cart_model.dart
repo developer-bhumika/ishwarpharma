@@ -10,7 +10,8 @@ class CartModel {
 
   CartModel({this.success, this.data, this.message});
 
-  factory CartModel.fromJson(Map<String, dynamic> json) => _$CartModelFromJson(json);
+  factory CartModel.fromJson(Map<String, dynamic> json) =>
+      _$CartModelFromJson(json);
   Map<String, dynamic> toJson() => _$CartModelToJson(this);
 }
 
@@ -49,6 +50,7 @@ class CartData {
       this.created_at,
       this.updated_at});
 
-  factory CartData.fromJson(Map<String, dynamic> json) => _$CartDataFromJson(json);
+  factory CartData.fromJson(Map<String, dynamic> json) =>
+      _$CartDataFromJson(json);
   Map<String, dynamic> toJson() => _$CartDataToJson(this);
 }

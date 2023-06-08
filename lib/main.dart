@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +25,8 @@ Future<void> main() async {
   );
 
   getToken() async {
-    FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance; // Change here
+    FirebaseMessaging firebaseMessaging =
+        FirebaseMessaging.instance; // Change here
     firebaseMessaging.getToken().then((token) {
       print("token is $token");
     });
@@ -68,7 +67,8 @@ Future<void> setupFlutterNotifications() async {
   channel = const AndroidNotificationChannel(
     'high_importance_channel', // id
     'High Importance Notifications', // title
-    description: 'This channel is used for important notifications.', // description
+    description:
+        'This channel is used for important notifications.', // description
     importance: Importance.high,
   );
 
@@ -79,7 +79,8 @@ Future<void> setupFlutterNotifications() async {
   /// We use this channel in the `AndroidManifest.xml` file to override the
   /// default FCM channel to enable heads up notifications.
   await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
 
   /// Update the iOS foreground notification presentation options to allow

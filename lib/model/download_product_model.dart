@@ -10,7 +10,8 @@ class DownLoadProductModel {
 
   DownLoadProductModel({this.success, this.data, this.message});
 
-  factory DownLoadProductModel.fromJson(Map<String, dynamic> json) => _$DownLoadProductModelFromJson(json);
+  factory DownLoadProductModel.fromJson(Map<String, dynamic> json) =>
+      _$DownLoadProductModelFromJson(json);
   Map<String, dynamic> toJson() => _$DownLoadProductModelToJson(this);
 }
 
@@ -24,8 +25,15 @@ class DownloadProductDataModel {
   String? productpdfUrl;
   Rx<bool> load = false.obs;
 
-  DownloadProductDataModel({this.id, this.name, this.price_pdf, this.created_at, this.updated_at, this.productpdfUrl});
+  DownloadProductDataModel(
+      {this.id,
+      this.name,
+      this.price_pdf,
+      this.created_at,
+      this.updated_at,
+      this.productpdfUrl});
 
-  factory DownloadProductDataModel.fromJson(Map<String, dynamic> json) => _$DownloadProductDataModelFromJson(json);
+  factory DownloadProductDataModel.fromJson(Map<String, dynamic> json) =>
+      _$DownloadProductDataModelFromJson(json);
   Map<String, dynamic> toJson() => _$DownloadProductDataModelToJson(this);
 }

@@ -8,40 +8,63 @@ class ProductCardColumn extends StatelessWidget {
   String? searchText;
   CrossAxisAlignment? alignment;
   int? flex;
-  ProductCardColumn({Key? key, this.title, this.subTitle, this.searchText, this.alignment, this.flex})
+  ProductCardColumn(
+      {Key? key,
+      this.title,
+      this.subTitle,
+      this.searchText,
+      this.alignment,
+      this.flex})
       : super(key: key);
-
   List<TextSpan> highlightOccurrences(String source, String query) {
-    if (query.isEmpty || !source.toLowerCase().contains(query.toLowerCase())) {
+    if (query.isEmpty) {
       return [TextSpan(text: source)];
     }
-    final matches = query.toLowerCase().allMatches(source.toLowerCase());
+
+    var matches = <Match>[];
+    for (final token in query.trim().toLowerCase().split(' ')) {
+      matches.addAll(token.allMatches(source.toLowerCase()));
+    }
+
+    if (matches.isEmpty) {
+      return [TextSpan(text: source)];
+    }
+    matches.sort((a, b) => a.start.compareTo(b.start));
 
     int lastMatchEnd = 0;
-
     final List<TextSpan> children = [];
-    for (var i = 0; i < matches.length; i++) {
-      final match = matches.elementAt(i);
-
-      if (match.start != lastMatchEnd) {
+    for (final match in matches) {
+      if (match.end <= lastMatchEnd) {
+        // already matched -> ignore
+      } else if (match.start <= lastMatchEnd) {
+        children.add(TextSpan(
+          text: source.substring(lastMatchEnd, match.end),
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, backgroundColor: Colors.yellow),
+        ));
+      } else if (match.start > lastMatchEnd) {
         children.add(TextSpan(
           text: source.substring(lastMatchEnd, match.start),
         ));
-      }
 
-      children.add(TextSpan(
-        text: source.substring(match.start, match.end),
-        style: TextStyle(fontWeight: FontWeight.bold, color: AppColor.primaryColor, backgroundColor: Colors.yellow),
-      ));
-
-      if (i == matches.length - 1 && match.end != source.length) {
         children.add(TextSpan(
-          text: source.substring(match.end, source.length),
+          text: source.substring(match.start, match.end),
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, backgroundColor: Colors.yellow),
         ));
       }
 
-      lastMatchEnd = match.end;
+      if (lastMatchEnd < match.end) {
+        lastMatchEnd = match.end;
+      }
     }
+
+    if (lastMatchEnd < source.length) {
+      children.add(TextSpan(
+        text: source.substring(lastMatchEnd, source.length),
+      ));
+    }
+
     return children;
   }
 
@@ -54,12 +77,19 @@ class ProductCardColumn extends StatelessWidget {
       child: Column(
         crossAxisAlignment: alignment ?? CrossAxisAlignment.start,
         children: [
-          CommonText(text: title ?? "", fontWeight: FontWeight.w400, color: AppColor.greyGreen, fontSize: 12),
+          CommonText(
+              text: title ?? "",
+              fontWeight: FontWeight.w400,
+              color: AppColor.greyGreen,
+              fontSize: 12),
           const SizedBox(height: 5),
           Text.rich(
             TextSpan(
               children: highlightOccurrences(companyName, searchText ?? ''),
-              style: const TextStyle(color: AppColor.textColor, fontWeight: FontWeight.w500, fontSize: 13),
+              style: const TextStyle(
+                  color: AppColor.textColor,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13),
             ),
           ),
         ],
