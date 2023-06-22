@@ -9,29 +9,32 @@ class AboutUsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
+        foregroundColor: Colors.black,
         title: const CommonText(
+          color: AppColor.textColor,
+          fontSize: 18,
           text: "About Us",
-          color: AppColor.white,
-          fontWeight: FontWeight.w800,
-          fontSize: 20,
+          fontWeight: FontWeight.w500,
         ),
+        shadowColor: AppColor.borderColor2,
+        centerTitle: true,
+        elevation: 0.75,
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CommonText(
+            const CommonText(
               text:
                   "Ishwar Pharma is a leading distributor of quality generic medicines in Maharashtra currently associated with Abbott, Wockhardt, Emcure, Sandoz, Troikaa, Indian Immunoglobins, Tripada, Jackson and many other companies.",
             ),
-            SizedBox(height: 15),
-            CommonText(
+            const SizedBox(height: 15),
+            const CommonText(
               text:
                   "Disclaimer: This application does not support online billing, payment or pharmacy. it is not for end retailers and only meant for authorized Ishwar Pharma stockiest to communicate orders.",
             ),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -44,17 +47,46 @@ class AboutUsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    CommonText(text: ""),
-                    SizedBox(height: 5),
-                    CommonText(text: "Website: www.ishwarpharma.com"),
-                    SizedBox(height: 2),
-                    CommonText(text: "Email: ishwarpharma@gmail.com"),
-                    SizedBox(height: 2),
-                    CommonText(text: "(0): 022-66155679 / 66155680"),
-                  ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const CommonText(text: ""),
+                      const SizedBox(height: 5),
+                      RichText(
+                          text: const TextSpan(
+                              text: "Website: ",
+                              style: TextStyle(fontFamily: "Poppins", color: AppColor.dartFontColor),
+                              children: [
+                            TextSpan(
+                                text: "www.ishwarpharma.com",
+                                style: TextStyle(
+                                    color: AppColor.primaryColor, fontWeight: FontWeight.w500, fontFamily: "Poppins"))
+                          ])),
+                      const SizedBox(height: 2),
+                      RichText(
+                          text: const TextSpan(
+                              text: "Email: ",
+                              style: TextStyle(fontFamily: "Poppins", color: AppColor.dartFontColor),
+                              children: [
+                            TextSpan(
+                                text: "ishwarpharma@gmail.com",
+                                style: TextStyle(
+                                    color: AppColor.primaryColor, fontWeight: FontWeight.w500, fontFamily: "Poppins"))
+                          ])),
+                      const SizedBox(height: 2),
+                      RichText(
+                          text: const TextSpan(
+                              text: "(0): ",
+                              style: TextStyle(fontFamily: "Poppins", color: AppColor.dartFontColor),
+                              children: [
+                            TextSpan(
+                                text: "022-66155679 / 66155680",
+                                style: TextStyle(
+                                    color: AppColor.primaryColor, fontWeight: FontWeight.w500, fontFamily: "Poppins"))
+                          ])),
+                    ],
+                  ),
                 ),
               ],
             ),

@@ -14,13 +14,16 @@ class SettingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        title: const CommonText(
-          text: "Settings",
-          color: AppColor.white,
-          fontWeight: FontWeight.w800,
-          fontSize: 20,
+        foregroundColor: Colors.black,
+        title: CommonText(
+          color: AppColor.textColor,
+          fontSize: 18,
+          text: "Setting",
+          fontWeight: FontWeight.w500,
         ),
+        shadowColor: AppColor.borderColor2,
+        centerTitle: true,
+        elevation: 0.75,
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),

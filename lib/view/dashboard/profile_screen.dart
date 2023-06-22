@@ -3,28 +3,17 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ishwarpharma/controller/product_controller.dart';
 import 'package:ishwarpharma/utils/constant.dart';
-import 'package:ishwarpharma/utils/indicator.dart';
+import 'package:ishwarpharma/view/about_us_screen.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
-import 'package:ishwarpharma/view/common_widget/history_card.dart';
 import 'package:ishwarpharma/view/dashboard/contact_us_screen.dart';
+import 'package:ishwarpharma/view/dashboard/notification_screen.dart';
+import 'package:ishwarpharma/view/setting/setting_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class HistoryScreen extends StatefulWidget {
-  HistoryScreen({Key? key}) : super(key: key);
+class ProfileScreen extends StatelessWidget {
+  ProfileScreen({Key? key}) : super(key: key);
 
-  @override
-  State<HistoryScreen> createState() => _HistoryScreenState();
-}
-
-class _HistoryScreenState extends State<HistoryScreen> {
   final productController = Get.find<ProductController>();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    productController.getHistory();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,26 +85,86 @@ class _HistoryScreenState extends State<HistoryScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Obx(
-          () => productController.isHistoryLoading.value
-              ? ProgressView()
-              : productController.historyList.isEmpty
-                  ? const Center(
-                      child: CommonText(
-                        fontSize: 20,
-                        textAlign: TextAlign.center,
-                        fontWeight: FontWeight.w700,
-                        color: AppColor.primaryColor,
-                        text: "Your History is Empty",
-                      ),
-                    )
-                  : ListView.separated(
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: productController.historyList.length,
-                      separatorBuilder: (context, index) => const SizedBox(height: 10),
-                      itemBuilder: (context, index) =>
-                          HistoryCard(products: productController.historyList[index].products),
+        child: Column(
+          children: [
+            InkWell(
+              onTap: () {
+                Get.to(SettingScreen());
+              },
+              child: Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColor.borderColorProduct),
+                  borderRadius: BorderRadius.circular(6),
+                  color: AppColor.white,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: CommonText(text: "Setting", fontWeight: FontWeight.w600, fontSize: 16),
                     ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: AppColor.grey,
+                      size: 20,
+                    )
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+            InkWell(
+              onTap: () {
+                Get.to(NotificationScreen());
+              },
+              child: Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColor.borderColorProduct),
+                  borderRadius: BorderRadius.circular(6),
+                  color: AppColor.white,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: CommonText(text: "Notification", fontWeight: FontWeight.w600, fontSize: 16),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: AppColor.grey,
+                      size: 20,
+                    )
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+            InkWell(
+              onTap: () {
+                Get.to(AboutUsScreen());
+              },
+              child: Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColor.borderColorProduct),
+                  borderRadius: BorderRadius.circular(6),
+                  color: AppColor.white,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: CommonText(text: "About Us", fontWeight: FontWeight.w600, fontSize: 16),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: AppColor.grey,
+                      size: 20,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -14,16 +14,13 @@ class CompanyCard extends StatelessWidget {
       padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [
-          BoxShadow(color: const Color(0xffC9DECE).withOpacity(0.24), blurRadius: 17),
-        ],
-        borderRadius: BorderRadius.circular(5),
+        border: Border.all(color: AppColor.borderColor2, width: 1),
+        borderRadius: BorderRadius.circular(6),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            height: 90,
+            height: 80,
             width: double.infinity,
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
@@ -37,10 +34,22 @@ class CompanyCard extends StatelessWidget {
                   errorWidget: (e, es, esq) => const Icon(Icons.error)),
             ),
           ),
-          Expanded(
-            child: CommonText(text: companyName ?? "", fontWeight: FontWeight.w500, color: AppColor.textColor),
+          // Expanded(
+          //   child: CommonText(text: companyName ?? "", fontWeight: FontWeight.w500, color: AppColor.textColor),
+          // ),
+          Spacer(),
+          Column(
+            children: [
+              CommonText(
+                text: companyName ?? "",
+                fontWeight: FontWeight.w500,
+                maxLines: 1,
+                color: AppColor.textColor,
+                fontSize: 12,
+              ),
+            ],
           ),
-          const SizedBox(),
+          Spacer(),
         ],
       ),
     );

@@ -17,6 +17,7 @@ import 'package:ishwarpharma/model/history_model.dart';
 import 'package:ishwarpharma/model/product_detail_model.dart';
 import 'package:ishwarpharma/model/product_model.dart';
 import 'package:ishwarpharma/model/slider_model.dart';
+import 'package:ishwarpharma/utils/constant.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,7 +75,7 @@ class ProductController extends GetxController {
           return true;
         } else {
           Get.snackbar("Error", resp["message"] ?? "",
-              backgroundColor: const Color(0xff81B29A).withOpacity(0.9), colorText: Colors.green.shade900);
+              backgroundColor: const Color(0xff81B29A).withOpacity(0.3), colorText: AppColor.primaryColor);
           editCartLoad.value = false;
           return true;
         }
@@ -109,6 +110,7 @@ class ProductController extends GetxController {
         if (page == 1) {
           isLoading.value = true;
           productList.clear();
+          searchList.clear();
         }
         final resp = await productService.getProduct(text ?? search.text, page);
         if (resp != null) {
@@ -134,11 +136,11 @@ class ProductController extends GetxController {
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 13,
-                    color: Colors.green.shade900,
+                    color: AppColor.primaryColor,
                   ),
                 ),
-                backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
-                colorText: Colors.green.shade900);
+                backgroundColor: const Color(0xff81B29A).withOpacity(0.3),
+                colorText: AppColor.primaryColor);
             isLoading.value = false;
           }
         } else {
@@ -181,11 +183,11 @@ class ProductController extends GetxController {
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 13,
-                  color: Colors.green.shade900,
+                  color: AppColor.primaryColor,
                 ),
               ),
-              backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
-              colorText: Colors.green.shade900);
+              backgroundColor: const Color(0xff81B29A).withOpacity(0.3),
+              colorText: AppColor.primaryColor);
           productDetailLoad.value = false;
         }
       } else {
@@ -232,11 +234,11 @@ class ProductController extends GetxController {
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 13,
-                    color: Colors.green.shade900,
+                    color: AppColor.primaryColor,
                   ),
                 ),
-                backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
-                colorText: Colors.green.shade900);
+                backgroundColor: const Color(0xff81B29A).withOpacity(0.3),
+                colorText: AppColor.primaryColor);
             companyLoad.value = false;
           }
         } else {
@@ -276,11 +278,11 @@ class ProductController extends GetxController {
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 13,
-                  color: Colors.green.shade900,
+                  color: AppColor.primaryColor,
                 ),
               ),
-              backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
-              colorText: Colors.green.shade900);
+              backgroundColor: const Color(0xff81B29A).withOpacity(0.3),
+              colorText: AppColor.primaryColor);
           categoryLoad.value = false;
         }
       } else {
@@ -326,11 +328,11 @@ class ProductController extends GetxController {
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 13,
-                    color: Colors.green.shade900,
+                    color: AppColor.primaryColor,
                   ),
                 ),
-                backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
-                colorText: Colors.green.shade900);
+                backgroundColor: const Color(0xff81B29A).withOpacity(0.3),
+                colorText: AppColor.primaryColor);
             sliderLoad.value = false;
           }
         } else {
@@ -399,10 +401,10 @@ class ProductController extends GetxController {
             cartModel.value.message ?? "",
             messageText: Text(
               cartModel.value.message ?? "",
-              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: Colors.green.shade900),
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: AppColor.primaryColor),
             ),
-            backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
-            colorText: Colors.green.shade900,
+            backgroundColor: const Color(0xff81B29A).withOpacity(0.3),
+            colorText: AppColor.primaryColor,
           );
           isCartLoading.value = false;
         }
@@ -434,11 +436,11 @@ class ProductController extends GetxController {
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 13,
-                  color: Colors.green.shade900,
+                  color: AppColor.primaryColor,
                 ),
               ),
-              backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
-              colorText: Colors.green.shade900);
+              backgroundColor: const Color(0xff81B29A).withOpacity(0.3),
+              colorText: AppColor.primaryColor);
           deleteProductLoading.value = false;
         }
       }
@@ -480,11 +482,11 @@ class ProductController extends GetxController {
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 13,
-                  color: Colors.green.shade900,
+                  color: AppColor.primaryColor,
                 ),
               ),
-              backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
-              colorText: Colors.green.shade900);
+              backgroundColor: const Color(0xff81B29A).withOpacity(0.3),
+              colorText: AppColor.primaryColor);
           orderPlaceLoading.value = false;
         }
       }
@@ -520,11 +522,11 @@ class ProductController extends GetxController {
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 13,
-                    color: Colors.green.shade900,
+                    color: AppColor.primaryColor,
                   ),
                 ),
-                backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
-                colorText: Colors.green.shade900);
+                backgroundColor: const Color(0xff81B29A).withOpacity(0.3),
+                colorText: AppColor.primaryColor);
             isHistoryLoading.value = false;
           }
         } else {
@@ -588,11 +590,11 @@ class ProductController extends GetxController {
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 13,
-                  color: Colors.green.shade900,
+                  color: AppColor.primaryColor,
                 ),
               ),
-              backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
-              colorText: Colors.green.shade900);
+              backgroundColor: const Color(0xff81B29A).withOpacity(0.3),
+              colorText: AppColor.primaryColor);
           getCart();
         } else {
           Get.snackbar("Error", cartModel.value.message ?? "");
@@ -630,11 +632,11 @@ class ProductController extends GetxController {
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 13,
-                    color: Colors.green.shade900,
+                    color: AppColor.primaryColor,
                   ),
                 ),
-                backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
-                colorText: Colors.green.shade900);
+                backgroundColor: const Color(0xff81B29A).withOpacity(0.3),
+                colorText: AppColor.primaryColor);
           },
           onDownloadError: (String error) {
             downloadPriceList[index].load.value = false;
@@ -671,11 +673,11 @@ class ProductController extends GetxController {
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 13,
-                  color: Colors.green.shade900,
+                  color: AppColor.primaryColor,
                 ),
               ),
-              backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
-              colorText: Colors.green.shade900);
+              backgroundColor: const Color(0xff81B29A).withOpacity(0.3),
+              colorText: AppColor.primaryColor);
           downloadsPriceLoad.value = false;
         }
       } else {
@@ -702,11 +704,11 @@ class ProductController extends GetxController {
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 13,
-                  color: Colors.green.shade900,
+                  color: AppColor.primaryColor,
                 ),
               ),
-              backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
-              colorText: Colors.green.shade900);
+              backgroundColor: const Color(0xff81B29A).withOpacity(0.3),
+              colorText: AppColor.primaryColor);
           downloadsProductLoad.value = false;
         }
       } else {

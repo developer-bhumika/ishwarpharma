@@ -83,6 +83,7 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
+        backgroundColor: AppColor.scaffoldBgColor,
         body: Obx(() => bottomBarController.pageList.elementAt(bottomBarController.selectedIndex.value)),
         bottomNavigationBar: Obx(
           () => BottomNavigationBar(
@@ -105,10 +106,6 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                   label: "", icon: SvgPicture.asset(AppImage.home), activeIcon: SvgPicture.asset(AppImage.homeColor)),
               BottomNavigationBarItem(
                   label: "",
-                  icon: SvgPicture.asset(AppImage.search),
-                  activeIcon: SvgPicture.asset(AppImage.searchColor)),
-              BottomNavigationBarItem(
-                  label: "",
                   icon: badges.Badge(
                       badgeStyle: const badges.BadgeStyle(badgeColor: AppColor.primaryColor),
                       badgeContent: Text(
@@ -116,19 +113,25 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                         style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
                       ),
                       child: SvgPicture.asset(AppImage.cart)),
-                  activeIcon: SvgPicture.asset(AppImage.cartColor)),
-              BottomNavigationBarItem(
-                  label: "",
-                  icon: SvgPicture.asset(AppImage.history),
-                  activeIcon: SvgPicture.asset(AppImage.historyColor)),
+                  activeIcon: badges.Badge(
+                      badgeStyle: const badges.BadgeStyle(badgeColor: AppColor.primaryColor),
+                      badgeContent: Text(
+                        productController.cartList.length.toString(),
+                        style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                      ),
+                      child: SvgPicture.asset(AppImage.cartColor))),
               BottomNavigationBarItem(
                   label: "",
                   icon: SvgPicture.asset(AppImage.download),
                   activeIcon: SvgPicture.asset(AppImage.downloadColor)),
               BottomNavigationBarItem(
                   label: "",
-                  icon: SvgPicture.asset(AppImage.notification),
-                  activeIcon: SvgPicture.asset(AppImage.notificationColor)),
+                  icon: SvgPicture.asset(AppImage.history),
+                  activeIcon: SvgPicture.asset(AppImage.historyColor)),
+              BottomNavigationBarItem(
+                  label: "",
+                  icon: SvgPicture.asset(AppImage.profile),
+                  activeIcon: SvgPicture.asset(AppImage.profileColor)),
             ],
           ),
         ),

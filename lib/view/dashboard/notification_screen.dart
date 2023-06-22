@@ -25,23 +25,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [AppColor.primaryColor, AppColor.secondaryColor],
-            ),
-          ),
+        foregroundColor: Colors.black,
+        title: CommonText(
+          color: AppColor.textColor,
+          fontSize: 18,
+          text: "Notification",
+          fontWeight: FontWeight.w500,
         ),
         centerTitle: true,
-        title: CommonText(
-          text: "Notification",
-          color: AppColor.white,
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-        ),
+        shadowColor: AppColor.borderColor2,
+        elevation: 0.75,
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),

@@ -8,6 +8,7 @@ class CommonText extends StatelessWidget {
   final double? textHeight;
   final FontWeight? fontWeight;
   final TextAlign? textAlign;
+  final int? maxLines;
   const CommonText({
     super.key,
     this.text,
@@ -15,6 +16,7 @@ class CommonText extends StatelessWidget {
     this.fontSize,
     this.textHeight,
     this.fontWeight,
+    this.maxLines,
     this.textAlign,
   });
 
@@ -22,6 +24,7 @@ class CommonText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text ?? "",
+      maxLines: 1,
       style: TextStyle(
           color: color ?? AppColor.dartFontColor,
           fontSize: fontSize ?? 14,

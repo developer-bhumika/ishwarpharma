@@ -54,43 +54,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.white,
+      appBar: AppBar(
+        foregroundColor: Colors.black,
+        title: CommonText(
+          color: AppColor.textColor,
+          fontSize: 18,
+          text: "Product Detail",
+          fontWeight: FontWeight.w500,
+        ),
+        centerTitle: true,
+        shadowColor: AppColor.borderColor2,
+        elevation: 0.75,
+      ),
       body: Obx(
         () => Column(
           children: [
-            Container(
-              height: 94,
-              width: Get.width,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [AppColor.primaryColor, AppColor.secondaryColor],
-                ),
-              ),
-              child: SafeArea(
-                  child: Row(
-                children: [
-                  SizedBox(width: 5),
-                  IconButton(
-                    onPressed: () {
-                      Get.back();
-                    },
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: AppColor.white,
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  CommonText(
-                    text: "Product Details",
-                    color: AppColor.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  )
-                ],
-              )),
-            ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -100,6 +78,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         children: [
                           Expanded(
                             child: SingleChildScrollView(
+                              physics: BouncingScrollPhysics(),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -394,11 +373,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                       style: TextStyle(
                                                         fontWeight: FontWeight.w500,
                                                         fontSize: 13,
-                                                        color: Colors.green.shade900,
+                                                        color: AppColor.primaryColor,
                                                       ),
                                                     ),
                                                     backgroundColor: Color(0xff81B29A).withOpacity(0.9),
-                                                    colorText: Colors.green.shade900);
+                                                    colorText: AppColor.primaryColor);
                                               }
                                             } else {
                                               Get.snackbar("Required", "Minimum 1 quantity required",
@@ -407,11 +386,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                     style: TextStyle(
                                                       fontWeight: FontWeight.w500,
                                                       fontSize: 13,
-                                                      color: Colors.green.shade900,
+                                                      color: AppColor.primaryColor,
                                                     ),
                                                   ),
                                                   backgroundColor: Color(0xff81B29A).withOpacity(0.9),
-                                                  colorText: Colors.green.shade900);
+                                                  colorText: AppColor.primaryColor);
                                             }
                                           },
                                         ),

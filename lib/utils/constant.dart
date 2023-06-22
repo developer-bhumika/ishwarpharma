@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 
 class AppColor {
-  static const Color primaryColor = Color(0xff00A651);
+  static const Color primaryColor = Color(0xff1EB28F);
   static const Color secondaryColor = Color(0xff96BF24);
   static const Color borderColor = Color(0xffEBF5ED);
   static const Color dartFontColor = Color(0xff2D4D3C);
   static const Color greyGreen = Color(0xff889990);
   static const Color teal = Color(0xffDBFFED);
   static const Color borderColorProduct = Color(0xffE3EFE6);
-  static const Color textColor = Color(0xff1C211E);
+  static const Color textColor = Color(0xff21262D);
   static const Color lightGreen = Color(0xffF2FBF4);
+  static const Color scaffoldBgColor = Color(0xffEFF9FF);
+  static const Color borderColor2 = Color(0xffEDF3FC);
+  static const Color blue = Color(0xff179DFF);
+  static const Color grey = Color(0xff7C8899);
 
   static const Color white = Colors.white;
   static const Color black = Colors.black;
@@ -36,6 +40,10 @@ class AppImage {
   static const String home = "${imagePath}home.svg";
   static const String notification = "${imagePath}notification.svg";
   static const String search = "${imagePath}search.svg";
+  static const String profile = "${imagePath}profile.svg";
+  static const String profileColor = "${imagePath}profileColor.svg";
+  static const String catalogue = "${imagePath}catalogue.svg";
+  static const String priceList = "${imagePath}priceList.svg";
 }
 
 class Endpoints {
