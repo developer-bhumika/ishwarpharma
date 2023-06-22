@@ -20,6 +20,7 @@ class AppImage {
   static const String logo = "${imagePath}logo.png";
   static const String more = "${imagePath}more.svg";
   static const String refresh = "${imagePath}refresh.svg";
+  static const String contactUs = "${imagePath}contactUs.svg";
   static const String searchColor = "${imagePath}searchColor.svg";
   static const String cartColor = "${imagePath}cartColor.svg";
   static const String notificationColor = "${imagePath}notificationColor.svg";

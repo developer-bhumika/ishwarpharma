@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ishwarpharma/controller/product_controller.dart';
 import 'package:ishwarpharma/utils/constant.dart';
@@ -14,7 +15,8 @@ class DownloadScreen extends StatefulWidget {
   State<DownloadScreen> createState() => _DownloadScreenState();
 }
 
-class _DownloadScreenState extends State<DownloadScreen> with TickerProviderStateMixin {
+class _DownloadScreenState extends State<DownloadScreen>
+    with TickerProviderStateMixin {
   final productController = Get.find<ProductController>();
   TabController? tabController;
 
@@ -43,25 +45,22 @@ class _DownloadScreenState extends State<DownloadScreen> with TickerProviderStat
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [AppColor.primaryColor, AppColor.secondaryColor],
-            ),
-          ),
-        ),
         centerTitle: true,
-        title: CommonText(
-          text: "Download",
-          color: AppColor.white,
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
+        title: Row(
+          children: [
+            Image.asset(AppImage.logo),
+          ],
         ),
+        actions: [
+          SvgPicture.asset(AppImage.refresh),
+          const SizedBox(width: 6),
+          SvgPicture.asset(AppImage.contactUs),
+          const SizedBox(width: 14),
+        ],
       ),
       body: Obx(
-        () => productController.downloadsProductLoad.value && productController.downloadsPriceLoad.value
+        () => productController.downloadsProductLoad.value &&
+                productController.downloadsPriceLoad.value
             ? ProgressView()
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,14 +68,17 @@ class _DownloadScreenState extends State<DownloadScreen> with TickerProviderStat
                   TabBar(
                     controller: tabController,
                     tabs: [
-                      Tab(
+                      const Tab(
                         text: "Product Catalogues",
                       ),
-                      Tab(
+                      const Tab(
                         text: "Price List",
                       ),
                     ],
-                    labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: "Poppins"),
+                    labelStyle: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: "Poppins"),
                     indicatorColor: AppColor.primaryColor,
                     labelColor: AppColor.primaryColor,
                     unselectedLabelColor: AppColor.textColor,
@@ -88,13 +90,16 @@ class _DownloadScreenState extends State<DownloadScreen> with TickerProviderStat
                         ListView.separated(
                           shrinkWrap: true,
                           physics: const BouncingScrollPhysics(),
-                          padding: EdgeInsets.all(15),
-                          itemCount: productController.downloadProductList.length,
-                          separatorBuilder: (context, index) => const SizedBox(height: 10),
+                          padding: const EdgeInsets.all(15),
+                          itemCount:
+                              productController.downloadProductList.length,
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 10),
                           itemBuilder: (context, index) => Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              border: Border.all(color: AppColor.borderColorProduct),
+                              border: Border.all(
+                                  color: AppColor.borderColorProduct),
                               borderRadius: BorderRadius.circular(6),
                               color: AppColor.white,
                             ),
@@ -102,27 +107,39 @@ class _DownloadScreenState extends State<DownloadScreen> with TickerProviderStat
                               children: [
                                 Expanded(
                                   child: CommonText(
-                                      text: productController.downloadProductList[index].name ?? "",
+                                      text: productController
+                                              .downloadProductList[index]
+                                              .name ??
+                                          "",
                                       fontWeight: FontWeight.w600,
                                       fontSize: 16),
                                 ),
                                 Obx(
-                                  () => productController.downloadProductList[index].load.value
+                                  () => productController
+                                          .downloadProductList[index].load.value
                                       ? CircularPercentIndicator(
                                           radius: 20.0,
                                           lineWidth: 3.0,
-                                          percent: productController.progressDownload.value,
+                                          percent: productController
+                                              .progressDownload.value,
                                           center: CommonText(
-                                            text: "${(productController.progressDownload.value * 100).toInt()}%",
+                                            text:
+                                                "${(productController.progressDownload.value * 100).toInt()}%",
                                             fontSize: 11,
                                           ),
                                           progressColor: AppColor.primaryColor,
                                         )
                                       : InkWell(
                                           onTap: () {
-                                            productController.downloadProductList[index].load.value = true;
+                                            productController
+                                                .downloadProductList[index]
+                                                .load
+                                                .value = true;
                                             productController.downloadFile(
-                                                productController.downloadProductList[index].productpdfUrl, index);
+                                                productController
+                                                    .downloadProductList[index]
+                                                    .productpdfUrl,
+                                                index);
                                             // final taskId = await FlutterDownloader.enqueue(
                                             //   url: productController.downloadProductList[index].pricepdfUrl ?? "",
                                             //   savedDir: "/storage/emulated/0/Download",
@@ -132,7 +149,8 @@ class _DownloadScreenState extends State<DownloadScreen> with TickerProviderStat
                                             // );
                                             // print(taskId);
                                           },
-                                          child: Icon(Icons.download, color: AppColor.primaryColor),
+                                          child: const Icon(Icons.download,
+                                              color: AppColor.primaryColor),
                                         ),
                                 ),
                               ],
@@ -141,14 +159,16 @@ class _DownloadScreenState extends State<DownloadScreen> with TickerProviderStat
                         ),
                         ListView.separated(
                           shrinkWrap: true,
-                          padding: EdgeInsets.all(15),
+                          padding: const EdgeInsets.all(15),
                           physics: const BouncingScrollPhysics(),
                           itemCount: productController.downloadPriceList.length,
-                          separatorBuilder: (context, index) => const SizedBox(height: 10),
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 10),
                           itemBuilder: (context, index) => Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              border: Border.all(color: AppColor.borderColorProduct),
+                              border: Border.all(
+                                  color: AppColor.borderColorProduct),
                               borderRadius: BorderRadius.circular(6),
                               color: AppColor.white,
                             ),
@@ -156,29 +176,41 @@ class _DownloadScreenState extends State<DownloadScreen> with TickerProviderStat
                               children: [
                                 Expanded(
                                   child: CommonText(
-                                      text: productController.downloadPriceList[index].name ?? "",
+                                      text: productController
+                                              .downloadPriceList[index].name ??
+                                          "",
                                       fontWeight: FontWeight.w600,
                                       fontSize: 16),
                                 ),
                                 Obx(
-                                  () => productController.downloadPriceList[index].load.value
+                                  () => productController
+                                          .downloadPriceList[index].load.value
                                       ? CircularPercentIndicator(
                                           radius: 20.0,
                                           lineWidth: 5.0,
-                                          percent: productController.progressDownload.value,
+                                          percent: productController
+                                              .progressDownload.value,
                                           center: CommonText(
-                                            text: "${(productController.progressDownload.value * 100).toInt()}%",
+                                            text:
+                                                "${(productController.progressDownload.value * 100).toInt()}%",
                                             fontSize: 13,
                                           ),
                                           progressColor: AppColor.primaryColor,
                                         )
                                       : InkWell(
                                           onTap: () {
-                                            productController.downloadPriceList[index].load.value = true;
+                                            productController
+                                                .downloadPriceList[index]
+                                                .load
+                                                .value = true;
                                             productController.downloadFile(
-                                                productController.downloadPriceList[index].pricepdfUrl, index);
+                                                productController
+                                                    .downloadPriceList[index]
+                                                    .pricepdfUrl,
+                                                index);
                                           },
-                                          child: Icon(Icons.download, color: AppColor.primaryColor),
+                                          child: const Icon(Icons.download,
+                                              color: AppColor.primaryColor),
                                         ),
                                 ),
                               ],

@@ -57,7 +57,9 @@ class HomeScreen extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
-                          Center(child: CircularProgressIndicator(color: AppColor.primaryColor)),
+                          Center(
+                              child: CircularProgressIndicator(
+                                  color: AppColor.primaryColor)),
                         ],
                       ),
                     )
@@ -81,26 +83,36 @@ class HomeScreen extends StatelessWidget {
                       : Expanded(
                           child: GridView.builder(
                             shrinkWrap: true,
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 10),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,
                               mainAxisSpacing: 10,
                               crossAxisSpacing: 10,
-                              childAspectRatio: MediaQuery.of(context).size.aspectRatio / 0.5,
+                              childAspectRatio:
+                                  MediaQuery.of(context).size.aspectRatio / 0.5,
                             ),
                             physics: const BouncingScrollPhysics(),
                             itemCount: productController.companyList.length,
                             itemBuilder: (context, index) => InkWell(
                               onTap: () {
-                                productController.search.text = productController.companyList[index].name!;
-                                productController.searchProduct(productController.search.text);
+                                productController.search.text =
+                                    productController.companyList[index].name!;
+                                productController.searchProduct(
+                                    productController.search.text);
                                 BottomNavigationBar navigationBar =
-                                    bottomWidgetKey.currentWidget as BottomNavigationBar;
+                                    bottomWidgetKey.currentWidget
+                                        as BottomNavigationBar;
                                 navigationBar.onTap!(1);
                               },
                               child: CompanyCard(
-                                imageUrl: productController.companyList[index].logoUrl ?? "",
-                                companyName: productController.companyList[index].name ?? "",
+                                imageUrl: productController
+                                        .companyList[index].logoUrl ??
+                                    "",
+                                companyName:
+                                    productController.companyList[index].name ??
+                                        "",
                               ),
                             ),
                           ),
@@ -131,7 +143,8 @@ class HomeScreen extends StatelessWidget {
                   const Spacer(),
                   InkWell(
                     onTap: () async {
-                      SharedPreferences preferences = await SharedPreferences.getInstance();
+                      SharedPreferences preferences =
+                          await SharedPreferences.getInstance();
                       preferences.clear();
                       if (await productController.isInternet()) {
                         productController.reLoad.value = true;
@@ -146,13 +159,18 @@ class HomeScreen extends StatelessWidget {
                           "Data reload successfully",
                           messageText: Text(
                             "Data reload successfully",
-                            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: Colors.green.shade900),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 13,
+                                color: Colors.green.shade900),
                           ),
-                          backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
+                          backgroundColor:
+                              const Color(0xff81B29A).withOpacity(0.9),
                           colorText: Colors.green.shade900,
                         );
                       } else {
-                        Get.snackbar("Network", "Check your internet connection",
+                        Get.snackbar(
+                            "Network", "Check your internet connection",
                             messageText: Text(
                               "Check your internet connection",
                               style: TextStyle(
@@ -161,7 +179,8 @@ class HomeScreen extends StatelessWidget {
                                 color: Colors.green.shade900,
                               ),
                             ),
-                            backgroundColor: const Color(0xff81B29A).withOpacity(0.9),
+                            backgroundColor:
+                                const Color(0xff81B29A).withOpacity(0.9),
                             colorText: Colors.green.shade900);
                       }
                     },
@@ -169,7 +188,8 @@ class HomeScreen extends StatelessWidget {
                       () => productController.reLoad.value
                           ? const SizedBox(
                               width: 20,
-                              child: CircularProgressIndicator(color: AppColor.white, strokeWidth: 2),
+                              child: CircularProgressIndicator(
+                                  color: AppColor.white, strokeWidth: 2),
                             )
                           : SvgPicture.asset(AppImage.refresh),
                     ),
@@ -236,19 +256,25 @@ class HomeScreen extends StatelessWidget {
                           return Container(
                             width: MediaQuery.of(context).size.width,
                             margin: const EdgeInsets.symmetric(horizontal: 6.0),
-                            transform: Matrix4.translationValues(-350 / 20, 0, 0),
+                            transform:
+                                Matrix4.translationValues(-350 / 20, 0, 0),
                             decoration: BoxDecoration(
                               color: AppColor.white,
                               borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: AppColor.white, width: 2),
+                              border:
+                                  Border.all(color: AppColor.white, width: 2),
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: CachedNetworkImage(
                                 imageUrl: i.sliderUrl ?? "",
                                 fit: BoxFit.fill,
-                                placeholder: (context, url) => SizedBox(height: 25, width: 25, child: ProgressView()),
-                                errorWidget: (context, url, error) => const Center(child: Icon(Icons.error)),
+                                placeholder: (context, url) => SizedBox(
+                                    height: 25,
+                                    width: 25,
+                                    child: ProgressView()),
+                                errorWidget: (context, url, error) =>
+                                    const Center(child: Icon(Icons.error)),
                               ),
                             ),
                           );
