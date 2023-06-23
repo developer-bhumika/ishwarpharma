@@ -125,8 +125,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   productController.page.value = 1;
                   productController.getProduct(productController.page.value);
                 } else {
-                  // productController.page.value = 1;
-                  productController.getProduct(1, text: v);
+                  productController.page.value = 1;
+                  productController.getProduct(productController.page.value, text: v);
                   productController.searchProduct(v);
                 }
               },
@@ -272,7 +272,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               ),
             ),
           ),
-          SizedBox(height: 14),
+          const SizedBox(height: 14),
           Obx(() => productController.isLoading.value
               ? Expanded(
                   child: Column(

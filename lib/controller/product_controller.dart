@@ -24,7 +24,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductController extends GetxController {
   final productService = getIt.get<ProductService>();
-  RxBool isLoading = true.obs;
+  RxBool isLoading = false.obs;
   RxList<ProductDataModel> productList = <ProductDataModel>[].obs;
   RxList<ProductDataModel> searchList = <ProductDataModel>[].obs;
   Rx<ProductModel> productModel = ProductModel().obs;

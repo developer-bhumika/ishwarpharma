@@ -85,7 +85,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   Container(
                                     width: Get.width,
                                     decoration: BoxDecoration(
-                                      color: AppColor.teal,
+                                      color: AppColor.primaryColor.withOpacity(0.2),
                                       borderRadius: BorderRadius.circular(5),
                                     ),
                                     padding: const EdgeInsets.symmetric(vertical: 12),
@@ -299,7 +299,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         children: [
                                           InkWell(
                                             onTap: () {
-                                              productController.addQuantity();
+                                              productController.removeQuantity();
                                             },
                                             child: Container(
                                               height: double.infinity,
@@ -309,7 +309,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                 borderRadius: BorderRadius.circular(3),
                                               ),
                                               child: const Icon(
-                                                Icons.add,
+                                                Icons.remove,
                                                 color: AppColor.primaryColor,
                                               ),
                                             ),
@@ -325,7 +325,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                           const SizedBox(width: 15),
                                           InkWell(
                                             onTap: () {
-                                              productController.removeQuantity();
+                                              productController.addQuantity();
                                             },
                                             child: Container(
                                               height: double.infinity,
@@ -335,7 +335,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                 borderRadius: BorderRadius.circular(3),
                                               ),
                                               child: const Icon(
-                                                Icons.remove,
+                                                Icons.add,
                                                 color: AppColor.primaryColor,
                                               ),
                                             ),
