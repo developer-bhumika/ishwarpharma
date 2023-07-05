@@ -7,6 +7,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class PriceListScreen extends StatelessWidget {
   PriceListScreen({Key? key}) : super(key: key);
+
   final productController = Get.find<ProductController>();
 
   @override
@@ -17,18 +18,18 @@ class PriceListScreen extends StatelessWidget {
         title: CommonText(
           color: AppColor.textColor,
           fontSize: 18,
-          text: "Price List",
+          text: "Product Catalogue",
           fontWeight: FontWeight.w500,
         ),
-        centerTitle: true,
         shadowColor: AppColor.borderColor2,
         elevation: 0.75,
+        centerTitle: true,
       ),
       body: ListView.separated(
         shrinkWrap: true,
-        physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.all(15),
-        itemCount: productController.downloadProductList.length,
+        physics: const BouncingScrollPhysics(),
+        itemCount: productController.downloadPriceList.length,
         separatorBuilder: (context, index) => const SizedBox(height: 10),
         itemBuilder: (context, index) => Container(
           padding: const EdgeInsets.all(10),
@@ -41,37 +42,34 @@ class PriceListScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: CommonText(
-                    text: productController.downloadProductList[index].name ?? "",
+                    text: productController.downloadPriceList[index].name ?? "",
                     fontWeight: FontWeight.w600,
                     fontSize: 16),
               ),
               Obx(
-                () => productController.downloadProductList[index].load.value
+                () => productController.downloadPriceList[index].load.value
                     ? CircularPercentIndicator(
                         radius: 20.0,
-                        lineWidth: 3.0,
+                        lineWidth: 5.0,
                         percent: productController.progressDownload.value,
                         center: CommonText(
-                          text: "${(productController.progressDownload.value * 100).toInt()}%",
-                          fontSize: 11,
+                          text:
+                              "${(productController.progressDownload.value * 100).toInt()}%",
+                          fontSize: 13,
                         ),
                         progressColor: AppColor.primaryColor,
                       )
                     : InkWell(
                         onTap: () {
-                          productController.downloadProductList[index].load.value = true;
+                          productController
+                              .downloadPriceList[index].load.value = true;
                           productController.downloadFile(
-                              productController.downloadProductList[index].productpdfUrl, index);
-                          // final taskId = await FlutterDownloader.enqueue(
-                          //   url: productController.downloadProductList[index].pricepdfUrl ?? "",
-                          //   savedDir: "/storage/emulated/0/Download",
-                          //   showNotification: true,
-                          //   saveInPublicStorage: true,
-                          //   openFileFromNotification: true,
-                          // );
-                          // print(taskId);
+                              productController
+                                  .downloadPriceList[index].pricepdfUrl,
+                              index);
                         },
-                        child: const Icon(Icons.download, color: AppColor.primaryColor),
+                        child: const Icon(Icons.download,
+                            color: AppColor.primaryColor),
                       ),
               ),
             ],

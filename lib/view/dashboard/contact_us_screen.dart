@@ -70,7 +70,8 @@ class ContactUsScreen extends StatelessWidget {
                             AndroidIntent intent;
                             intent = AndroidIntent(
                               action: 'action_view',
-                              data: Uri.encodeFull('google.navigation:q=24 VITHALDAS ROAD, DAWA BAZAR, MUMBAI 400002'),
+                              data: Uri.encodeFull(
+                                  'google.navigation:q=24 VITHALDAS ROAD, DAWA BAZAR, MUMBAI 400002'),
                               package: 'com.google.android.apps.maps',
                             );
                             intent.launch();
@@ -110,7 +111,8 @@ class ContactUsScreen extends StatelessWidget {
                             // }
                           },
                           child: CommonText(
-                            text: "7 DEVKARAN MANSION, 24 VITHALDAS ROAD, DAWA BAZAR, MUMBAI 400002",
+                            text:
+                                "7 DEVKARAN MANSION, 24 VITHALDAS ROAD, DAWA BAZAR, MUMBAI 400002",
                             fontSize: 14,
                             color: AppColor.textColor,
                             fontWeight: FontWeight.w400,
@@ -193,8 +195,10 @@ class ContactUsScreen extends StatelessWidget {
                                           fontWeight: FontWeight.w500),
                                     ),
                                   ],
-                                  style:
-                                      const TextStyle(fontSize: 14, fontFamily: "Poppins", color: AppColor.textColor),
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      fontFamily: "Poppins",
+                                      color: AppColor.textColor),
                                 ),
                               ),
                               RichText(
@@ -218,8 +222,10 @@ class ContactUsScreen extends StatelessWidget {
                                           fontWeight: FontWeight.w500),
                                     ),
                                   ],
-                                  style:
-                                      const TextStyle(fontSize: 14, fontFamily: "Poppins", color: AppColor.textColor),
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      fontFamily: "Poppins",
+                                      color: AppColor.textColor),
                                 ),
                               ),
                             ],

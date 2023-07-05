@@ -57,7 +57,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
         actions: [
           InkWell(
             onTap: () async {
-              SharedPreferences preferences = await SharedPreferences.getInstance();
+              SharedPreferences preferences =
+                  await SharedPreferences.getInstance();
               preferences.clear();
               if (await productController.isInternet()) {
                 productController.reLoad.value = true;
@@ -65,6 +66,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 await productController.getSlider();
                 await productController.getProduct(1);
                 await productController.getCart();
+                await productController.focusProduct();
+                await productController.newArrival();
                 await productController.getHistory();
                 productController.reLoad.value = false;
                 Get.snackbar(
@@ -72,7 +75,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   "Data reload successfully",
                   messageText: Text(
                     "Data reload successfully",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: AppColor.primaryColor),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
+                        color: AppColor.primaryColor),
                   ),
                   backgroundColor: const Color(0xff81B29A).withOpacity(0.3),
                   colorText: AppColor.primaryColor,
@@ -94,9 +100,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
             child: Obx(
               () => productController.reLoad.value
                   ? Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12.0, horizontal: 8),
                       child: SizedBox(
-                          height: 30, width: 30, child: CircularProgressIndicator(color: AppColor.primaryColor)),
+                          height: 30,
+                          width: 30,
+                          child: CircularProgressIndicator(
+                              color: AppColor.primaryColor)),
                     )
                   : SvgPicture.asset(AppImage.refresh),
             ),
@@ -126,7 +136,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   productController.getProduct(productController.page.value);
                 } else {
                   productController.page.value = 1;
-                  productController.getProduct(productController.page.value, text: v);
+                  productController.getProduct(productController.page.value,
+                      text: v);
                   productController.searchProduct(v);
                 }
               },
@@ -134,9 +145,14 @@ class _ProductsScreenState extends State<ProductsScreen> {
               decoration: InputDecoration(
                 fillColor: AppColor.white,
                 filled: true,
-                border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(7)),
+                border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(7)),
                 hintText: "Search Medicine",
-                hintStyle: const TextStyle(color: AppColor.greyGreen, fontSize: 14, fontWeight: FontWeight.w400),
+                hintStyle: const TextStyle(
+                    color: AppColor.greyGreen,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400),
                 prefixIcon: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: SvgPicture.asset(AppImage.search),
@@ -152,23 +168,27 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 productController.selectedCity = null;
                                 productController.isFilter.value = false;
                                 productController.page.value = 1;
-                                productController.getProduct(productController.page.value);
+                                productController
+                                    .getProduct(productController.page.value);
                               },
-                              child: const Icon(Icons.clear, color: AppColor.greyGreen, size: 30),
+                              child: const Icon(Icons.clear,
+                                  color: AppColor.greyGreen, size: 30),
                             )
                           : InkWell(
                               onTap: () {
                                 Get.bottomSheet(
                                   shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(20),
+                                        topRight: Radius.circular(20)),
                                   ),
                                   backgroundColor: AppColor.white,
                                   Padding(
                                     padding: const EdgeInsets.all(12.0),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         const SizedBox(height: 13),
                                         Row(
@@ -182,7 +202,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                             const Spacer(),
                                             InkWell(
                                                 onTap: () => Get.back(),
-                                                child: const Icon(Icons.close, color: AppColor.greyGreen)),
+                                                child: const Icon(Icons.close,
+                                                    color: AppColor.greyGreen)),
                                           ],
                                         ),
                                         const SizedBox(height: 30),
@@ -193,37 +214,54 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                         ),
                                         const SizedBox(height: 20),
                                         StatefulBuilder(
-                                          builder: (context, setState) => Container(
+                                          builder: (context, setState) =>
+                                              Container(
                                             height: 48,
-                                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 12),
                                             decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(6),
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
                                                 color: const Color(0xffE3EFE6),
-                                                border: Border.all(color: AppColor.borderColor)),
+                                                border: Border.all(
+                                                    color:
+                                                        AppColor.borderColor)),
                                             child: DropdownButtonHideUnderline(
                                               child: DropdownButton<String>(
-                                                icon: const Icon(Icons.arrow_drop_down, color: AppColor.primaryColor),
+                                                icon: const Icon(
+                                                    Icons.arrow_drop_down,
+                                                    color:
+                                                        AppColor.primaryColor),
                                                 hint: const Padding(
-                                                  padding: EdgeInsets.only(left: 8.0),
+                                                  padding: EdgeInsets.only(
+                                                      left: 8.0),
                                                   child: CommonText(
                                                     text: 'Select Category',
                                                     color: Colors.black,
                                                     fontWeight: FontWeight.w500,
                                                   ),
                                                 ),
-                                                borderRadius: BorderRadius.circular(6),
-                                                value: productController.selectedCity,
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
+                                                value: productController
+                                                    .selectedCity,
                                                 isDense: true,
                                                 isExpanded: true,
                                                 onChanged: (String? newValue) {
-                                                  productController.selectedCity = newValue!;
+                                                  productController
+                                                      .selectedCity = newValue!;
                                                   setState(() {});
                                                 },
-                                                items: productController.categoryType.map((value) {
+                                                items: productController
+                                                    .categoryType
+                                                    .map((value) {
                                                   return DropdownMenuItem(
                                                     value: value,
                                                     child: Text(value,
-                                                        style: const TextStyle(color: AppColor.black, fontSize: 15)),
+                                                        style: const TextStyle(
+                                                            color:
+                                                                AppColor.black,
+                                                            fontSize: 15)),
                                                   );
                                                 }).toList(),
                                               ),
@@ -232,24 +270,44 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                         ),
                                         const SizedBox(height: 23),
                                         Column(
-                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
                                           children: [
                                             MaterialButton(
                                                 height: 52,
                                                 color: AppColor.primaryColor,
                                                 onPressed: () async {
-                                                  if (productController.selectedCity == null) {
-                                                    Get.snackbar("Error", "Please select category",
-                                                        backgroundColor: const Color(0xff81B29A).withOpacity(0.3),
-                                                        colorText: AppColor.primaryColor);
+                                                  if (productController
+                                                          .selectedCity ==
+                                                      null) {
+                                                    Get.snackbar("Error",
+                                                        "Please select category",
+                                                        backgroundColor:
+                                                            const Color(
+                                                                    0xff81B29A)
+                                                                .withOpacity(
+                                                                    0.3),
+                                                        colorText: AppColor
+                                                            .primaryColor);
                                                   } else {
-                                                    SharedPreferences preferences =
-                                                        await SharedPreferences.getInstance();
-                                                    preferences.remove('product');
-                                                    productController.search.text = productController.selectedCity!;
-                                                    productController.searchProduct(productController.search.text);
-                                                    productController.getProduct(1);
-                                                    productController.isFilter.value = true;
+                                                    SharedPreferences
+                                                        preferences =
+                                                        await SharedPreferences
+                                                            .getInstance();
+                                                    preferences
+                                                        .remove('product');
+                                                    productController
+                                                            .search.text =
+                                                        productController
+                                                            .selectedCity!;
+                                                    productController
+                                                        .searchProduct(
+                                                            productController
+                                                                .search.text);
+                                                    productController
+                                                        .getProduct(1);
+                                                    productController
+                                                        .isFilter.value = true;
                                                     Get.back();
                                                   }
                                                 },
@@ -279,7 +337,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
                       Center(
-                        child: CircularProgressIndicator(color: AppColor.primaryColor),
+                        child: CircularProgressIndicator(
+                            color: AppColor.primaryColor),
                       ),
                     ],
                   ),
@@ -304,35 +363,66 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           ? ListView.separated(
                               itemCount: productController.searchList.length,
                               shrinkWrap: true,
-                              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                              padding: const EdgeInsets.only(
+                                  left: 10, right: 10, bottom: 10),
                               physics: const BouncingScrollPhysics(),
-                              separatorBuilder: (context, index) => const SizedBox(height: 10),
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(height: 10),
                               itemBuilder: (context, index) => InkWell(
                                 onTap: () {
                                   Get.to(ProductDetailScreen(
                                     id: productController.searchList[index].id,
-                                    brand_name: productController.searchList[index].brand ?? "",
-                                    content: productController.searchList[index].content ?? "",
-                                    company: productController.searchList[index].company ?? "",
-                                    type: productController.searchList[index].type ?? "",
-                                    rate: productController.searchList[index].rate ?? "0",
-                                    scheme: productController.searchList[index].free_scheme ?? "0",
-                                    caseData: productController.searchList[index].case_value ?? "0",
-                                    mrp: productController.searchList[index].mrp.toString(),
-                                    pack: productController.searchList[index].pack ?? "0",
+                                    brand_name: productController
+                                            .searchList[index].brand ??
+                                        "",
+                                    content: productController
+                                            .searchList[index].content ??
+                                        "",
+                                    company: productController
+                                            .searchList[index].company ??
+                                        "",
+                                    type: productController
+                                            .searchList[index].type ??
+                                        "",
+                                    rate: productController
+                                            .searchList[index].rate ??
+                                        "0",
+                                    scheme: productController
+                                            .searchList[index].free_scheme ??
+                                        "0",
+                                    caseData: productController
+                                            .searchList[index].case_value ??
+                                        "0",
+                                    mrp: productController.searchList[index].mrp
+                                        .toString(),
+                                    pack: productController
+                                            .searchList[index].pack ??
+                                        "0",
                                   ));
                                 },
                                 child: ProductCard(
                                   title:
                                       "${productController.searchList[index].brand ?? ""} ${productController.searchList[index].pack ?? ""}",
-                                  company: productController.searchList[index].company ?? "",
-                                  rate: productController.searchList[index].rate ?? "",
-                                  mrp: productController.searchList[index].mrp.toString(),
-                                  free: productController.productDetailModel.value.data?.free_scheme == ""
+                                  company: productController
+                                          .searchList[index].company ??
+                                      "",
+                                  rate: productController
+                                          .searchList[index].rate ??
+                                      "",
+                                  mrp: productController.searchList[index].mrp
+                                      .toString(),
+                                  free: productController.productDetailModel
+                                              .value.data?.free_scheme ==
+                                          ""
                                       ? "0"
-                                      : productController.searchList[index].free_scheme ?? "0",
-                                  subTitle: productController.searchList[index].content ?? "",
-                                  searchTextList: productController.searchTextList,
+                                      : productController
+                                              .searchList[index].free_scheme ??
+                                          "0",
+                                  subTitle: productController
+                                          .searchList[index].content ??
+                                      "",
+                                  searchTextList:
+                                      productController.searchTextList,
                                   searchText: productController.search.text,
                                 ),
                               ),
@@ -346,36 +436,70 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               child: ListView.separated(
                                 itemCount: productController.productList.length,
                                 shrinkWrap: true,
-                                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                                padding: const EdgeInsets.only(
+                                    left: 10, right: 10, bottom: 10),
                                 physics: const BouncingScrollPhysics(),
-                                separatorBuilder: (context, index) => const SizedBox(height: 10),
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(height: 10),
                                 itemBuilder: (context, index) => InkWell(
                                   onTap: () {
                                     Get.to(ProductDetailScreen(
-                                      id: productController.productList[index].id,
-                                      brand_name: productController.productList[index].brand ?? "",
-                                      content: productController.productList[index].content ?? "",
-                                      type: productController.productList[index].type ?? "",
-                                      company: productController.productList[index].company ?? "",
-                                      rate: productController.productList[index].rate ?? "0",
-                                      scheme: productController.productList[index].free_scheme ?? "0",
-                                      caseData: productController.productList[index].case_value ?? "0",
-                                      mrp: productController.productList[index].mrp.toString(),
-                                      pack: productController.productList[index].pack ?? "0",
+                                      id: productController
+                                          .productList[index].id,
+                                      brand_name: productController
+                                              .productList[index].brand ??
+                                          "",
+                                      content: productController
+                                              .productList[index].content ??
+                                          "",
+                                      type: productController
+                                              .productList[index].type ??
+                                          "",
+                                      company: productController
+                                              .productList[index].company ??
+                                          "",
+                                      rate: productController
+                                              .productList[index].rate ??
+                                          "0",
+                                      scheme: productController
+                                              .productList[index].free_scheme ??
+                                          "0",
+                                      caseData: productController
+                                              .productList[index].case_value ??
+                                          "0",
+                                      mrp: productController
+                                          .productList[index].mrp
+                                          .toString(),
+                                      pack: productController
+                                              .productList[index].pack ??
+                                          "0",
                                     ));
                                   },
                                   child: ProductCard(
                                     title:
                                         "${productController.productList[index].brand ?? ""} ${productController.productList[index].pack ?? ""}",
-                                    company: productController.productList[index].company ?? "",
-                                    rate: productController.productList[index].rate ?? "",
-                                    mrp: productController.productList[index].mrp.toString(),
+                                    company: productController
+                                            .productList[index].company ??
+                                        "",
+                                    rate: productController
+                                            .productList[index].rate ??
+                                        "",
+                                    mrp: productController
+                                        .productList[index].mrp
+                                        .toString(),
                                     searchText: productController.search.text,
-                                    searchTextList: productController.searchTextList,
-                                    free: productController.productDetailModel.value.data?.free_scheme == ""
+                                    searchTextList:
+                                        productController.searchTextList,
+                                    free: productController.productDetailModel
+                                                .value.data?.free_scheme ==
+                                            ""
                                         ? "0"
-                                        : productController.productList[index].free_scheme ?? "0",
-                                    subTitle: productController.productList[index].content ?? "",
+                                        : productController.productList[index]
+                                                .free_scheme ??
+                                            "0",
+                                    subTitle: productController
+                                            .productList[index].content ??
+                                        "",
                                   ),
                                 ),
                               ),

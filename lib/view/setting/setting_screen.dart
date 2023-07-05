@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ishwarpharma/controller/setting_controller.dart';
+import 'package:ishwarpharma/controller/product_controller.dart';
 import 'package:ishwarpharma/utils/constant.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
 import 'package:ishwarpharma/view/common_widget/common_tile.dart';
 
 class SettingScreen extends StatelessWidget {
-  final settingController = Get.put<SettingController>(SettingController());
+  final productController = Get.put<ProductController>(ProductController());
 
   SettingScreen({Key? key}) : super(key: key);
 
@@ -15,7 +15,7 @@ class SettingScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.black,
-        title: CommonText(
+        title: const CommonText(
           color: AppColor.textColor,
           fontSize: 18,
           text: "Setting",
@@ -65,10 +65,10 @@ class SettingScreen extends StatelessWidget {
                 ),
                 Obx(
                   () => Checkbox(
-                    value: settingController.notification.value,
+                    value: productController.notification.value,
                     fillColor: MaterialStateProperty.all(AppColor.primaryColor),
                     onChanged: (v) {
-                      settingController.notification.value = v!;
+                      productController.notification.value = v!;
                     },
                   ),
                 )

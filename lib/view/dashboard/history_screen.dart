@@ -41,7 +41,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
         actions: [
           InkWell(
             onTap: () async {
-              SharedPreferences preferences = await SharedPreferences.getInstance();
+              SharedPreferences preferences =
+                  await SharedPreferences.getInstance();
               preferences.clear();
               if (await productController.isInternet()) {
                 productController.reLoad.value = true;
@@ -49,6 +50,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 await productController.getSlider();
                 await productController.getProduct(1);
                 await productController.getCart();
+                await productController.focusProduct();
+                await productController.newArrival();
                 await productController.getHistory();
                 productController.reLoad.value = false;
                 Get.snackbar(
@@ -56,7 +59,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   "Data reload successfully",
                   messageText: Text(
                     "Data reload successfully",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: AppColor.primaryColor),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
+                        color: AppColor.primaryColor),
                   ),
                   backgroundColor: const Color(0xff81B29A).withOpacity(0.3),
                   colorText: AppColor.primaryColor,
@@ -78,9 +84,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
             child: Obx(
               () => productController.reLoad.value
                   ? Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12.0, horizontal: 8),
                       child: SizedBox(
-                          height: 30, width: 30, child: CircularProgressIndicator(color: AppColor.primaryColor)),
+                          height: 30,
+                          width: 30,
+                          child: CircularProgressIndicator(
+                              color: AppColor.primaryColor)),
                     )
                   : SvgPicture.asset(AppImage.refresh),
             ),
@@ -112,9 +122,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   : ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       itemCount: productController.historyList.length,
-                      separatorBuilder: (context, index) => const SizedBox(height: 10),
-                      itemBuilder: (context, index) =>
-                          HistoryCard(products: productController.historyList[index].products),
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 10),
+                      itemBuilder: (context, index) => HistoryCard(
+                          products:
+                              productController.historyList[index].products),
                     ),
         ),
       ),

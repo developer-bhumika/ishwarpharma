@@ -5,9 +5,8 @@ import 'package:ishwarpharma/utils/constant.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-class ProductCatalogueScreen extends StatelessWidget {
-  ProductCatalogueScreen({Key? key}) : super(key: key);
-
+class ProductCatalogScreen extends StatelessWidget {
+  ProductCatalogScreen({Key? key}) : super(key: key);
   final productController = Get.find<ProductController>();
 
   @override
@@ -21,15 +20,15 @@ class ProductCatalogueScreen extends StatelessWidget {
           text: "Product Catalogue",
           fontWeight: FontWeight.w500,
         ),
+        centerTitle: true,
         shadowColor: AppColor.borderColor2,
         elevation: 0.75,
-        centerTitle: true,
       ),
       body: ListView.separated(
         shrinkWrap: true,
-        padding: const EdgeInsets.all(15),
         physics: const BouncingScrollPhysics(),
-        itemCount: productController.downloadPriceList.length,
+        padding: const EdgeInsets.all(15),
+        itemCount: productController.downloadProductList.length,
         separatorBuilder: (context, index) => const SizedBox(height: 10),
         itemBuilder: (context, index) => Container(
           padding: const EdgeInsets.all(10),
@@ -42,28 +41,35 @@ class ProductCatalogueScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: CommonText(
-                    text: productController.downloadPriceList[index].name ?? "",
+                    text:
+                        productController.downloadProductList[index].name ?? "",
                     fontWeight: FontWeight.w600,
                     fontSize: 16),
               ),
               Obx(
-                () => productController.downloadPriceList[index].load.value
+                () => productController.downloadProductList[index].load.value
                     ? CircularPercentIndicator(
                         radius: 20.0,
                         lineWidth: 5.0,
                         percent: productController.progressDownload.value,
                         center: CommonText(
-                          text: "${(productController.progressDownload.value * 100).toInt()}%",
-                          fontSize: 13,
+                          text:
+                              "${(productController.progressDownload.value * 100).toInt()}%",
+                          fontSize: 11,
                         ),
                         progressColor: AppColor.primaryColor,
                       )
                     : InkWell(
                         onTap: () {
-                          productController.downloadPriceList[index].load.value = true;
-                          productController.downloadFile(productController.downloadPriceList[index].pricepdfUrl, index);
+                          productController
+                              .downloadProductList[index].load.value = true;
+                          productController.downloadFile(
+                              productController
+                                  .downloadProductList[index].productpdfUrl,
+                              index);
                         },
-                        child: const Icon(Icons.download, color: AppColor.primaryColor),
+                        child: const Icon(Icons.download,
+                            color: AppColor.primaryColor),
                       ),
               ),
             ],

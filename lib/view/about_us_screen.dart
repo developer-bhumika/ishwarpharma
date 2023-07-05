@@ -3,7 +3,7 @@ import 'package:ishwarpharma/utils/constant.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
 
 class AboutUsScreen extends StatelessWidget {
-  AboutUsScreen({Key? key}) : super(key: key);
+  const AboutUsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,34 +56,46 @@ class AboutUsScreen extends StatelessWidget {
                       RichText(
                           text: const TextSpan(
                               text: "Website: ",
-                              style: TextStyle(fontFamily: "Poppins", color: AppColor.dartFontColor),
+                              style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  color: AppColor.dartFontColor),
                               children: [
                             TextSpan(
                                 text: "www.ishwarpharma.com",
                                 style: TextStyle(
-                                    color: AppColor.primaryColor, fontWeight: FontWeight.w500, fontFamily: "Poppins"))
+                                    color: AppColor.primaryColor,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: "Poppins"))
                           ])),
                       const SizedBox(height: 2),
                       RichText(
                           text: const TextSpan(
                               text: "Email: ",
-                              style: TextStyle(fontFamily: "Poppins", color: AppColor.dartFontColor),
+                              style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  color: AppColor.dartFontColor),
                               children: [
                             TextSpan(
                                 text: "ishwarpharma@gmail.com",
                                 style: TextStyle(
-                                    color: AppColor.primaryColor, fontWeight: FontWeight.w500, fontFamily: "Poppins"))
+                                    color: AppColor.primaryColor,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: "Poppins"))
                           ])),
                       const SizedBox(height: 2),
                       RichText(
                           text: const TextSpan(
                               text: "(0): ",
-                              style: TextStyle(fontFamily: "Poppins", color: AppColor.dartFontColor),
+                              style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  color: AppColor.dartFontColor),
                               children: [
                             TextSpan(
                                 text: "022-66155679 / 66155680",
                                 style: TextStyle(
-                                    color: AppColor.primaryColor, fontWeight: FontWeight.w500, fontFamily: "Poppins"))
+                                    color: AppColor.primaryColor,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: "Poppins"))
                           ])),
                     ],
                   ),

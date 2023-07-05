@@ -13,7 +13,7 @@ class BottomBarController extends GetxController {
   RxList pageList = [
     HomeScreen(),
     CartScreen(),
-    DownloadScreen(),
+    const DownloadScreen(),
     HistoryScreen(),
     ProfileScreen(),
   ].obs;

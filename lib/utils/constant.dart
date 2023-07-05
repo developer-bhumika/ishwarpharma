@@ -70,4 +70,6 @@ class Endpoints {
   static const String placeOrder = '/place-order';
   static const String downloadPrice = '/download-price';
   static const String downloadProduct = '/download-product';
+  static const String newArrivals = '/new-arrivals';
+  static const String focusProduct = '/focus-product';
 }

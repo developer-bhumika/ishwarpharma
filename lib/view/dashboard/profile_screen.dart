@@ -30,7 +30,8 @@ class ProfileScreen extends StatelessWidget {
         actions: [
           InkWell(
             onTap: () async {
-              SharedPreferences preferences = await SharedPreferences.getInstance();
+              SharedPreferences preferences =
+                  await SharedPreferences.getInstance();
               preferences.clear();
               if (await productController.isInternet()) {
                 productController.reLoad.value = true;
@@ -38,6 +39,8 @@ class ProfileScreen extends StatelessWidget {
                 await productController.getSlider();
                 await productController.getProduct(1);
                 await productController.getCart();
+                await productController.focusProduct();
+                await productController.newArrival();
                 await productController.getHistory();
                 productController.reLoad.value = false;
                 Get.snackbar(
@@ -45,7 +48,10 @@ class ProfileScreen extends StatelessWidget {
                   "Data reload successfully",
                   messageText: Text(
                     "Data reload successfully",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: AppColor.primaryColor),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
+                        color: AppColor.primaryColor),
                   ),
                   backgroundColor: const Color(0xff81B29A).withOpacity(0.3),
                   colorText: AppColor.primaryColor,
@@ -67,9 +73,13 @@ class ProfileScreen extends StatelessWidget {
             child: Obx(
               () => productController.reLoad.value
                   ? Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12.0, horizontal: 8),
                       child: SizedBox(
-                          height: 30, width: 30, child: CircularProgressIndicator(color: AppColor.primaryColor)),
+                          height: 30,
+                          width: 30,
+                          child: CircularProgressIndicator(
+                              color: AppColor.primaryColor)),
                     )
                   : SvgPicture.asset(AppImage.refresh),
             ),
@@ -101,7 +111,10 @@ class ProfileScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: CommonText(text: "Setting", fontWeight: FontWeight.w600, fontSize: 16),
+                      child: CommonText(
+                          text: "Setting",
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16),
                     ),
                     Icon(
                       Icons.arrow_forward_ios,
@@ -127,7 +140,10 @@ class ProfileScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: CommonText(text: "Notification", fontWeight: FontWeight.w600, fontSize: 16),
+                      child: CommonText(
+                          text: "Notification",
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16),
                     ),
                     Icon(
                       Icons.arrow_forward_ios,
@@ -153,7 +169,10 @@ class ProfileScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: CommonText(text: "About Us", fontWeight: FontWeight.w600, fontSize: 16),
+                      child: CommonText(
+                          text: "About Us",
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16),
                     ),
                     Icon(
                       Icons.arrow_forward_ios,

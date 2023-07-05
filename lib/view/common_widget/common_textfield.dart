@@ -14,6 +14,7 @@ class CommonTextField extends StatelessWidget {
   final TextInputType? keyBoardType;
   final String? labelText;
   final bool? readOnly;
+  final int? mexLength;
   final bool? isDense;
   void Function()? onTap;
   final double? radius;
@@ -39,6 +40,7 @@ class CommonTextField extends StatelessWidget {
     this.radius,
     this.onChange,
     this.validator,
+    this.mexLength,
     this.inputFormatters,
     this.suffixIcon,
   });
@@ -64,9 +66,11 @@ class CommonTextField extends StatelessWidget {
           obscureText: obSecureText ?? false,
           readOnly: readOnly ?? false,
           onTap: readOnly ?? false ? onTap : null,
+          maxLength: mexLength,
           inputFormatters: inputFormatters,
           onChanged: onChange,
-          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: AppColor.black),
+          style: const TextStyle(
+              fontWeight: FontWeight.w500, fontSize: 14, color: AppColor.black),
           controller: controller,
           validator: validator,
           decoration: InputDecoration(

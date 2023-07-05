@@ -6,7 +6,9 @@ import 'package:ishwarpharma/model/category_model.dart';
 import 'package:ishwarpharma/model/company_model.dart';
 import 'package:ishwarpharma/model/download_model.dart';
 import 'package:ishwarpharma/model/download_product_model.dart';
+import 'package:ishwarpharma/model/focus_product_model.dart';
 import 'package:ishwarpharma/model/history_model.dart';
+import 'package:ishwarpharma/model/new_arrival_model.dart';
 import 'package:ishwarpharma/model/product_detail_model.dart';
 import 'package:ishwarpharma/model/product_model.dart';
 import 'package:ishwarpharma/model/slider_model.dart';
@@ -115,7 +117,8 @@ class ProductService {
 
   Future<dynamic> editCart(int? id, String? qty, String dId) async {
     try {
-      final body = FormData.fromMap({'device_id': dId, 'qty': qty.toString(), 'id': id.toString()});
+      final body = FormData.fromMap(
+          {'device_id': dId, 'qty': qty.toString(), 'id': id.toString()});
       final response = await productApi.editCart(body);
       if (response != null) {
         return response.data;
@@ -132,6 +135,32 @@ class ProductService {
       final response = await productApi.getCart(params);
       if (response != null) {
         return CartModel.fromJson(response.data);
+      }
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+    return null;
+  }
+
+  Future<FocusProductModel?> focusProduct() async {
+    try {
+      final response = await productApi.getFocusProduct();
+      if (response != null) {
+        return FocusProductModel.fromJson(response.data);
+      }
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+    return null;
+  }
+
+  Future<NewArrivalModel?> newArrival() async {
+    try {
+      final response = await productApi.getNewArrival();
+      if (response != null) {
+        return NewArrivalModel.fromJson(response.data);
       }
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
@@ -172,7 +201,11 @@ class ProductService {
   }
 
   Future<dynamic> orderPlace(
-      {String? deviceId, String? firmName, String? mobileNo, String? place, String? email}) async {
+      {String? deviceId,
+      String? firmName,
+      String? mobileNo,
+      String? place,
+      String? email}) async {
     try {
       final data = FormData.fromMap({
         "device_id": deviceId,
