@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ishwarpharma/controller/product_controller.dart';
-import 'package:ishwarpharma/main.dart';
 import 'package:ishwarpharma/utils/constant.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
 import 'package:ishwarpharma/view/common_widget/company_card.dart';
@@ -21,13 +20,13 @@ class ViewAllScreen extends StatelessWidget {
           onPressed: () {
             Get.back();
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: AppColor.black,
           ),
         ),
         centerTitle: true,
-        title: CommonText(
+        title: const CommonText(
           color: AppColor.textColor,
           fontSize: 18,
           text: "Companies",

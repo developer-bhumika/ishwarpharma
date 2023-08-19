@@ -115,7 +115,10 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 5),
-                    const Divider(color: AppColor.borderColor2, thickness: 1),
+                    const Divider(
+                      color: AppColor.borderColor2,
+                      thickness: 1,
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(left: 15.0, right: 15, top: 5, bottom: 10),
                       child: InkWell(
@@ -208,7 +211,9 @@ class HomeScreen extends StatelessWidget {
                       fontSize: 15,
                     ),
                     InkWell(
-                      onTap: () => Get.to(ViewAllScreen()),
+                      onTap: () {
+                        Get.to(ViewAllScreen());
+                      },
                       child: Row(
                         children: const [
                           CommonText(
@@ -217,7 +222,11 @@ class HomeScreen extends StatelessWidget {
                             fontWeight: FontWeight.w500,
                             fontSize: 12,
                           ),
-                          Icon(Icons.arrow_forward_ios_outlined, color: AppColor.primaryColor, size: 15)
+                          Icon(
+                            Icons.arrow_forward_ios_outlined,
+                            color: AppColor.primaryColor,
+                            size: 15,
+                          )
                         ],
                       ),
                     ),
@@ -242,14 +251,14 @@ class HomeScreen extends StatelessWidget {
                           color: Colors.white,
                           child: GridView.builder(
                             shrinkWrap: true,
-                            physics: const BouncingScrollPhysics(),
                             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,
                               mainAxisSpacing: 10,
                               crossAxisSpacing: 10,
-                              childAspectRatio: 1,
+                              childAspectRatio: MediaQuery.of(context).size.aspectRatio / 0.5,
                             ),
+                            physics: const BouncingScrollPhysics(),
                             itemCount:
                                 productController.companyList.length >= 3 ? 3 : productController.companyList.length,
                             itemBuilder: (context, index) => InkWell(
@@ -257,6 +266,9 @@ class HomeScreen extends StatelessWidget {
                                 productController.search.text = productController.companyList[index].name!;
                                 productController.searchProduct(productController.search.text);
                                 Get.to(ProductsScreen());
+                                // BottomNavigationBar navigationBar =
+                                //     bottomWidgetKey.currentWidget as BottomNavigationBar;
+                                // navigationBar.onTap!(1);
                               },
                               child: CompanyCard(
                                 imageUrl: productController.companyList[index].logoUrl ?? "",
@@ -266,7 +278,9 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(
+              height: 10,
+            ),
             Container(
               color: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 18),
@@ -334,7 +348,9 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(
+              height: 10,
+            ),
             Container(
               color: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 18),
@@ -368,6 +384,7 @@ class HomeScreen extends StatelessWidget {
                             options: CarouselOptions(
                               height: 160.0,
                               autoPlay: true,
+                              // disableCenter: true,
                               viewportFraction: 0.9,
                               initialPage: 1,
                               enableInfiniteScroll: false,
