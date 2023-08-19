@@ -79,8 +79,7 @@ class ProductController extends GetxController {
           return true;
         } else {
           Get.snackbar("Error", resp["message"] ?? "",
-              backgroundColor: const Color(0xff81B29A).withOpacity(0.3),
-              colorText: AppColor.primaryColor);
+              backgroundColor: const Color(0xff81B29A).withOpacity(0.3), colorText: AppColor.primaryColor);
           editCartLoad.value = false;
           return true;
         }
@@ -93,8 +92,7 @@ class ProductController extends GetxController {
     return true;
   }
 
-  RefreshController refreshController =
-      RefreshController(initialRefresh: false);
+  RefreshController refreshController = RefreshController(initialRefresh: false);
   ScrollController scrollController = ScrollController();
   RxInt page = 1.obs;
   RxBool pageLoad = true.obs;
@@ -409,8 +407,7 @@ class ProductController extends GetxController {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     if (preferences.getString('focusProduct') != null) {
       final data = preferences.getString('focusProduct');
-      focusProductModel.value =
-          FocusProductModel.fromJson(jsonDecode(data ?? ""));
+      focusProductModel.value = FocusProductModel.fromJson(jsonDecode(data ?? ""));
       focusDataList.value = focusProductModel.value.data ?? [];
       if (focusDataList.isNotEmpty) {
         focusLoad.value = false;
@@ -467,11 +464,9 @@ class ProductController extends GetxController {
                   (element.content?.toLowerCase().contains(e.toLowerCase()) ?? false)*/
               ) {
             searchList.add(element);
-          } else if (element.company?.toLowerCase().contains(e.toLowerCase()) ??
-              false) {
+          } else if (element.company?.toLowerCase().contains(e.toLowerCase()) ?? false) {
             searchList.add(element);
-          } else if (element.content?.toLowerCase().contains(e.toLowerCase()) ??
-              false) {
+          } else if (element.content?.toLowerCase().contains(e.toLowerCase()) ?? false) {
             searchList.add(element);
           }
         }
@@ -480,17 +475,11 @@ class ProductController extends GetxController {
       for (var element in productList) {
         RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
         String brandName = element.content?.replaceAll(exp, '') ?? "";
-        if (element.brand?.toLowerCase().contains(search.text.toLowerCase()) ??
-            false) {
+        if (element.brand?.toLowerCase().contains(search.text.toLowerCase()) ?? false) {
           searchList.add(element);
-        } else if (element.company
-                ?.toLowerCase()
-                .contains(search.text.toLowerCase()) ??
-            false) {
+        } else if (element.company?.toLowerCase().contains(search.text.toLowerCase()) ?? false) {
           searchList.add(element);
-        } else if (brandName
-            .toLowerCase()
-            .contains(search.text.toLowerCase())) {
+        } else if (brandName.toLowerCase().contains(search.text.toLowerCase())) {
           searchList.add(element);
         }
       }
@@ -525,10 +514,7 @@ class ProductController extends GetxController {
             cartModel.value.message ?? "",
             messageText: Text(
               cartModel.value.message ?? "",
-              style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 13,
-                  color: AppColor.primaryColor),
+              style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: AppColor.primaryColor),
             ),
             backgroundColor: const Color(0xff81B29A).withOpacity(0.3),
             colorText: AppColor.primaryColor,
@@ -551,8 +537,7 @@ class ProductController extends GetxController {
       deleteProductLoading.value = true;
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
 
-      final resp =
-          await productService.deleteProduct(androidInfo.id, id.toString());
+      final resp = await productService.deleteProduct(androidInfo.id, id.toString());
       if (resp != null) {
         if (resp['success'] ?? false) {
           cartList.removeAt(index ?? 0);
@@ -804,12 +789,9 @@ class ProductController extends GetxController {
       String savePath = Platform.isAndroid
           ? "/storage/emulated/0/Download/ishwarpharma${DateTime.now().toString().replaceAll("-", "").replaceAll(" ", "").replaceAll(":", "")}.pdf"
           : '${Directory.systemTemp.path}/ishwarpharma${DateTime.now()}.pdf';
-      await dio.download(url ?? "", savePath,
-          onReceiveProgress: (receivedBytes, totalBytes) {
+      await dio.download(url ?? "", savePath, onReceiveProgress: (receivedBytes, totalBytes) {
         if (totalBytes != -1) {
-          // Calculate download progress percentage
           progressDownload.value = (receivedBytes / totalBytes);
-          print('Download progress: ${progressDownload.value}%');
 
           if (progressDownload.value == 1.0) {
             OpenFilex.open(savePath);
@@ -834,8 +816,7 @@ class ProductController extends GetxController {
   Rx<DownloadModel> downloadModel = DownloadModel().obs;
   Rx<DownLoadProductModel> downloadProductModel = DownLoadProductModel().obs;
   RxList<DownloadDataModel> downloadPriceList = <DownloadDataModel>[].obs;
-  RxList<DownloadProductDataModel> downloadProductList =
-      <DownloadProductDataModel>[].obs;
+  RxList<DownloadProductDataModel> downloadProductList = <DownloadProductDataModel>[].obs;
   getDownloads() async {
     try {
       downloadsPriceLoad.value = true;

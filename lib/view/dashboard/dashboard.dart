@@ -22,19 +22,19 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
   final productController = Get.put<ProductController>(ProductController());
   final bottomBarController = Get.put<BottomBarController>(BottomBarController());
 
+  ///for show notification
   Future<void> initFcm() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     if (preferences.getString("notificationList") != null) {
       productController.notificationList.value = jsonDecode(preferences.getString("notificationList").toString());
     }
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     var initializationSettingsAndroid = const AndroidInitializationSettings('@mipmap/ic_launcher');
 
     const initializationSettingsDarwin = DarwinInitializationSettings(
-      requestSoundPermission: false,
-      requestBadgePermission: false,
-      requestAlertPermission: false,
+      requestSoundPermission: true,
+      requestBadgePermission: true,
+      requestAlertPermission: true,
     );
     var initializationSettings =
         InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsDarwin);
@@ -44,30 +44,45 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) async {
-      print("Message:::::::::::${json.encode(message!.data)}");
-      // var jsonRes = jsonDecode(jsonEncode(message));
-      // await preferences.setString('company', json.encode(jsonRes));
-      flutterLocalNotificationsPlugin.show(
-        message.hashCode,
-        message.data["title"],
-        message.data["body"],
-        const NotificationDetails(android: AndroidNotificationDetails('channel.id', 'channel.name')),
-        payload: json.encode(message.data),
+      channel = const AndroidNotificationChannel(
+        'high_importance_channel', // id
+        'High Importance Notifications', // title
+        description: 'This channel is used for important notifications.', // description
+        importance: Importance.high,
       );
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.remove('notificationList');
-      print("Data:::::::${message.notification?.title}");
-      final mes = {
-        'title': message.notification?.title,
-        'body': message.notification?.body,
-        'time': message.sentTime.toString(),
-      };
 
-      productController.notificationList.add(mes);
-      if (productController.notificationList.isNotEmpty) {
-        await preferences.setString('notificationList', jsonEncode(productController.notificationList));
+      RemoteNotification? notification = message?.notification;
+      if (notification?.body != null) {
+        flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification?.title,
+          notification?.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              channelDescription: channel.description,
+              // TODO add a proper drawable resource to android, for now using
+              //      one that already exists in example app.
+              icon: 'launch_background',
+            ),
+          ),
+        );
+
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        preferences.remove('notificationList');
+        print("Data:::::::${message?.notification?.title}");
+        final mes = {
+          'title': message?.notification?.title,
+          'body': message?.notification?.body,
+          'time': message?.sentTime.toString(),
+        };
+
+        productController.notificationList.add(mes);
+        if (productController.notificationList.isNotEmpty) {
+          await preferences.setString('notificationList', jsonEncode(productController.notificationList));
+        }
       }
-      String? data = preferences.getString("notificationList");
     });
   }
 

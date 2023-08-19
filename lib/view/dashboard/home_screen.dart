@@ -1,20 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ishwarpharma/controller/product_controller.dart';
-import 'package:ishwarpharma/main.dart';
 import 'package:ishwarpharma/utils/constant.dart';
 import 'package:ishwarpharma/utils/indicator.dart';
-import 'package:ishwarpharma/view/about_us_screen.dart';
 import 'package:ishwarpharma/view/common_widget/common_text.dart';
 import 'package:ishwarpharma/view/common_widget/company_card.dart';
 import 'package:ishwarpharma/view/dashboard/contact_us_screen.dart';
 import 'package:ishwarpharma/view/dashboard/products_screen.dart';
 import 'package:ishwarpharma/view/dashboard/view_all_screen.dart';
-import 'package:ishwarpharma/view/setting/setting_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -25,20 +21,20 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
             Container(
               decoration: BoxDecoration(
                 color: AppColor.white,
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(12),
                   bottomRight: Radius.circular(12),
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Color(0xffE5EBF4).withOpacity(0.32),
-                    offset: Offset(0, 1),
+                    color: const Color(0xffE5EBF4).withOpacity(0.32),
+                    offset: const Offset(0, 1),
                     blurRadius: 2,
                   ),
                 ],
@@ -46,7 +42,7 @@ class HomeScreen extends StatelessWidget {
               child: SafeArea(
                 child: Column(
                   children: [
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -60,8 +56,7 @@ class HomeScreen extends StatelessWidget {
                         const Spacer(),
                         InkWell(
                           onTap: () async {
-                            SharedPreferences preferences =
-                                await SharedPreferences.getInstance();
+                            SharedPreferences preferences = await SharedPreferences.getInstance();
                             preferences.clear();
                             if (await productController.isInternet()) {
                               productController.reLoad.value = true;
@@ -76,22 +71,19 @@ class HomeScreen extends StatelessWidget {
                               Get.snackbar(
                                 "Success",
                                 "Data reload successfully",
-                                messageText: Text(
+                                messageText: const Text(
                                   "Data reload successfully",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 13,
-                                      color: AppColor.primaryColor),
+                                      fontWeight: FontWeight.w500, fontSize: 13, color: AppColor.primaryColor),
                                 ),
-                                backgroundColor:
-                                    const Color(0xff81B29A).withOpacity(0.3),
+                                backgroundColor: const Color(0xff81B29A).withOpacity(0.3),
                                 colorText: AppColor.primaryColor,
                               );
                             } else {
                               Get.snackbar(
                                 "Network",
                                 "Check your internet connection",
-                                messageText: Text(
+                                messageText: const Text(
                                   "Check your internet connection",
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
@@ -99,39 +91,33 @@ class HomeScreen extends StatelessWidget {
                                     color: AppColor.primaryColor,
                                   ),
                                 ),
-                                backgroundColor:
-                                    const Color(0xff81B29A).withOpacity(0.3),
+                                backgroundColor: const Color(0xff81B29A).withOpacity(0.3),
                                 colorText: AppColor.primaryColor,
                               );
                             }
                           },
                           child: Obx(
                             () => productController.reLoad.value
-                                ? SizedBox(
+                                ? const SizedBox(
                                     height: 30,
                                     width: 30,
-                                    child: CircularProgressIndicator(
-                                        color: AppColor.primaryColor))
+                                    child: CircularProgressIndicator(color: AppColor.primaryColor))
                                 : SvgPicture.asset(AppImage.refresh),
                           ),
                         ),
                         const SizedBox(width: 10),
                         InkWell(
                             onTap: () {
-                              Get.to(ContactUsScreen());
+                              Get.to(const ContactUsScreen());
                             },
                             child: SvgPicture.asset(AppImage.contactUs)),
                         const SizedBox(width: 16),
                       ],
                     ),
-                    SizedBox(height: 5),
-                    Divider(
-                      color: AppColor.borderColor2,
-                      thickness: 1,
-                    ),
+                    const SizedBox(height: 5),
+                    const Divider(color: AppColor.borderColor2, thickness: 1),
                     Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0, right: 15, top: 5, bottom: 10),
+                      padding: const EdgeInsets.only(left: 15.0, right: 15, top: 5, bottom: 10),
                       child: InkWell(
                         onTap: () {
                           productController.search.clear();
@@ -140,13 +126,13 @@ class HomeScreen extends StatelessWidget {
                         child: Row(
                           children: [
                             SvgPicture.asset(AppImage.search),
-                            SizedBox(width: 12),
-                            CommonText(
+                            const SizedBox(width: 12),
+                            const CommonText(
                               color: Color(0xff909396),
                               text: "Search Medicine",
                               fontSize: 14,
                             ),
-                            Spacer(),
+                            const Spacer(),
                             SvgPicture.asset(AppImage.filter)
                           ],
                         ),
@@ -168,8 +154,7 @@ class HomeScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: AppColor.white,
                               borderRadius: BorderRadius.circular(10),
-                              border:
-                                  Border.all(color: AppColor.white, width: 2),
+                              border: Border.all(color: AppColor.white, width: 2),
                             ),
                             child: ProgressView()),
                       )
@@ -187,10 +172,8 @@ class HomeScreen extends StatelessWidget {
                             builder: (BuildContext context) {
                               return Container(
                                 width: MediaQuery.of(context).size.width,
-                                margin:
-                                    const EdgeInsets.only(left: 12.0, right: 2),
-                                transform:
-                                    Matrix4.translationValues(-350 / 20, 0, 0),
+                                margin: const EdgeInsets.only(left: 12.0, right: 2),
+                                transform: Matrix4.translationValues(-350 / 20, 0, 0),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -199,12 +182,9 @@ class HomeScreen extends StatelessWidget {
                                   child: CachedNetworkImage(
                                     imageUrl: i.sliderUrl ?? "",
                                     fit: BoxFit.fill,
-                                    placeholder: (context, url) => SizedBox(
-                                        height: 25,
-                                        width: 25,
-                                        child: ProgressView()),
-                                    errorWidget: (context, url, error) =>
-                                        const Center(child: Icon(Icons.error)),
+                                    placeholder: (context, url) =>
+                                        SizedBox(height: 25, width: 25, child: ProgressView()),
+                                    errorWidget: (context, url, error) => const Center(child: Icon(Icons.error)),
                                   ),
                                 ),
                               );
@@ -221,29 +201,23 @@ class HomeScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CommonText(
+                    const CommonText(
                       color: AppColor.textColor,
                       text: "Explore Companies",
                       fontWeight: FontWeight.w500,
                       fontSize: 15,
                     ),
                     InkWell(
-                      onTap: () {
-                        Get.to(ViewAllScreen());
-                      },
+                      onTap: () => Get.to(ViewAllScreen()),
                       child: Row(
-                        children: [
+                        children: const [
                           CommonText(
                             color: AppColor.primaryColor,
                             text: "View All",
                             fontWeight: FontWeight.w500,
                             fontSize: 12,
                           ),
-                          Icon(
-                            Icons.arrow_forward_ios_outlined,
-                            color: AppColor.primaryColor,
-                            size: 15,
-                          )
+                          Icon(Icons.arrow_forward_ios_outlined, color: AppColor.primaryColor, size: 15)
                         ],
                       ),
                     ),
@@ -253,11 +227,9 @@ class HomeScreen extends StatelessWidget {
             ),
             Obx(
               () => productController.companyLoad.value
-                  ? Center(
-                      child: CircularProgressIndicator(
-                          color: AppColor.primaryColor))
+                  ? const Center(child: CircularProgressIndicator(color: AppColor.primaryColor))
                   : productController.companyList.isEmpty
-                      ? Center(
+                      ? const Center(
                           child: CommonText(
                             fontSize: 20,
                             textAlign: TextAlign.center,
@@ -270,54 +242,39 @@ class HomeScreen extends StatelessWidget {
                           color: Colors.white,
                           child: GridView.builder(
                             shrinkWrap: true,
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 14),
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
+                            physics: const BouncingScrollPhysics(),
+                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,
                               mainAxisSpacing: 10,
                               crossAxisSpacing: 10,
-                              childAspectRatio:
-                                  MediaQuery.of(context).size.aspectRatio / 0.5,
+                              childAspectRatio: 1,
                             ),
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: productController.companyList.length >= 3
-                                ? 3
-                                : productController.companyList.length,
+                            itemCount:
+                                productController.companyList.length >= 3 ? 3 : productController.companyList.length,
                             itemBuilder: (context, index) => InkWell(
                               onTap: () {
-                                productController.search.text =
-                                    productController.companyList[index].name!;
-                                productController.searchProduct(
-                                    productController.search.text);
+                                productController.search.text = productController.companyList[index].name!;
+                                productController.searchProduct(productController.search.text);
                                 Get.to(ProductsScreen());
-                                // BottomNavigationBar navigationBar =
-                                //     bottomWidgetKey.currentWidget as BottomNavigationBar;
-                                // navigationBar.onTap!(1);
                               },
                               child: CompanyCard(
-                                imageUrl: productController
-                                        .companyList[index].logoUrl ??
-                                    "",
-                                companyName:
-                                    productController.companyList[index].name ??
-                                        "",
+                                imageUrl: productController.companyList[index].logoUrl ?? "",
+                                companyName: productController.companyList[index].name ?? "",
                               ),
                             ),
                           ),
                         ),
             ),
-            SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             Container(
               color: Colors.white,
-              padding: EdgeInsets.symmetric(vertical: 18),
+              padding: const EdgeInsets.symmetric(vertical: 18),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15.0),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 15.0),
                     child: CommonText(
                       color: AppColor.textColor,
                       text: "Focus Products",
@@ -325,7 +282,7 @@ class HomeScreen extends StatelessWidget {
                       fontSize: 15,
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Obx(
                     () => productController.focusLoad.value
                         ? Padding(
@@ -335,8 +292,7 @@ class HomeScreen extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: AppColor.white,
                                   borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                      color: AppColor.white, width: 2),
+                                  border: Border.all(color: AppColor.white, width: 2),
                                 ),
                                 child: ProgressView()),
                           )
@@ -354,10 +310,8 @@ class HomeScreen extends StatelessWidget {
                                 builder: (BuildContext context) {
                                   return Container(
                                     width: MediaQuery.of(context).size.width,
-                                    margin: const EdgeInsets.only(
-                                        left: 12.0, right: 2),
-                                    transform: Matrix4.translationValues(
-                                        -350 / 20, 0, 0),
+                                    margin: const EdgeInsets.only(left: 12.0, right: 2),
+                                    transform: Matrix4.translationValues(-350 / 20, 0, 0),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
@@ -366,13 +320,9 @@ class HomeScreen extends StatelessWidget {
                                       child: CachedNetworkImage(
                                         imageUrl: i.focusUrl ?? "",
                                         fit: BoxFit.fill,
-                                        placeholder: (context, url) => SizedBox(
-                                            height: 25,
-                                            width: 25,
-                                            child: ProgressView()),
-                                        errorWidget: (context, url, error) =>
-                                            const Center(
-                                                child: Icon(Icons.error)),
+                                        placeholder: (context, url) =>
+                                            SizedBox(height: 25, width: 25, child: ProgressView()),
+                                        errorWidget: (context, url, error) => const Center(child: Icon(Icons.error)),
                                       ),
                                     ),
                                   );
@@ -384,17 +334,15 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             Container(
               color: Colors.white,
-              padding: EdgeInsets.symmetric(vertical: 18),
+              padding: const EdgeInsets.symmetric(vertical: 18),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15.0),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 15.0),
                     child: CommonText(
                       color: AppColor.textColor,
                       text: "New Arrivals",
@@ -402,7 +350,7 @@ class HomeScreen extends StatelessWidget {
                       fontSize: 15,
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Obx(
                     () => productController.newArrivalLoad.value
                         ? Padding(
@@ -412,8 +360,7 @@ class HomeScreen extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: AppColor.white,
                                   borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                      color: AppColor.white, width: 2),
+                                  border: Border.all(color: AppColor.white, width: 2),
                                 ),
                                 child: ProgressView()),
                           )
@@ -421,7 +368,6 @@ class HomeScreen extends StatelessWidget {
                             options: CarouselOptions(
                               height: 160.0,
                               autoPlay: true,
-                              // disableCenter: true,
                               viewportFraction: 0.9,
                               initialPage: 1,
                               enableInfiniteScroll: false,
@@ -431,10 +377,8 @@ class HomeScreen extends StatelessWidget {
                                 builder: (BuildContext context) {
                                   return Container(
                                     width: MediaQuery.of(context).size.width,
-                                    margin: const EdgeInsets.only(
-                                        left: 12.0, right: 2),
-                                    transform: Matrix4.translationValues(
-                                        -350 / 20, 0, 0),
+                                    margin: const EdgeInsets.only(left: 12.0, right: 2),
+                                    transform: Matrix4.translationValues(-350 / 20, 0, 0),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
@@ -443,13 +387,9 @@ class HomeScreen extends StatelessWidget {
                                       child: CachedNetworkImage(
                                         imageUrl: i.arrivalUrl ?? "",
                                         fit: BoxFit.fill,
-                                        placeholder: (context, url) => SizedBox(
-                                            height: 25,
-                                            width: 25,
-                                            child: ProgressView()),
-                                        errorWidget: (context, url, error) =>
-                                            const Center(
-                                                child: Icon(Icons.error)),
+                                        placeholder: (context, url) =>
+                                            SizedBox(height: 25, width: 25, child: ProgressView()),
+                                        errorWidget: (context, url, error) => const Center(child: Icon(Icons.error)),
                                       ),
                                     ),
                                   );

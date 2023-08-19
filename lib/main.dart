@@ -10,11 +10,10 @@ import 'package:ishwarpharma/utils/constant.dart';
 import 'package:ishwarpharma/view/dashboard/dashboard.dart';
 
 var bottomWidgetKey = GlobalKey<State<BottomNavigationBar>>();
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -25,8 +24,7 @@ Future<void> main() async {
   );
 
   getToken() async {
-    FirebaseMessaging firebaseMessaging =
-        FirebaseMessaging.instance; // Change here
+    FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance; // Change here
     firebaseMessaging.getToken().then((token) {
       print("token is $token");
     });
@@ -51,7 +49,6 @@ Future<void> main() async {
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await setupFlutterNotifications();
   showFlutterNotification(message);
   // If you're going to use other Firebase services in the background, such as Firestore,
@@ -60,6 +57,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
 Future<void> setupFlutterNotifications() async {
   if (isFlutterLocalNotificationsInitialized) {
     return;
@@ -67,8 +65,7 @@ Future<void> setupFlutterNotifications() async {
   channel = const AndroidNotificationChannel(
     'high_importance_channel', // id
     'High Importance Notifications', // title
-    description:
-        'This channel is used for important notifications.', // description
+    description: 'This channel is used for important notifications.', // description
     importance: Importance.high,
   );
 
@@ -79,8 +76,7 @@ Future<void> setupFlutterNotifications() async {
   /// We use this channel in the `AndroidManifest.xml` file to override the
   /// default FCM channel to enable heads up notifications.
   await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
 
   /// Update the iOS foreground notification presentation options to allow

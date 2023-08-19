@@ -11,12 +11,20 @@ import 'package:url_launcher/url_launcher.dart';
 class ContactUsScreen extends StatelessWidget {
   const ContactUsScreen({Key? key}) : super(key: key);
 
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.black,
-        title: CommonText(
+        title: const CommonText(
           color: AppColor.textColor,
           fontSize: 18,
           text: "Contact Us",
@@ -54,7 +62,7 @@ class ContactUsScreen extends StatelessWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
+                      const Expanded(
                         child: CommonText(
                           text: "Address : ",
                           fontSize: 14,
@@ -67,52 +75,27 @@ class ContactUsScreen extends StatelessWidget {
                         flex: 4,
                         child: InkWell(
                           onTap: () async {
-                            AndroidIntent intent;
-                            intent = AndroidIntent(
-                              action: 'action_view',
-                              data: Uri.encodeFull(
-                                  'google.navigation:q=24 VITHALDAS ROAD, DAWA BAZAR, MUMBAI 400002'),
-                              package: 'com.google.android.apps.maps',
-                            );
-                            intent.launch();
-
-                            // List<Location> coordinates = await locationFromAddress(
-                            //     "7 DEVKARAN MANSION, 24 VITHALDAS ROAD, DAWA BAZAR, MUMBAI 400002");
-                            // // final uri = Uri.parse(
-                            // //     'https://www.google.com/maps/search/?api=1&query=${coordinates[0].latitude},${coordinates[0].longitude}');
-                            // // if (await canLaunchUrl(uri)) {
-                            // //   await launchUrl(uri);
-                            // // } else {
-                            // //   throw 'Could not launch $uri';
-                            // // }
-                            //
-                            // String appleUrl =
-                            //     'https://maps.apple.com/?saddr=&daddr=${coordinates[0].latitude},${coordinates[0].longitude}&directionsmode=driving';
-                            // String googleUrl =
-                            //     'https://www.google.com/maps/search/?api=1&query=${coordinates[0].latitude},${coordinates[0].longitude}';
-                            // // 'https://www.google.com/maps/search/${Uri.encodeFull("7 DEVKARAN MANSION, 24 VITHALDAS ROAD, DAWA BAZAR, MUMBAI 400002")}';
-                            //
-                            // if (Platform.isIOS) {
-                            //   if (await canLaunchUrl(Uri.parse(appleUrl))) {
-                            //     await launchUrl(Uri.parse(appleUrl));
-                            //   } else {
-                            //     if (await canLaunchUrl(Uri.parse(googleUrl))) {
-                            //       await launchUrl(Uri.parse(googleUrl));
-                            //     } else {
-                            //       throw 'Could not open the map.';
-                            //     }
-                            //   }
-                            // } else {
-                            //   if (await canLaunchUrl(Uri.parse(googleUrl))) {
-                            //     await launchUrl(Uri.parse(googleUrl));
-                            //   } else {
-                            //     throw 'Could not open the map.';
-                            //   }
-                            // }
+                            if (Platform.isIOS) {
+                              if (await canLaunchUrl(Uri.parse(
+                                  "https://www.google.com/maps/search/?api=1&query=24 VITHALDAS ROAD, DAWA BAZAR, MUMBAI 400002"))) {
+                                await launchUrl(
+                                    Uri.parse(
+                                        "https://www.google.com/maps/search/?api=1&query=24 VITHALDAS ROAD, DAWA BAZAR, MUMBAI 400002"),
+                                    mode: LaunchMode.externalApplication);
+                              }
+                            } else {
+                              AndroidIntent intent;
+                              intent = AndroidIntent(
+                                action: 'action_view',
+                                data:
+                                    Uri.encodeFull('google.navigation:q=24 VITHALDAS ROAD, DAWA BAZAR, MUMBAI 400002'),
+                                package: 'com.google.android.apps.maps',
+                              );
+                              intent.launch();
+                            }
                           },
-                          child: CommonText(
-                            text:
-                                "7 DEVKARAN MANSION, 24 VITHALDAS ROAD, DAWA BAZAR, MUMBAI 400002",
+                          child: const CommonText(
+                            text: "7 DEVKARAN MANSION, 24 VITHALDAS ROAD, DAWA BAZAR, MUMBAI 400002",
                             fontSize: 14,
                             color: AppColor.textColor,
                             fontWeight: FontWeight.w400,
@@ -182,11 +165,7 @@ class ContactUsScreen extends StatelessWidget {
                                       text: "9820061593",
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () async {
-                                          final Uri launchUri = Uri(
-                                            scheme: 'tel',
-                                            path: "9820061593",
-                                          );
-                                          await launchUrl(launchUri);
+                                          _makePhoneCall("9820061593");
                                         },
                                       style: const TextStyle(
                                           fontSize: 15,
@@ -195,10 +174,8 @@ class ContactUsScreen extends StatelessWidget {
                                           fontWeight: FontWeight.w500),
                                     ),
                                   ],
-                                  style: const TextStyle(
-                                      fontSize: 14,
-                                      fontFamily: "Poppins",
-                                      color: AppColor.textColor),
+                                  style:
+                                      const TextStyle(fontSize: 14, fontFamily: "Poppins", color: AppColor.textColor),
                                 ),
                               ),
                               RichText(
@@ -209,11 +186,7 @@ class ContactUsScreen extends StatelessWidget {
                                       text: "9833064770",
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () async {
-                                          final Uri launchUri = Uri(
-                                            scheme: 'tel',
-                                            path: "9833064770",
-                                          );
-                                          await launchUrl(launchUri);
+                                          _makePhoneCall("9833064770");
                                         },
                                       style: const TextStyle(
                                           fontSize: 15,
@@ -222,10 +195,8 @@ class ContactUsScreen extends StatelessWidget {
                                           fontWeight: FontWeight.w500),
                                     ),
                                   ],
-                                  style: const TextStyle(
-                                      fontSize: 14,
-                                      fontFamily: "Poppins",
-                                      color: AppColor.textColor),
+                                  style:
+                                      const TextStyle(fontSize: 14, fontFamily: "Poppins", color: AppColor.textColor),
                                 ),
                               ),
                             ],
